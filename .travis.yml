@@ -1,3 +1,6 @@
 language: node_js
 node_js:
   - '4.5.0'
+ deploy:
+      - provider: s3
+        ⋮ # rest of S3 deployment for MyApp.zip
