@@ -8,7 +8,7 @@ let currentGame;
 let pitch = 0;
 let yaw = 0;
 let host = false;
-let shotCount = 3;
+let shotCount = config.maxShots;
 let shotRegen = false;
 let latestServerUpdate;
 const serverShapeMap = {};
@@ -18,9 +18,8 @@ module.exports = {
     const onMouseMove = function onMouseMove(event) {
       const movementX = event.movementX;
       const movementY = event.movementY;
-      yaw -= movementX * 0.002;
-      pitch -= movementY * 0.002;
-
+      yaw -= movementX * config.mouseSensitivity;
+      pitch -= movementY * config.mouseSensitivity;
       const yawQuat = new THREE.Quaternion();
       const pitchQuat = new THREE.Quaternion();
       yawQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
@@ -87,11 +86,11 @@ module.exports = {
       });
     }
     const regen = function regen() {
-      if (shotCount < 3) {
+      if (shotCount < config.maxShots) {
         shotCount++;
       }
-      if (shotCount < 3) {
-        setTimeout(regen, 1000)
+      if (shotCount < config.maxShots) {
+        setTimeout(regen, config.shotRegen)
       } else {
         shotRegen = false;
       }
@@ -100,7 +99,7 @@ module.exports = {
       shotRegen = true;
       setTimeout(function() {
         regen();
-      }, 1000)
+      }, config.shotRegen)
     }
 
 
@@ -161,7 +160,7 @@ module.exports = {
         localMesh.position.copy(serverMesh.position);
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
-        let ballMesh = new objectBuilder.redBall({radius: .5, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
+        let ballMesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
         serverShapeMap[serverMesh.uuid] = ballMesh.uuid;
         currentGame.scene.add(ballMesh);
       }
