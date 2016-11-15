@@ -1,6 +1,7 @@
 'use strict';
 const CANNON = require('cannon');
 const THREE = require('three');
+const config = require('../../config/config.js');
 let kill;
 
 const getGuid = function getGuid() {
@@ -22,13 +23,12 @@ module.exports = function Match(deleteMatch) {
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
   this.physicsEmitClock;
-  this.physicsEmitTick = 1/60*1000; //period between physics emits
+  this.physicsEmitTick = config.physicsEmitTick; //period between physics emits
   this.physicsClock;
-  this.physicsTick = 1/100*1000;
+  this.physicsTick = config.physicsTick;
   this.killFloor = killFloor.bind(this);
-  this.connected = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
-  this.timeoutDelay = 30000;
+  this.timeoutDelay = config.serverTimeout;
   this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
@@ -55,8 +55,8 @@ const startPhysics = function startPhysics(io) {
       const client = context.clients[key];
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
-      const movePerTick = .75;
-      if (clientBody.position.y < -100) {
+      const movePerTick = config.playerMovePerTick;
+      if (clientBody.position.y < config.playerYReset) {
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
         continue;
@@ -75,7 +75,7 @@ const startPhysics = function startPhysics(io) {
       }
       if (client.jump) {
         if (client.jumps > 0) {
-          clientBody.velocity.set(currVelocity.x, currVelocity.y + 50, currVelocity.z);
+          clientBody.velocity.set(currVelocity.x, currVelocity.y + config.jumpVelocity, currVelocity.z);
           client.jumps --;
         }
         const regen = function regen() {
@@ -104,7 +104,7 @@ const startPhysics = function startPhysics(io) {
     for(var i=0; i<context.balls.length; i++){
       const ball = context.balls[i];
 
-      if (Math.abs(ball.position.x) > 200 || Math.abs(ball.position.y) > 200 || Math.abs(ball.position.z) > 200) {
+      if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
         expiredBallIndices.push(i);
       }
     }
@@ -121,7 +121,7 @@ const startPhysics = function startPhysics(io) {
     for(var i=0; i<context.boxes.length; i++){
       const box = context.boxes[i];
 
-      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
+      if (Math.abs(box.position.x) > config.physicsBounds || Math.abs(box.position.y) > config.physicsBounds || Math.abs(box.position.z) > config.physicsBounds) {
         expiredBoxIndices.push(i);
       }
     }
@@ -176,17 +176,17 @@ const shootBall = function shootBall(camera) {
   let y = camera.position.y;
   let z = camera.position.z;
 
-  const ballBody = new CANNON.Body({ mass: 300 });
-  const ballShape = new CANNON.Sphere(0.5);
+  const ballBody = new CANNON.Body({ mass: config.ballMass });
+  const ballShape = new CANNON.Sphere(config.ballRadius);
   ballBody.addShape(ballShape);
   this.world.add(ballBody);
   this.balls.push(ballBody);
 
   const shootDirection = camera.direction;
-  ballBody.velocity.set(shootDirection.x * 125, shootDirection.y * 125, shootDirection.z * 125);
-  x += shootDirection.x * 2;
-  y += shootDirection.y * 2;
-  z += shootDirection.z * 2;
+  ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
+  x += shootDirection.x;
+  y += shootDirection.y;
+  z += shootDirection.z;
   ballBody.position.set(x,y,z);
 };
 
@@ -194,8 +194,8 @@ const loadNewClient = function loadNewClient(player) {
   const x = player.position.x;
   const y = player.position.y;
   const z = player.position.z;
-  const ballBody = new CANNON.Body({ mass: 10 });
-  const ballShape = new CANNON.Sphere(2);
+  const ballBody = new CANNON.Body({ mass: config.playerModelMass });
+  const ballShape = new CANNON.Sphere(config.playerModelRadius);
   ballBody.position.x = x;
   ballBody.position.y = y;
   ballBody.position.z = z;
@@ -221,7 +221,7 @@ const loadFullScene = function loadFullScene(scene, player) {
   solver.tolerance = 0.5;
   world.solver = new CANNON.SplitSolver(solver);
 
-  world.gravity.set(0,-98,0);
+  world.gravity.set(0, config.gravity, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
 
   // Create a slippery material (friction coefficient = 0.0)
