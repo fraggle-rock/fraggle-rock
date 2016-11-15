@@ -27,12 +27,12 @@ module.exports = function Match(deleteMatch) {
   this.physicsTick = 1/100*1000;
   this.connected = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
-  this.timeoutDelay = 10000;
-  // this.timeout = setTimeout(kill, this.timeoutDelay);
+  this.timeoutDelay = 30000;
+  this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
-  // clearTimeout(this.timeout);
+  clearTimeout(this.timeout);
   clientPosition = JSON.parse(clientPosition);
   const localClient = this.clients[clientPosition.uuid];
   localClient.up = clientPosition.up;
@@ -41,7 +41,7 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
   localClient.down = clientPosition.down;
   localClient.direction = clientPosition.direction;
   localClient.jump = clientPosition.jump;
-  // this.timeout = setTimeout(kill, this.timeoutDelay);
+  this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
 const startPhysics = function startPhysics(io) {
