@@ -116,15 +116,13 @@ module.exports = {
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     if (currentGame.camera.uuid !== clientPosition.uuid) {
-      const oldShape = remoteClients[clientPosition.uuid];
-      if (oldShape) {
-        currentGame.scene.remove(oldShape);
-        delete remoteClients[clientPosition.uuid];
+      if (remoteClients[clientPosition.uuid]) {
+        remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
+      } else {
+        const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
+        currentGame.scene.add(mesh);
+        remoteClients[clientPosition.uuid] = mesh;
       }
-      const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
-
-      currentGame.scene.add(mesh);
-      remoteClients[clientPosition.uuid] = mesh;
     } else {
       currentGame.camera.position.copy(clientPosition.position);
     }
