@@ -148,7 +148,6 @@ module.exports = {
     // let zquat = new THREE.Quaternion();
     // zquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
     // let quat = yquat.multiply(zquat);
-    console.log(yquat)
     let mesh = new THREE.Mesh(BoxGeometry(size), sidePanelMaterial);
     initPosition(mesh, position);
     mesh.userData.name = 'sidePanel';
