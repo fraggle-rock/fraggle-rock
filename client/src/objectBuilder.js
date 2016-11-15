@@ -1,5 +1,5 @@
 const THREE = require('three');
-const config = require('../config/config.js');
+const config = require('../../config/config.js');
 
 const LoadTexture = function LoadTexture(texturePath) {
   return new THREE.TextureLoader().load(texturePath);

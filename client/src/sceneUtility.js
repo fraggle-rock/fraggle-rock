@@ -1,6 +1,6 @@
 const THREE = require('three');
 const objectBuilder = require('./objectBuilder');
-const config = require('./../config/config.js')
+const config = require('../../config/config.js');
 
 const remoteClients = {};
 const remoteScene = {};
