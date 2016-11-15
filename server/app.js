@@ -33,6 +33,9 @@ io.on('connection', (socket) => {
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
     match.loadFullScene(scene, player);
+    socket.on('disconnect', function (e) {
+      matchController.deleteMatch(match.guid);
+    })
     match.startPhysics(io);
     socket.join(match.guid);
     socket.on('shootBall', function(camera) {
@@ -41,9 +44,6 @@ io.on('connection', (socket) => {
     socket.on('clientUpdate', function (camera) { // listener for client position updates
       match.loadClientUpdate(camera); // update server's copy of client position
     });
-    socket.on('disconnect', function (e) {
-      matchController.deleteMatch(match.guid);
-    })
   });
 
   socket.on('addMeToMatch', function (newMatchRequest) {
