@@ -32,10 +32,10 @@ io.on('connection', (socket) => {
     const scene = fullScene.scene;
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
-    match.loadFullScene(scene, player);
     socket.on('disconnect', function (e) {
       matchController.deleteMatch(match.guid);
     })
+    match.loadFullScene(scene, player);
     match.startPhysics(io);
     socket.join(match.guid);
     socket.on('shootBall', function(camera) {
