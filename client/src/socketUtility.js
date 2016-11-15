@@ -1,6 +1,8 @@
 const THREE = require('three');
 let socket;
 const sceneUtility = require('./sceneUtility');
+const lastEmittedClient = {};
+let canEmit = true;
 
 const addInitialLoadListener = function addInitialLoadListener(socket) {
   socket.on('initMatch', function(match) {
@@ -35,6 +37,28 @@ const roundQuaternion = function roundQuaternion (quaternion, decimals) {
   newQuaternion._z = roundToDec(quaternion.z, decimals);
   return newQuaternion;
 };
+const hasChangedInput = function hasChangedInput(playerInput) {
+  let hasChanged = false;
+  if (playerInput.up !== lastEmittedClient.up) {
+    hasChanged = true;
+  } else if (playerInput.down !== lastEmittedClient.down) {
+    hasChanged = true;
+  } else if (playerInput.left !== lastEmittedClient.left) {
+    hasChanged = true;
+  } else if (playerInput.right !== lastEmittedClient.right) {
+    hasChanged = true;
+  } else if (playerInput.jump === true) {
+    hasChanged = true;
+  }
+  if (hasChanged) {
+    lastEmittedClient.up = playerInput.up;
+    lastEmittedClient.down = playerInput.down;
+    lastEmittedClient.right = playerInput.right;
+    lastEmittedClient.left = playerInput.left;
+    lastEmittedClient.jump = playerInput.up;
+  }
+  return hasChanged;
+}
 
 
 module.exports = {
@@ -56,10 +80,12 @@ module.exports = {
     addPhysicsUpdateListener(socket);
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
-    playerInput.direction = camera.getWorldDirection();
-    socket.emit('clientUpdate', JSON.stringify(playerInput));
-    if (playerInput.jump) {
-      playerInput.jump = false;
+    if (hasChangedInput(playerInput)) {
+      playerInput.direction = camera.getWorldDirection();
+      socket.emit('clientUpdate', JSON.stringify(playerInput));
+      if (playerInput.jump) {
+        playerInput.jump = false;
+      } 
     }
   },
   emitShootBall: function emitShootBall(camera) {

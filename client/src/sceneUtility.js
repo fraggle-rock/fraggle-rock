@@ -28,10 +28,9 @@ module.exports = {
       const quat = yawQuat.multiply(pitchQuat);
       camera.quaternion.copy(quat);
     };
-
    document.addEventListener('mousemove', onMouseMove, false);
   },
-  addMoveControls: function addMoveControls(camera) {
+  addMoveControls: function addMoveControls(camera, socketUtility) {
     const playerInput = {};
     playerInput.up = false;
     playerInput.left = false;
@@ -55,7 +54,7 @@ module.exports = {
       if (event.keyCode === 32) {
         playerInput.jump = true;
       }
-
+      socketUtility.emitClientPosition(camera, playerInput);
     };
 
     const onKeyUp = function onKeyUp(event) {
@@ -72,7 +71,7 @@ module.exports = {
       if (event.keyCode === 68 || event.keyCode === 39) {
         playerInput.right = false;
       }
-
+      socketUtility.emitClientPosition(camera, playerInput);
     };
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
@@ -109,7 +108,6 @@ module.exports = {
   },
   animate: function animate(game) {
     currentGame = game;
-    module.exports.stepClientPhysics();
     if(latestServerUpdate) {
       module.exports.loadPhysicsUpdate(latestServerUpdate);
     }
@@ -118,15 +116,13 @@ module.exports = {
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     if (currentGame.camera.uuid !== clientPosition.uuid) {
-      const oldShape = remoteClients[clientPosition.uuid];
-      if (oldShape) {
-        currentGame.scene.remove(oldShape);
-        delete remoteClients[clientPosition.uuid];
+      if (remoteClients[clientPosition.uuid]) {
+        remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
+      } else {
+        const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
+        currentGame.scene.add(mesh);
+        remoteClients[clientPosition.uuid] = mesh;
       }
-      const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
-
-      currentGame.scene.add(mesh);
-      remoteClients[clientPosition.uuid] = mesh;
     } else {
       currentGame.camera.position.copy(clientPosition.position);
     }
@@ -174,8 +170,4 @@ module.exports = {
       module.exports.loadClientUpdate(serverClients[key]);
     }
   },
-  stepClientPhysics: function stepClientPhysics() {
-    const camera = currentGame.camera;
-    const scene = currentGame.scene;
-  }
 };

@@ -27,7 +27,7 @@ module.exports = function Match(deleteMatch) {
   this.physicsTick = 1/100*1000;
   this.connected = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
-  this.timeoutDelay = 10000;
+  this.timeoutDelay = 30000;
   this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
@@ -55,6 +55,11 @@ const startPhysics = function startPhysics(io) {
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
       const movePerTick = .75;
+      if (clientBody.position.y < -100) {
+        clientBody.position.set(0,10,0);
+        clientBody.velocity.set(0,0,0);
+        continue;
+      }
       if (client.up) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
       } 
