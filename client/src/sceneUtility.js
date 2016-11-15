@@ -53,6 +53,7 @@ module.exports = {
         playerInput.right = true;
       }
       if (event.keyCode === 32) {
+        event.preventDefault();
         if (jumpCount > 0 && playerInput.jump === false) {
           jumpCount--;
           playerInput.jump = true;
