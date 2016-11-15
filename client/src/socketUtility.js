@@ -55,7 +55,6 @@ const hasChangedInput = function hasChangedInput(playerInput) {
     lastEmittedClient.down = playerInput.down;
     lastEmittedClient.right = playerInput.right;
     lastEmittedClient.left = playerInput.left;
-    lastEmittedClient.jump = playerInput.up;
   }
   return hasChanged;
 }

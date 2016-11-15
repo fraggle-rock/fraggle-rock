@@ -10,6 +10,8 @@ let yaw = 0;
 let host = false;
 let shotCount = config.maxShots;
 let shotRegen = false;
+let jumpCount = config.maxJumps;
+let jumpRegen = false;
 let latestServerUpdate;
 const serverShapeMap = {};
 
@@ -51,7 +53,26 @@ module.exports = {
         playerInput.right = true;
       }
       if (event.keyCode === 32) {
-        playerInput.jump = true;
+        if (jumpCount > 0 && playerInput.jump === false) {
+          jumpCount--;
+          playerInput.jump = true;
+        }
+        const regen = function regen() {
+          if (jumpCount < config.maxJumps) {
+            jumpCount++;
+          }
+          if (jumpCount < config.maxJumps) {
+            setTimeout(regen, config.jumpRegen)
+          } else {
+            jumpRegen = false;
+          }
+        };
+        if (!jumpRegen && jumpCount < 3) {
+          jumpRegen = true;
+          setTimeout(function() {
+            regen();
+          }, config.jumpRegen)
+        }
       }
       socketUtility.emitClientPosition(camera, playerInput);
     };
