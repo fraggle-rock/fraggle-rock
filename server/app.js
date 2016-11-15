@@ -37,6 +37,7 @@ io.on('connection', (socket) => {
     })
     match.loadFullScene(scene, player);
     match.startPhysics(io);
+    match.killFloor();
     socket.join(match.guid);
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);

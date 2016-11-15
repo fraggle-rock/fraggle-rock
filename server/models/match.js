@@ -25,6 +25,7 @@ module.exports = function Match(deleteMatch) {
   this.physicsEmitTick = 1/60*1000; //period between physics emits
   this.physicsClock;
   this.physicsTick = 1/100*1000;
+  this.killFloor = killFloor.bind(this);
   this.connected = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
   this.timeoutDelay = 30000;
@@ -62,13 +63,13 @@ const startPhysics = function startPhysics(io) {
       }
       if (client.up) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
-      } 
+      }
       if (client.down) {
         clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
       }
       if (client.right) {
         clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
-      } 
+      }
       if (client.left) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
       }
@@ -94,7 +95,7 @@ const startPhysics = function startPhysics(io) {
             regen();
           }, 3000)
         }
-        client.jump = false; 
+        client.jump = false;
       }
     }
     context.world.step(context.physicsTick/1000);
@@ -271,8 +272,18 @@ const loadFullScene = function loadFullScene(scene, player) {
   this.loadNewClient(player);
 };
 
+const killFloor = function killFloor() {
+  let killFloorTick = 2000;
+  // this.killFloorInterval = setInterval(() => {
+  //   // this.world.children.userData.shapeType === 'grassFloor'
+  //   // cannonBody.mass = 100 //then it falls
+  //   //add physics 1 block
+  // }.bind(this), killFloorTick);
+}
+
 const shutdown = function shutdown() {
   clearTimeout(this.timeout);
   clearInterval(this.physicsClock);
   clearInterval(this.physicsEmitClock);
-}
+  clearInterval(this.killFloorInterval);
+};
