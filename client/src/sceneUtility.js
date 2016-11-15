@@ -15,6 +15,11 @@ let jumpRegen = false;
 let latestServerUpdate;
 const serverShapeMap = {};
 
+//DEBUGGING
+let ticks = 0;
+let lastTick;
+let averageTickRate = 0;
+
 module.exports = {
   addLookControls: function addLookControls(camera) {
     const onMouseMove = function onMouseMove(event) {
@@ -100,31 +105,29 @@ module.exports = {
   },
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
-    if (shotCount > 0) {
-      shotCount--;
-      socketUtility.emitShootBall({
-        position: currentGame.camera.position,
-        direction: currentGame.camera.getWorldDirection(),
-      });
-    }
-    const regen = function regen() {
-      if (shotCount < config.maxShots) {
-        shotCount++;
+      if (shotCount > 0) {
+        shotCount--;
+        socketUtility.emitShootBall({
+          position: currentGame.camera.position,
+          direction: currentGame.camera.getWorldDirection(),
+        });
       }
-      if (shotCount < config.maxShots) {
-        setTimeout(regen, config.shotRegen)
-      } else {
-        shotRegen = false;
+      const regen = function regen() {
+        if (shotCount < config.maxShots) {
+          shotCount++;
+        }
+        if (shotCount < config.maxShots) {
+          setTimeout(regen, config.shotRegen)
+        } else {
+          shotRegen = false;
+        }
+      };
+      if (!shotRegen && shotCount < 3) {
+        shotRegen = true;
+        setTimeout(function() {
+          regen();
+        }, config.shotRegen)
       }
-    };
-    if (!shotRegen && shotCount < 3) {
-      shotRegen = true;
-      setTimeout(function() {
-        regen();
-      }, config.shotRegen)
-    }
-
-
     });
   },
   animate: function animate(game) {
@@ -149,9 +152,20 @@ module.exports = {
     }
   },
   savePhysicsUpdate: function(meshObject) {
+    if (lastTick) {
+      const now = performance.now();
+      const thisTick = now - lastTick;
+      lastTick = now;
+      averageTickRate = (averageTickRate * ticks + thisTick) / (ticks + 1);
+      ticks++; 
+    } else {
+      lastTick = performance.now();
+      ticks++;
+    }
     latestServerUpdate = meshObject;
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
+    console.log(averageTickRate);
     meshObject = JSON.parse(meshObject);
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
