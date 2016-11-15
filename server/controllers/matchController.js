@@ -5,18 +5,19 @@ const Match = require('../models/match.js');
 const deleteMatch = function deleteMatch(matchId) {
   let match;
   let deleteKey;
-  let count = 0;
+  let open = 0;
   for (var key in liveMatches) {
     if (liveMatches[key].guid === matchId) {
       match = liveMatches[key];
       match.shutdown();
       deleteKey = key;
     }
-    count++;
   }
   delete liveMatches[deleteKey];
-  count--;
-  console.log(`Deleting match, there are ${count} open matches.`);
+  for (var key in liveMatches) {
+    open++;
+  }
+  console.log(`Deleting match, there are ${open} open matches.`);
 };
 
 module.exports = {
