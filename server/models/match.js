@@ -132,10 +132,10 @@ const startPhysics = function startPhysics(io) {
     context.world.step(1/100);  
     physicsEmit();
 
-    if (this.open) {
-      this.physicsClock = setTimeout(physicsLoop, 1/60*1000);
+    if (context.open) {
+      context.physicsClock = setTimeout(physicsLoop, 1/60*1000);
     }
-  }.bind(this)
+  }
 
   physicsLoop();
 };
@@ -282,6 +282,6 @@ const killFloor = function killFloor() {
 const shutdown = function shutdown() {
   this.open = false;
   clearTimeout(this.timeout);
-  clearTimout(this.physicsClock);
+  clearTimeout(this.physicsClock);
   clearInterval(this.killFloorInterval);
 };
