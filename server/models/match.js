@@ -24,7 +24,7 @@ module.exports = function Match(deleteMatch) {
   this.shutdown = shutdown.bind(this);
   this.physicsClock;
   this.physicsTick = config.physicsTick;
-  this.emittedAtLastTick = false;
+  this.updatesSinceLastEmit = config.physicsEmitRatio - 1;
   this.killFloor = killFloor.bind(this);
   kill = function() {deleteMatch(this.guid)}.bind(this);
   this.timeoutDelay = config.serverTimeout;
@@ -143,11 +143,11 @@ const startPhysics = function startPhysics(io) {
         offset--;
       });
     }
-    if (!context.emittedAtLastTick) {
+    if (context.updatesSinceLastEmit === config.physicsEmitRatio - 1) {
       physicsEmit();
-      context.emittedAtLastTick = true;
+      context.updatesSinceLastEmit = 0;
     } else {
-      context.emittedAtLastTick = false;
+      context.updatesSinceLastEmit++;;
     }
   }, this.physicsTick)
 

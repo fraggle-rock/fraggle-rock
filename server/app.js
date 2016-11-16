@@ -35,10 +35,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', function (e) {
       matchController.deleteMatch(match.guid);
     })
-    socket.join(match.guid, function(a,b) {
-      console.log(a);
-      console.log(b);
-    });
+    socket.join(match.guid);
     match.loadFullScene(scene, player);
     match.startPhysics(io);
     match.killFloor();

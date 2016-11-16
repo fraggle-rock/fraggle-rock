@@ -26,5 +26,6 @@ module.exports = {
   playerYReset: -100,
   jumpVelocity: 50,
   gravity: -98,
-  physicsBounds: 200
+  physicsBounds: 200,
+  physicsEmitRatio: 2
 };

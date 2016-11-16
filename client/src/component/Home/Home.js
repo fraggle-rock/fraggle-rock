@@ -51,20 +51,35 @@ class Home extends React.Component {
   JoinExisting() {
     var blocker = document.getElementById( 'blocker' );
     var instructions = document.getElementById( 'instructions' );
-    blocker.style.display = 'none';
+    blocker.style.display = '';
     document.addEventListener('keydown', function(e) {
-     console.log('hi')
       if(e.keyCode === 16) {
      blocker.style.display = '-webkit-box';
      blocker.style.display = '-moz-box';
      blocker.style.display = 'box';
      if(instructions.style.display === '') {
        instructions.style.display = 'none';
+       document.body.requestPointerLock()  
      }else {
-     instructions.style.display = '';
+       instructions.style.display = '';
+        document.exitPointerLock()
      }   
       }
-     })
+    })
+    
+    var button = document.getElementById('resume');
+    button.addEventListener('click', function(e) {
+     blocker.style.display = '-webkit-box';
+     blocker.style.display = '-moz-box';
+     blocker.style.display = 'box';
+     if(instructions.style.display === '') {
+       instructions.style.display = 'none';
+       document.body.requestPointerLock()  
+     }else {
+       instructions.style.display = '';
+     }   
+    })
+    document.getElementById( 'HomePage' ).style.display = 'none'; 
     clientScene.joinGame(0);
     document.querySelector('#testButtons').remove();
   }

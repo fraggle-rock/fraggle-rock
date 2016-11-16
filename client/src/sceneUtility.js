@@ -152,20 +152,9 @@ module.exports = {
     }
   },
   savePhysicsUpdate: function(meshObject) {
-    if (lastTick) {
-      const now = performance.now();
-      const thisTick = now - lastTick;
-      lastTick = now;
-      averageTickRate = (averageTickRate * ticks + thisTick) / (ticks + 1);
-      ticks++; 
-    } else {
-      lastTick = performance.now();
-      ticks++;
-    }
     latestServerUpdate = meshObject;
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
-    console.log(averageTickRate);
     meshObject = JSON.parse(meshObject);
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
