@@ -113,7 +113,7 @@ const startPhysics = function startPhysics(io) {
         box.updateMassProperties()
       });
     }
-    io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
+    io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
   };
 
   this.physicsClock = setInterval(function() {
@@ -145,51 +145,7 @@ const startPhysics = function startPhysics(io) {
       }
     }
     context.world.step(context.physicsTick/1000);
-
     
-    let expiredBoxes = [];
-    const expiredBallIndices = [];
-    // Update ball positions
-    for(var i=0; i<context.balls.length; i++){
-      const ball = context.balls[i];
-
-      if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
-        expiredBallIndices.push(i);
-      }
-    }
-    if (expiredBallIndices.length > 0) {
-      console.log('Deleted out of bounds ball!');
-      let offset = 0;
-      expiredBallIndices.forEach(function(index) {
-        context.balls.splice(index - offset, 1);
-        offset--;
-      });
-    }
-
-    // Get a list of boxes outside bounds
-    for(var i=0; i<context.boxes.length; i++){
-      const box = context.boxes[i];
-
-      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-        if (box.userData.shapeType === 'grassFloor') {
-          //do not replace fallen floor tiles
-          context.world.remove(box);
-        } else {
-          expiredBoxes.push(box);
-        }
-      }
-    }
-    // Replace boxes randomly above the field if they fall off
-    if (expiredBoxes.length > 0) {
-      console.log('Deleted out of bounds box!');
-      expiredBoxes.forEach(function(box, index) {
-        box.position.set((Math.random() - Math.random()) * 30, 30 + Math.random() * 10, (Math.random() - Math.random()) * 30);
-        box.velocity.set(0, 0, 0);
-        box.mass = 1;
-        box.updateMassProperties()
-      });
-      expiredBoxes = [];
-    }
     if (context.updatesSinceLastEmit === config.physicsEmitRatio - 1) {
       physicsEmit();
       context.updatesSinceLastEmit = 0;
