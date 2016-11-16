@@ -29,6 +29,10 @@ module.exports = function Match(deleteMatch) {
   kill = function() {deleteMatch(this.guid)}.bind(this);
   this.timeoutDelay = config.serverTimeout;
   this.timeout = setTimeout(kill, this.timeoutDelay);
+  this.t0 = 0;
+  this.t1 = 0;
+  this.t2 = 0;
+  this.t3 = 0;
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
@@ -69,18 +73,50 @@ const startPhysics = function startPhysics(io) {
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
-    context.balls.forEach(function(ball) {
+    const expiredBoxes = [];
+    const expiredBoxIndices = [];
+    const expiredBallIndices = [];
+    context.balls.forEach(function(ball, i) {
       balls.push({uuid: ball.id, position: roundPosition(ball.position), quaternion: roundQuaternion(ball.quaternion), mass: ball.mass})
+      if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
+        expiredBallIndices.push(i);
+      }
     })
-    context.boxes.forEach(function(box) {
+    context.boxes.forEach(function(box, i) {
       boxes.push({uuid: box.uuid, position: roundPosition(box.position), quaternion: roundQuaternion(box.quaternion), geometry: box.userData.geometry, type: box.userData.shapeType, mass: box.mass})
+      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
+        if (box.userData.shapeType === 'grassFloor') {
+          //do not replace fallen floor tiles
+          context.world.remove(box);
+        } else {
+          expiredBoxes.push(box);
+          expiredBoxIndices.push(i);
+        }
+      }
     })
+    if (expiredBallIndices.length > 0) {
+      console.log('Deleted out of bounds ball!');
+      let offset = 0;
+      expiredBallIndices.forEach(function(index) {
+        context.world.remove(context.balls[index]);
+        context.balls.splice(index - offset, 1);
+        offset--;
+      });
+    }
+    // Replace boxes randomly above the field if they fall off
+    if (expiredBoxes.length > 0) {
+      console.log('Deleted out of bounds box!');
+      expiredBoxes.forEach(function(box) {
+        box.position.set((Math.random() - Math.random()) * 30, 30 + Math.random() * 10, (Math.random() - Math.random()) * 30);
+        box.velocity.set(0, 0, 0);
+        box.mass = 1;
+        box.updateMassProperties()
+      });
+    }
     io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
   };
 
   this.physicsClock = setInterval(function() {
-    let expiredBoxes = [];
-    const expiredBallIndices = [];
     for (var key in context.clients) {
       const client = context.clients[key];
       const clientBody = context.clientToCannon[client.uuid];
@@ -110,6 +146,9 @@ const startPhysics = function startPhysics(io) {
     }
     context.world.step(context.physicsTick/1000);
 
+    
+    let expiredBoxes = [];
+    const expiredBallIndices = [];
     // Update ball positions
     for(var i=0; i<context.balls.length; i++){
       const ball = context.balls[i];
