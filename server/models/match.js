@@ -28,8 +28,8 @@ module.exports = function Match(deleteMatch) {
   this.updatesSinceLastEmit = config.physicsEmitRatio - 1;
   this.killFloor = killFloor.bind(this);
   kill = function() {deleteMatch(this.guid)}.bind(this);
-  this.timeoutDelay = config.serverTimeout;
-  this.timeout = setTimeout(kill, this.timeoutDelay);
+  // this.timeoutDelay = config.serverTimeout;
+  // this.timeout = setTimeout(kill, this.timeoutDelay);
   this.t0 = 0;
   this.t1 = 0;
   this.t2 = 0;
@@ -37,7 +37,7 @@ module.exports = function Match(deleteMatch) {
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
-  clearTimeout(this.timeout);
+  // clearTimeout(this.timeout);
   clientPosition = JSON.parse(clientPosition);
   const localClient = this.clients[clientPosition.uuid];
   localClient.up = clientPosition.up;
@@ -46,7 +46,7 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
   localClient.down = clientPosition.down;
   localClient.direction = clientPosition.direction;
   localClient.jump = clientPosition.jump;
-  this.timeout = setTimeout(kill, this.timeoutDelay);
+  // this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
 const startPhysics = function startPhysics(io) {
@@ -129,8 +129,8 @@ const startPhysics = function startPhysics(io) {
     }
 
     
-    context.world.step(1/120);
-    context.world.step(1/120);  
+    context.world.step(1/100);
+    context.world.step(1/100);  
     physicsEmit();
 
     
