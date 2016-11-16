@@ -28,6 +28,7 @@ module.exports = function Match(deleteMatch) {
   this.physicsTick = config.physicsTick;
   this.updatesSinceLastEmit = config.physicsEmitRatio - 1;
   this.killFloor = killFloor.bind(this);
+  this.sendFull = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
   // this.timeoutDelay = config.serverTimeout;
   // this.timeout = setTimeout(kill, this.timeoutDelay);
@@ -66,7 +67,7 @@ const startPhysics = function startPhysics(io) {
       }
     });
     context.boxes.forEach(function(box, i) {
-      if (box.mass) {
+      if (box.mass || context.sendFull) {
         boxes.push(flat.box(box));
       };
       if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
@@ -97,7 +98,12 @@ const startPhysics = function startPhysics(io) {
         box.updateMassProperties()
       });
     }
-    io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
+    if (context.sendFull) {
+      io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}));
+    } else {
+      io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}));
+    }
+    context.sendFull = false;
   };
   const physicsLoop = function physicsLoop() {
     for (var key in context.clients) {
