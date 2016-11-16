@@ -260,7 +260,7 @@ const loadFullScene = function loadFullScene(scene, player) {
 
 // Remove floor tiles periodically
 const killFloor = function killFloor() {
-  let killFloorTick = 500;
+  let killFloorTick = 250;
   let floorTiles = [];
   let spacer = 76;
 
