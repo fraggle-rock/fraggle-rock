@@ -298,7 +298,7 @@ const killFloor = function killFloor() {
         tile.velocity.y = 50;
         floorTiles.splice(randIndex, 1)
       }
-    }.bind(this), killFloorTick);
+    }, killFloorTick);
   }, 5000);
 }
 
