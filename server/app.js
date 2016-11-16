@@ -35,6 +35,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', function (e) {
       matchController.deleteMatch(match.guid);
     })
+    console.log(`adding player to ${match.guid}`);
     socket.join(match.guid);
     match.loadFullScene(scene, player);
     match.startPhysics(io);

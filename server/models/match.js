@@ -67,7 +67,7 @@ const startPhysics = function startPhysics(io) {
     return newQuaternion;
   };
   const physicsEmit = function physicsEmit () {
-    console.log('emitting physics');
+    console.log(`emitting physics to ${context.guid}`);
     const balls = [];
     const boxes = [];
     context.balls.forEach(function(ball) {
