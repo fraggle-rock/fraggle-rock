@@ -67,6 +67,7 @@ io.on('connection', (socket) => {
     }
     socket.join(match.guid);
     match.loadNewClient(player);
+    match.sendFull = true;
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);
     });

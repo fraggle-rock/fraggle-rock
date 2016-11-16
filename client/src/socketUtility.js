@@ -4,13 +4,6 @@ const sceneUtility = require('./sceneUtility');
 const lastEmittedClient = {};
 let canEmit = true;
 
-const addInitialLoadListener = function addInitialLoadListener(socket) {
-  socket.on('initMatch', function(match) {
-    console.log(match);
-    addClientUpdateListener(socket);
-  });
-};
-
 const addPhysicsUpdateListener = function addPhysicsUpdateListener(socket) {
   socket.on('physicsUpdate', function(meshesObject) {
     sceneUtility.savePhysicsUpdate(meshesObject);
@@ -47,7 +40,7 @@ const hasChangedInput = function hasChangedInput(playerInput) {
     hasChanged = true;
   } else if (playerInput.right !== lastEmittedClient.right) {
     hasChanged = true;
-  } else if (playerInput.jump === true) {
+  } else if (playerInput.jump === true && playerInput.jump !== lastEmittedClient.jump) {
     hasChanged = true;
   }
   if (hasChanged) {
@@ -55,6 +48,7 @@ const hasChangedInput = function hasChangedInput(playerInput) {
     lastEmittedClient.down = playerInput.down;
     lastEmittedClient.right = playerInput.right;
     lastEmittedClient.left = playerInput.left;
+    lastEmittedClient.jump = playerInput.jump;
   }
   return hasChanged;
 }
@@ -84,7 +78,8 @@ module.exports = {
       socket.emit('clientUpdate', JSON.stringify(playerInput));
       if (playerInput.jump) {
         playerInput.jump = false;
-      } 
+        lastEmittedClient.jump = false;
+      }
     }
   },
   emitShootBall: function emitShootBall(camera) {
