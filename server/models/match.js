@@ -56,28 +56,34 @@ const startPhysics = function startPhysics(io) {
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
+    const clear = [];
     const expiredBoxes = [];
     const expiredBoxIndices = [];
     const expiredBallIndices = [];
     context.balls.forEach(function(ball, i) {
-      balls.push(flat.ball(ball));
       if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
         expiredBallIndices.push(i);
         context.world.remove(ball);
+        clear.push(ball.id)
+      } else {
+        balls.push(flat.ball(ball));
       }
     });
     context.boxes.forEach(function(box, i) {
-      if (box.mass || context.sendFull) {
-        boxes.push(flat.box(box));
-      };
       if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-        if (box.userData.shapeType === 'grassFloor') {
+        if (box.userData.shapeType === flat.shapeEncoder['grassFloor']) {
           //do not replace fallen floor tiles
           context.world.remove(box);
+          context.boxes.splice(i, 1);
+          clear.push(box.uuid);
         } else {
           expiredBoxes.push(box);
           expiredBoxIndices.push(i);
         }
+      } else {
+        if (box.mass || context.sendFull) {
+          boxes.push(flat.box(box));
+        };
       }
     });
     if (expiredBallIndices.length > 0) {
@@ -98,10 +104,14 @@ const startPhysics = function startPhysics(io) {
         box.updateMassProperties()
       });
     }
-    if (context.sendFull) {
-      io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}));
+    const update = {boxMeshes: boxes, ballMeshes: balls, players: context.clients};;
+    if (clear.length > 0) {
+      update.clear = clear; 
+    }
+    if (context.sendFull || clear.length > 0) {
+      io.to(context.guid).emit('physicsUpdate', JSON.stringify(update));
     } else {
-      io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}));
+      io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
     }
     context.sendFull = false;
   };
@@ -137,13 +147,9 @@ const startPhysics = function startPhysics(io) {
     context.world.step(1/100);
     context.world.step(1/100);  
     physicsEmit();
-
-    if (context.open) {
-      context.physicsClock = setTimeout(physicsLoop, 1/60*1000);
-    }
   }
 
-  physicsLoop();
+  context.physicsClock = setInterval(physicsLoop, 1/60*1000);
 };
 
 const shootBall = function shootBall(camera) {
@@ -260,7 +266,7 @@ const killFloor = function killFloor() {
 
   setTimeout(() => {
     this.world.bodies.forEach((ele) => {
-      if(ele.userData && ele.userData.shapeType && ele.userData.shapeType === 'grassFloor') {
+      if(ele.userData && ele.userData.shapeType && ele.userData.shapeType === flat.shapeEncoder['grassFloor']) {
         floorTiles.push(ele);
       }
     });
@@ -278,7 +284,7 @@ const killFloor = function killFloor() {
         tile.mass = 1000;
         tile.updateMassProperties()
         tile.type = 1;
-        tile.velocity.y = 50;
+        tile.velocity.y = 100;
         floorTiles.splice(randIndex, 1)
       }
     }, killFloorTick);
@@ -288,6 +294,6 @@ const killFloor = function killFloor() {
 const shutdown = function shutdown() {
   this.open = false;
   clearTimeout(this.timeout);
-  clearTimeout(this.physicsClock);
+  clearInterval(this.physicsClock);
   clearInterval(this.killFloorInterval);
 };

@@ -161,11 +161,17 @@ module.exports = {
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
     const serverClients = meshObject.players;
+    const clear = meshObject.clear || [];
     const sceneChildren = currentGame.scene.children;
     while(sceneChildren.length > meshLookup.length) {
       meshLookup[sceneChildren[meshLookup.length].uuid.slice(0, config.uuidLength)] = sceneChildren[meshLookup.length];
       meshLookup.length++;
     }
+    clear.forEach(function(uuid) {
+      const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]];
+      currentGame.scene.remove(mesh);
+      meshLookup.length--;
+    });
     let localMesh;
     boxMeshes.forEach((serverMesh) => {
       serverMesh = flat.reBox(serverMesh);

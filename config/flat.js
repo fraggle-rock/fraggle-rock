@@ -33,14 +33,13 @@ const shapeEncoder = {
   ancientCrate: 5,
   woodCrate: 6
 };
-const shapeDecoder = {
-  1: 'grassFloor',
-  2: 'rockFloor',
-  3: 'questionCrate',
-  4: 'metalCrate',
-  5: 'ancientCrate',
-  6: 'woodCrate' 
-}
+const shapeDecoder = (function() {
+  const result = {};
+  for (var key in shapeEncoder) {
+    result[shapeEncoder[key]] = key;
+  }
+  return result;
+})()
 
 module.exports = {
   ball: function ball (ball) {
@@ -90,5 +89,7 @@ module.exports = {
       geometry: {width: flatBox[8], height: flatBox[9], depth: flatBox[10]}, 
       type: flatBox[11],
     };
-  }
+  },
+  shapeEncoder: shapeEncoder,
+  shapeDecoder: shapeDecoder
 };
