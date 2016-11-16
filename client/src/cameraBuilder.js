@@ -1,8 +1,9 @@
 const THREE = require('three');
+const config = require('../../config/config.js');
 
 module.exports = {
   buildCamera: function buildCamera() {
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // (fov, aspect, near, far)
+    const camera = new THREE.PerspectiveCamera(config.cameraFOV, window.innerWidth / window.innerHeight, config.cameraNear, config.cameraFar); // (fov, aspect, near, far)
     camera.position.y = 2;
     return camera;
   }

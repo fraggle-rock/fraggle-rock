@@ -1,6 +1,6 @@
 const THREE = require('three');
 const objectBuilder = require('./objectBuilder');
-const config = require('./../config/config.js')
+const config = require('../../config/config.js');
 
 const remoteClients = {};
 const remoteScene = {};
@@ -8,19 +8,25 @@ let currentGame;
 let pitch = 0;
 let yaw = 0;
 let host = false;
-let shotCount = 3;
+let shotCount = config.maxShots;
 let shotRegen = false;
+let jumpCount = config.maxJumps;
+let jumpRegen = false;
 let latestServerUpdate;
 const serverShapeMap = {};
+
+//DEBUGGING
+let ticks = 0;
+let lastTick;
+let averageTickRate = 0;
 
 module.exports = {
   addLookControls: function addLookControls(camera) {
     const onMouseMove = function onMouseMove(event) {
       const movementX = event.movementX;
       const movementY = event.movementY;
-      yaw -= movementX * 0.002;
-      pitch -= movementY * 0.002;
-
+      yaw -= movementX * config.mouseSensitivity;
+      pitch -= movementY * config.mouseSensitivity;
       const yawQuat = new THREE.Quaternion();
       const pitchQuat = new THREE.Quaternion();
       yawQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
@@ -28,10 +34,9 @@ module.exports = {
       const quat = yawQuat.multiply(pitchQuat);
       camera.quaternion.copy(quat);
     };
-
    document.addEventListener('mousemove', onMouseMove, false);
   },
-  addMoveControls: function addMoveControls(camera) {
+  addMoveControls: function addMoveControls(camera, socketUtility) {
     const playerInput = {};
     playerInput.up = false;
     playerInput.left = false;
@@ -53,9 +58,29 @@ module.exports = {
         playerInput.right = true;
       }
       if (event.keyCode === 32) {
-        playerInput.jump = true;
+        event.preventDefault();
+        if (jumpCount > 0 && playerInput.jump === false) {
+          jumpCount--;
+          playerInput.jump = true;
+        }
+        const regen = function regen() {
+          if (jumpCount < config.maxJumps) {
+            jumpCount++;
+          }
+          if (jumpCount < config.maxJumps) {
+            setTimeout(regen, config.jumpRegen)
+          } else {
+            jumpRegen = false;
+          }
+        };
+        if (!jumpRegen && jumpCount < 3) {
+          jumpRegen = true;
+          setTimeout(function() {
+            regen();
+          }, config.jumpRegen)
+        }
       }
-
+      socketUtility.emitClientPosition(camera, playerInput);
     };
 
     const onKeyUp = function onKeyUp(event) {
@@ -72,7 +97,7 @@ module.exports = {
       if (event.keyCode === 68 || event.keyCode === 39) {
         playerInput.right = false;
       }
-
+      socketUtility.emitClientPosition(camera, playerInput);
     };
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
@@ -80,36 +105,33 @@ module.exports = {
   },
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
-    if (shotCount > 0) {
-      shotCount--;
-      socketUtility.emitShootBall({
-        position: currentGame.camera.position,
-        direction: currentGame.camera.getWorldDirection(),
-      });
-    }
-    const regen = function regen() {
-      if (shotCount < 3) {
-        shotCount++;
+      if (shotCount > 0) {
+        shotCount--;
+        socketUtility.emitShootBall({
+          position: currentGame.camera.position,
+          direction: currentGame.camera.getWorldDirection(),
+        });
       }
-      if (shotCount < 3) {
-        setTimeout(regen, 1000)
-      } else {
-        shotRegen = false;
+      const regen = function regen() {
+        if (shotCount < config.maxShots) {
+          shotCount++;
+        }
+        if (shotCount < config.maxShots) {
+          setTimeout(regen, config.shotRegen)
+        } else {
+          shotRegen = false;
+        }
+      };
+      if (!shotRegen && shotCount < 3) {
+        shotRegen = true;
+        setTimeout(function() {
+          regen();
+        }, config.shotRegen)
       }
-    };
-    if (!shotRegen && shotCount < 3) {
-      shotRegen = true;
-      setTimeout(function() {
-        regen();
-      }, 1000)
-    }
-
-
     });
   },
   animate: function animate(game) {
     currentGame = game;
-    module.exports.stepClientPhysics();
     if(latestServerUpdate) {
       module.exports.loadPhysicsUpdate(latestServerUpdate);
     }
@@ -118,15 +140,13 @@ module.exports = {
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     if (currentGame.camera.uuid !== clientPosition.uuid) {
-      const oldShape = remoteClients[clientPosition.uuid];
-      if (oldShape) {
-        currentGame.scene.remove(oldShape);
-        delete remoteClients[clientPosition.uuid];
+      if (remoteClients[clientPosition.uuid]) {
+        remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
+      } else {
+        const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
+        currentGame.scene.add(mesh);
+        remoteClients[clientPosition.uuid] = mesh;
       }
-      const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
-
-      currentGame.scene.add(mesh);
-      remoteClients[clientPosition.uuid] = mesh;
     } else {
       currentGame.camera.position.copy(clientPosition.position);
     }
@@ -165,7 +185,7 @@ module.exports = {
         localMesh.position.copy(serverMesh.position);
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
-        let ballMesh = new objectBuilder.redBall({radius: .5, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
+        let ballMesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
         serverShapeMap[serverMesh.uuid] = ballMesh.uuid;
         currentGame.scene.add(ballMesh);
       }
@@ -174,8 +194,4 @@ module.exports = {
       module.exports.loadClientUpdate(serverClients[key]);
     }
   },
-  stepClientPhysics: function stepClientPhysics() {
-    const camera = currentGame.camera;
-    const scene = currentGame.scene;
-  }
 };

@@ -1,4 +1,5 @@
 const THREE = require('three');
+const config = require('../../config/config.js');
 
 const LoadTexture = function LoadTexture(texturePath) {
   return new THREE.TextureLoader().load(texturePath);
@@ -40,7 +41,7 @@ const sky = (() => {
   let imagePrefix = "textures/dawnmountain-";
   let directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
   let imageSuffix = ".png";
-  sky.geometry = new THREE.CubeGeometry( 500, 500, 500 );
+  sky.geometry = new THREE.CubeGeometry( config.skyboxSize, config.skyboxSize, config.skyboxSize );
 
   let materialArray = [];
   for (let i = 0; i < 6; i++)
@@ -95,7 +96,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'metalCrate';
-    mesh.userData.mass = volumeOf(size) * 10;
+    mesh.userData.mass = volumeOf(size) * config.metalCrateDensity;
     return mesh;
   },
   questionCrate: function(size, position, quaternion) {
@@ -103,7 +104,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'questionCrate';
-    mesh.userData.mass = volumeOf(size) * 1;
+    mesh.userData.mass = volumeOf(size) * config.questionCrateDensity;
     return mesh;
   },
   woodCrate: function(size, position, quaternion) {
@@ -111,7 +112,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'woodCrate';
-    mesh.userData.mass = volumeOf(size) * 5;
+    mesh.userData.mass = volumeOf(size) * config.woodCrateDensity;
     return mesh;
   },
   ancientCrate: function(size, position, quaternion) {
@@ -119,11 +120,11 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'ancientCrate';
-    mesh.userData.mass = volumeOf(size) * 100;
+    mesh.userData.mass = volumeOf(size) * config.ancientCrateDensity;
     return mesh;
   },
   playerModel: function(position, quaternion) {
-    const geometry = new THREE.SphereGeometry(2, 32, 32);
+    const geometry = new THREE.SphereGeometry(config.playerModelRadius, 32, 32);
     const mesh = new THREE.Mesh(geometry, playerMaterial);
     initPosition(mesh, position, quaternion);
     addShadow(mesh);
@@ -148,7 +149,6 @@ module.exports = {
     // let zquat = new THREE.Quaternion();
     // zquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
     // let quat = yquat.multiply(zquat);
-    console.log(yquat)
     let mesh = new THREE.Mesh(BoxGeometry(size), sidePanelMaterial);
     initPosition(mesh, position);
     mesh.userData.name = 'sidePanel';

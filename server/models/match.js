@@ -1,6 +1,7 @@
 'use strict';
 const CANNON = require('cannon');
 const THREE = require('three');
+const config = require('../../config/config.js');
 let kill;
 
 const getGuid = function getGuid() {
@@ -21,14 +22,12 @@ module.exports = function Match(deleteMatch) {
   this.startPhysics = startPhysics.bind(this);
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
-  this.physicsEmitClock;
-  this.physicsEmitTick = 1/60*1000; //period between physics emits
   this.physicsClock;
-  this.physicsTick = 1/100*1000;
+  this.physicsTick = config.physicsTick;
+  this.updatesSinceLastEmit = config.physicsEmitRatio - 1;
   this.killFloor = killFloor.bind(this);
-  this.connected = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
-  this.timeoutDelay = 10000;
+  this.timeoutDelay = config.serverTimeout;
   this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
@@ -47,92 +46,6 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
 
 const startPhysics = function startPhysics(io) {
   const context = this;
-
-  this.physicsClock = setInterval(function() {
-    const expiredBoxIndices = [];
-    const expiredBallIndices = [];
-    for (var key in context.clients) {
-      const client = context.clients[key];
-      const clientBody = context.clientToCannon[client.uuid];
-      const currVelocity = clientBody.velocity;
-      const movePerTick = .75;
-      if (client.up) {
-        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
-      }
-      if (client.down) {
-        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
-      }
-      if (client.right) {
-        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
-      }
-      if (client.left) {
-        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
-      }
-      if (client.jump) {
-        if (client.jumps > 0) {
-          clientBody.velocity.set(currVelocity.x, currVelocity.y + 50, currVelocity.z);
-          client.jumps --;
-        }
-        const regen = function regen() {
-          if (this.jumps < 3) {
-            this.jumps++;
-          }
-          console.log(this.jumps);
-          if (this.jumps < 3) {
-            setTimeout(regen.bind(this), 3000)
-          } else {
-            this.jumpRegen = false;
-          }
-        }.bind(client);
-        if (!client.jumpRegen && client.jumps < 3) {
-          client.jumpRegen = true;
-          setTimeout(function() {
-            regen();
-          }, 3000)
-        }
-        client.jump = false;
-      }
-    }
-    context.world.step(context.physicsTick/1000);
-
-    // Update ball positions
-    for(var i=0; i<context.balls.length; i++){
-      const ball = context.balls[i];
-
-      if (Math.abs(ball.position.x) > 200 || Math.abs(ball.position.y) > 200 || Math.abs(ball.position.z) > 200) {
-        expiredBallIndices.push(i);
-      }
-    }
-    if (expiredBallIndices.length > 0) {
-      console.log('Deleted out of bounds ball!');
-      let offset = 0;
-      expiredBallIndices.forEach(function(index) {
-        context.balls.splice(index - offset, 1);
-        offset--;
-      });
-    }
-
-    // Update box positions
-    for(var i=0; i<context.boxes.length; i++){
-      const box = context.boxes[i];
-
-      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-        expiredBoxIndices.push(i);
-      }
-    }
-    if (expiredBoxIndices.length > 0) {
-      console.log('Deleted out of bounds box!');
-      let offset = 0;
-      expiredBoxIndices.forEach(function(index) {
-        context.boxes.splice(index - offset, 1);
-        offset--;
-      });
-    }
-
-  }, this.physicsTick)
-
-
-
   const roundToDec = function round(num, decimals) {
     decimals = decimals || 3;
     const mult = Math.pow(10, decimals);
@@ -153,7 +66,7 @@ const startPhysics = function startPhysics(io) {
     newQuaternion.z = roundToDec(quaternion.z, decimals);
     return newQuaternion;
   };
-  this.physicsEmitClock = setInterval(function() {
+  const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
     context.balls.forEach(function(ball) {
@@ -162,8 +75,84 @@ const startPhysics = function startPhysics(io) {
     context.boxes.forEach(function(box) {
       boxes.push({uuid: box.uuid, position: roundPosition(box.position), quaternion: roundQuaternion(box.quaternion), geometry: box.userData.geometry, type: box.userData.shapeType, mass: box.mass})
     })
-    io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
-  }, this.physicsEmitTick)
+    io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
+  }; 
+
+  this.physicsClock = setInterval(function() {
+    const expiredBoxIndices = [];
+    const expiredBallIndices = [];
+    for (var key in context.clients) {
+      const client = context.clients[key];
+      const clientBody = context.clientToCannon[client.uuid];
+      const currVelocity = clientBody.velocity;
+      const movePerTick = config.playerMovePerTick;
+      if (clientBody.position.y < config.playerYReset) {
+        clientBody.position.set(0,10,0);
+        clientBody.velocity.set(0,0,0);
+        continue;
+      }
+      if (client.up) {
+        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
+      }
+      if (client.down) {
+        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
+      }
+      if (client.right) {
+        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
+      }
+      if (client.left) {
+        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
+      }
+      if (client.jump) {
+          clientBody.velocity.set(currVelocity.x, currVelocity.y + config.jumpVelocity, currVelocity.z);
+          client.jump = false;
+      }
+    }
+    context.world.step(context.physicsTick/1000);
+
+    // Update ball positions
+    for(var i=0; i<context.balls.length; i++){
+      const ball = context.balls[i];
+
+      if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
+        expiredBallIndices.push(i);
+      }
+    }
+    if (expiredBallIndices.length > 0) {
+      console.log('Deleted out of bounds ball!');
+      let offset = 0;
+      expiredBallIndices.forEach(function(index) {
+        context.balls.splice(index - offset, 1);
+        offset--;
+      });
+    }
+
+    // Update box positions
+    for(var i=0; i<context.boxes.length; i++){
+      const box = context.boxes[i];
+
+      if (Math.abs(box.position.x) > config.physicsBounds || Math.abs(box.position.y) > config.physicsBounds || Math.abs(box.position.z) > config.physicsBounds) {
+        expiredBoxIndices.push(i);
+      }
+    }
+    if (expiredBoxIndices.length > 0) {
+      console.log('Deleted out of bounds box!');
+      let offset = 0;
+      expiredBoxIndices.forEach(function(index) {
+        context.boxes.splice(index - offset, 1);
+        offset--;
+      });
+    }
+    if (context.updatesSinceLastEmit === config.physicsEmitRatio - 1) {
+      physicsEmit();
+      context.updatesSinceLastEmit = 0;
+    } else {
+      context.updatesSinceLastEmit++;;
+    }
+  }, this.physicsTick)
+
+
+
 };
 
 const shootBall = function shootBall(camera) {
@@ -171,17 +160,17 @@ const shootBall = function shootBall(camera) {
   let y = camera.position.y;
   let z = camera.position.z;
 
-  const ballBody = new CANNON.Body({ mass: 300 });
-  const ballShape = new CANNON.Sphere(0.5);
+  const ballBody = new CANNON.Body({ mass: config.ballMass });
+  const ballShape = new CANNON.Sphere(config.ballRadius);
   ballBody.addShape(ballShape);
   this.world.add(ballBody);
   this.balls.push(ballBody);
 
   const shootDirection = camera.direction;
-  ballBody.velocity.set(shootDirection.x * 125, shootDirection.y * 125, shootDirection.z * 125);
-  x += shootDirection.x * 2;
-  y += shootDirection.y * 2;
-  z += shootDirection.z * 2;
+  ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
+  x += shootDirection.x;
+  y += shootDirection.y;
+  z += shootDirection.z;
   ballBody.position.set(x,y,z);
 };
 
@@ -189,14 +178,14 @@ const loadNewClient = function loadNewClient(player) {
   const x = player.position.x;
   const y = player.position.y;
   const z = player.position.z;
-  const ballBody = new CANNON.Body({ mass: 10 });
-  const ballShape = new CANNON.Sphere(2);
+  const ballBody = new CANNON.Body({ mass: config.playerModelMass });
+  const ballShape = new CANNON.Sphere(config.playerModelRadius);
   ballBody.position.x = x;
   ballBody.position.y = y;
   ballBody.position.z = z;
   ballBody.addShape(ballShape);
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, jumps: 3};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
   this.world.add(ballBody);
 };
 
@@ -216,7 +205,7 @@ const loadFullScene = function loadFullScene(scene, player) {
   solver.tolerance = 0.5;
   world.solver = new CANNON.SplitSolver(solver);
 
-  world.gravity.set(0,-98,0);
+  world.gravity.set(0, config.gravity, 0);
   world.broadphase = new CANNON.NaiveBroadphase();
 
   // Create a slippery material (friction coefficient = 0.0)
