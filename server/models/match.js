@@ -2,6 +2,7 @@
 const CANNON = require('cannon');
 const THREE = require('three');
 const config = require('../../config/config.js');
+const flat = require('../../config/flat.js')
 let kill;
 
 const getGuid = function getGuid() {
@@ -11,6 +12,7 @@ const getGuid = function getGuid() {
 
 module.exports = function Match(deleteMatch) {
   this.guid = getGuid();
+  this.open = true;
   this.clients = {}; // key is client UUID, value is current information about client
   this.clientToCannon = {}; // key is client UUID, value is cannon body
   this.boxes = [];
@@ -26,13 +28,17 @@ module.exports = function Match(deleteMatch) {
   this.physicsTick = config.physicsTick;
   this.updatesSinceLastEmit = config.physicsEmitRatio - 1;
   this.killFloor = killFloor.bind(this);
+  this.sendFull = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
-  this.timeoutDelay = config.serverTimeout;
-  this.timeout = setTimeout(kill, this.timeoutDelay);
+  // this.timeoutDelay = config.serverTimeout;
+  // this.timeout = setTimeout(kill, this.timeoutDelay);
+  this.t0 = 0;
+  this.t1 = 0;
+  this.t2 = 0;
+  this.t3 = 0;
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
-  clearTimeout(this.timeout);
   clientPosition = JSON.parse(clientPosition);
   const localClient = this.clients[clientPosition.uuid];
   localClient.up = clientPosition.up;
@@ -41,46 +47,71 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
   localClient.down = clientPosition.down;
   localClient.direction = clientPosition.direction;
   localClient.jump = clientPosition.jump;
-  this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
 const startPhysics = function startPhysics(io) {
   const context = this;
-  const roundToDec = function round(num, decimals) {
-    decimals = decimals || 3;
-    const mult = Math.pow(10, decimals);
-    return Math.round(num * mult) / mult;
-  }
-  const roundPosition = function roundPosition (position, decimals) {
-    const newPosition = {};
-    newPosition.x = roundToDec(position.x, decimals);
-    newPosition.y = roundToDec(position.y, decimals);
-    newPosition.z = roundToDec(position.z, decimals);
-    return newPosition;
-  };
-  const roundQuaternion = function roundQuaternion (quaternion, decimals) {
-    const newQuaternion = {};
-    newQuaternion.w = roundToDec(quaternion.w, decimals);
-    newQuaternion.x = roundToDec(quaternion.x, decimals);
-    newQuaternion.y = roundToDec(quaternion.y, decimals);
-    newQuaternion.z = roundToDec(quaternion.z, decimals);
-    return newQuaternion;
-  };
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
-    context.balls.forEach(function(ball) {
-      balls.push({uuid: ball.id, position: roundPosition(ball.position), quaternion: roundQuaternion(ball.quaternion), mass: ball.mass})
-    })
-    context.boxes.forEach(function(box) {
-      boxes.push({uuid: box.uuid, position: roundPosition(box.position), quaternion: roundQuaternion(box.quaternion), geometry: box.userData.geometry, type: box.userData.shapeType, mass: box.mass})
-    })
-    io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
-  };
-
-  this.physicsClock = setInterval(function() {
-    let expiredBoxes = [];
+    const clear = [];
+    const expiredBoxes = [];
+    const expiredBoxIndices = [];
     const expiredBallIndices = [];
+    context.balls.forEach(function(ball, i) {
+      if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
+        expiredBallIndices.push(i);
+        context.world.remove(ball);
+        clear.push(ball.id)
+      } else {
+        balls.push(flat.ball(ball));
+      }
+    });
+    context.boxes.forEach(function(box, i) {
+      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
+        if (box.userData.shapeType === flat.shapeEncoder['grassFloor']) {
+          //do not replace fallen floor tiles
+          context.world.remove(box);
+          context.boxes.splice(i, 1);
+          clear.push(box.uuid);
+        } else {
+          expiredBoxes.push(box);
+          expiredBoxIndices.push(i);
+        }
+      } else {
+        if (box.mass || context.sendFull) {
+          boxes.push(flat.box(box));
+        };
+      }
+    });
+    if (expiredBallIndices.length > 0) {
+      console.log('Deleted out of bounds ball!');
+      let offset = 0;
+      expiredBallIndices.forEach(function(index) {
+        context.balls.splice(index - offset, 1);
+        offset--;
+      });
+    }
+    // Replace boxes randomly above the field if they fall off
+    if (expiredBoxes.length > 0) {
+      console.log('Deleted out of bounds box!');
+      expiredBoxes.forEach(function(box) {
+        box.position.set((Math.random() - Math.random()) * 30, 30 + Math.random() * 10, (Math.random() - Math.random()) * 30);
+        box.velocity.set(0, 0, 0);
+      });
+    }
+    const update = {boxMeshes: boxes, ballMeshes: balls, players: context.clients};;
+    if (clear.length > 0) {
+      update.clear = clear; 
+    }
+    if (context.sendFull || clear.length > 0) {
+      io.to(context.guid).emit('physicsUpdate', JSON.stringify(update));
+    } else {
+      io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+    }
+    context.sendFull = false;
+  };
+  const physicsLoop = function physicsLoop() {
     for (var key in context.clients) {
       const client = context.clients[key];
       const clientBody = context.clientToCannon[client.uuid];
@@ -108,59 +139,13 @@ const startPhysics = function startPhysics(io) {
           client.jump = false;
       }
     }
-    context.world.step(context.physicsTick/1000);
+    
+    context.world.step(1/150);
+    context.world.step(1/150);  
+    physicsEmit();
+  }
 
-    // Update ball positions
-    for(var i=0; i<context.balls.length; i++){
-      const ball = context.balls[i];
-
-      if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
-        expiredBallIndices.push(i);
-      }
-    }
-    if (expiredBallIndices.length > 0) {
-      console.log('Deleted out of bounds ball!');
-      let offset = 0;
-      expiredBallIndices.forEach(function(index) {
-        context.balls.splice(index - offset, 1);
-        offset--;
-      });
-    }
-
-    // Get a list of boxes outside bounds
-    for(var i=0; i<context.boxes.length; i++){
-      const box = context.boxes[i];
-
-      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-        if (box.userData.shapeType === 'grassFloor') {
-          //do not replace fallen floor tiles
-          context.world.remove(box);
-        } else {
-          expiredBoxes.push(box);
-        }
-      }
-    }
-    // Replace boxes randomly above the field if they fall off
-    if (expiredBoxes.length > 0) {
-      console.log('Deleted out of bounds box!');
-      expiredBoxes.forEach(function(box, index) {
-        box.position.set((Math.random() - Math.random()) * 30, 30 + Math.random() * 10, (Math.random() - Math.random()) * 30);
-        box.velocity.set(0, 0, 0);
-        box.mass = 1;
-        box.updateMassProperties()
-      });
-      expiredBoxes = [];
-    }
-    if (context.updatesSinceLastEmit === config.physicsEmitRatio - 1) {
-      physicsEmit();
-      context.updatesSinceLastEmit = 0;
-    } else {
-      context.updatesSinceLastEmit++;;
-    }
-  }, this.physicsTick)
-
-
-
+  context.physicsClock = setInterval(physicsLoop, 1/60*1000);
 };
 
 const shootBall = function shootBall(camera) {
@@ -173,6 +158,8 @@ const shootBall = function shootBall(camera) {
   ballBody.addShape(ballShape);
   this.world.add(ballBody);
   this.balls.push(ballBody);
+  ballBody.linearDamping = .1;
+  ballBody.angularDamping = .1;
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
@@ -192,6 +179,8 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.position.y = y;
   ballBody.position.z = z;
   ballBody.addShape(ballShape);
+  ballBody.linearDamping = config.playerDamping;
+  ballBody.angularDamping = config.playerDamping;
   this.clientToCannon[player.object.uuid] = ballBody;
   this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
   this.world.add(ballBody);
@@ -209,8 +198,8 @@ const loadFullScene = function loadFullScene(scene, player) {
   world.defaultContactMaterial.contactEquationStiffness = 1e9;
   world.defaultContactMaterial.contactEquationRelaxation = 4;
 
-  solver.iterations = 2;
-  solver.tolerance = 0.5;
+  solver.iterations = 20;
+  solver.tolerance = 0.1;
   world.solver = new CANNON.SplitSolver(solver);
 
   world.gravity.set(0, config.gravity, 0);
@@ -258,7 +247,7 @@ const loadFullScene = function loadFullScene(scene, player) {
       cannonBody.quaternion = cannonQuat;
       cannonBody.linearDamping = 0.01;
       cannonBody.angularDamping = 0.01;
-      cannonBody.uuid = mesh.uuid;
+      cannonBody.uuid = mesh.uuid.slice(0, config.uuidLength);
       cannonBody.userData = {shapeType: mesh.userData.name, geometry: {width, height, depth}};
 
       context.boxes.push(cannonBody);
@@ -271,13 +260,13 @@ const loadFullScene = function loadFullScene(scene, player) {
 
 // Remove floor tiles periodically
 const killFloor = function killFloor() {
-  let killFloorTick = 500;
+  let killFloorTick = 250;
   let floorTiles = [];
   let spacer = 76;
 
   setTimeout(() => {
     this.world.bodies.forEach((ele) => {
-      if(ele.userData && ele.userData.shapeType && ele.userData.shapeType === 'grassFloor') {
+      if(ele.userData && ele.userData.shapeType && ele.userData.shapeType === flat.shapeEncoder['grassFloor']) {
         floorTiles.push(ele);
       }
     });
@@ -295,7 +284,7 @@ const killFloor = function killFloor() {
         tile.mass = 1000;
         tile.updateMassProperties()
         tile.type = 1;
-        tile.velocity.y = 50;
+        tile.velocity.y = 100;
         floorTiles.splice(randIndex, 1)
       }
     }, killFloorTick);
@@ -303,8 +292,8 @@ const killFloor = function killFloor() {
 }
 
 const shutdown = function shutdown() {
+  this.open = false;
   clearTimeout(this.timeout);
   clearInterval(this.physicsClock);
-  clearInterval(this.physicsEmitClock);
   clearInterval(this.killFloorInterval);
 };
