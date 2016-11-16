@@ -39,6 +39,7 @@ class Home extends React.Component {
      }   
       }
      })
+   
     document.getElementById( 'HomePage' ).style.display = 'none'; 
     clientScene.joinGame(0);
     document.querySelector('#testButtons').remove();

@@ -1,4 +1,5 @@
 const THREE = require('three');
+const config = require('../../config/config.js');
 
 const LoadTexture = function LoadTexture(texturePath) {
   return new THREE.TextureLoader().load(texturePath);
@@ -16,12 +17,45 @@ const futureTile = function(xTile, zTile) {
   return texture;
 }
 
-const grass = function(xTile, zTile) {
-  const grass = new THREE.TextureLoader().load( 'textures/grass-repeating4.jpg' );
-  grass.wrapS = THREE.RepeatWrapping;
-  grass.wrapT = THREE.RepeatWrapping;
-  grass.repeat.set( xTile, zTile );
-  return grass;
+const grassSideMaterial = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load('textures/grass-side.jpg')});
+const grass = function() {
+  let materials = [
+         grassSideMaterial,
+         grassSideMaterial,
+         new THREE.MeshLambertMaterial({
+             map: new THREE.TextureLoader().load('textures/grass-bottom.jpg') //bottom
+         }),
+         new THREE.MeshLambertMaterial({
+             map: new THREE.TextureLoader().load('textures/grass-repeating4.jpg') //top
+         }),
+         grassSideMaterial,
+         grassSideMaterial
+  ]
+  return materials;
+}
+
+const rock = function() {
+  let materials = [
+         new THREE.MeshLambertMaterial({
+             map: new THREE.TextureLoader().load('textures/grass-side.jpg') //side
+         }),
+         new THREE.MeshLambertMaterial({
+             map: new THREE.TextureLoader().load('textures/grass-side.jpg') //side
+         }),
+         new THREE.MeshLambertMaterial({
+             map: new THREE.TextureLoader().load('textures/grass-bottom.jpg') //bottom
+         }),
+         new THREE.MeshLambertMaterial({
+             map: new THREE.TextureLoader().load('textures/rockygrass.jpg') //top
+         }),
+         new THREE.MeshLambertMaterial({
+             map: new THREE.TextureLoader().load('textures/grass-side.jpg') //side
+         }),
+         new THREE.MeshLambertMaterial({
+             map: new THREE.TextureLoader().load('textures/grass-side.jpg') //side
+         })
+  ]
+  return materials;
 }
 
 const redBallMaterial = new THREE.MeshLambertMaterial(
@@ -33,14 +67,15 @@ const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
 const ancientCrateMaterial = MeshLambertMaterial('textures/ancientcrate.jpg');
 const scoreBoardMaterial = new THREE.MeshPhongMaterial({ map: futureTile(9/4, 1), transparent: true, opacity: .8  });
 const sidePanelMaterial = new THREE.MeshPhongMaterial({ map: futureTile(15, 5/6), transparent: true, opacity: .8  });
-const floorMaterial = new THREE.MeshLambertMaterial({ map: grass(1, 1) });
+const grassMaterial =  new THREE.MeshFaceMaterial( grass() );
+const rockMaterial = new THREE.MeshFaceMaterial( rock() );
 
 const sky = (() => {
   let sky = {};
   let imagePrefix = "textures/dawnmountain-";
   let directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
   let imageSuffix = ".png";
-  sky.geometry = new THREE.CubeGeometry( 500, 500, 500 );
+  sky.geometry = new THREE.CubeGeometry( config.skyboxSize, config.skyboxSize, config.skyboxSize );
 
   let materialArray = [];
   for (let i = 0; i < 6; i++)
@@ -83,10 +118,19 @@ const volumeOf = function volumeOf(size) {
 module.exports = {
   grassFloor: function(size, position, quaternion) { // {width, depth, segments}, {x, y, z}, {w, x, y, z}
     const geometry = BoxGeometry( size );
-    const mesh = new THREE.Mesh(geometry, floorMaterial);
+    const mesh = new THREE.Mesh(geometry, grassMaterial);
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'grassFloor'
+    mesh.userData.mass = 0;
+    return mesh;
+  },
+  rockFloor: function(size, position, quaternion) { // {width, depth, segments}, {x, y, z}, {w, x, y, z}
+    const geometry = BoxGeometry( size );
+    const mesh = new THREE.Mesh(geometry, rockMaterial);
+    addShadow(mesh);
+    initPosition(mesh, position, quaternion);
+    mesh.userData.name = 'rockFloor'
     mesh.userData.mass = 0;
     return mesh;
   },
@@ -95,7 +139,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'metalCrate';
-    mesh.userData.mass = volumeOf(size) * 10;
+    mesh.userData.mass = volumeOf(size) * config.metalCrateDensity;
     return mesh;
   },
   questionCrate: function(size, position, quaternion) {
@@ -103,7 +147,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'questionCrate';
-    mesh.userData.mass = volumeOf(size) * 1;
+    mesh.userData.mass = volumeOf(size) * config.questionCrateDensity;
     return mesh;
   },
   woodCrate: function(size, position, quaternion) {
@@ -111,7 +155,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'woodCrate';
-    mesh.userData.mass = volumeOf(size) * 5;
+    mesh.userData.mass = volumeOf(size) * config.woodCrateDensity;
     return mesh;
   },
   ancientCrate: function(size, position, quaternion) {
@@ -119,11 +163,11 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'ancientCrate';
-    mesh.userData.mass = volumeOf(size) * 100;
+    mesh.userData.mass = volumeOf(size) * config.ancientCrateDensity;
     return mesh;
   },
   playerModel: function(position, quaternion) {
-    const geometry = new THREE.SphereGeometry(2, 32, 32);
+    const geometry = new THREE.SphereGeometry(config.playerModelRadius, 32, 32);
     const mesh = new THREE.Mesh(geometry, playerMaterial);
     initPosition(mesh, position, quaternion);
     addShadow(mesh);
@@ -148,7 +192,6 @@ module.exports = {
     // let zquat = new THREE.Quaternion();
     // zquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
     // let quat = yquat.multiply(zquat);
-    console.log(yquat)
     let mesh = new THREE.Mesh(BoxGeometry(size), sidePanelMaterial);
     initPosition(mesh, position);
     mesh.userData.name = 'sidePanel';
