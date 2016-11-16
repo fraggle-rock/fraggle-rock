@@ -20,7 +20,7 @@ module.exports = {
   ballMass: 300,
   ballVelocity: 125,
   physicsEmitTick: 1 / 60 * 1000,
-  physicsTick: 1 / 100 * 1000,
+  physicsTick: 1 / 120 * 1000,
   serverTimeout: 30 * 1000,
   playerMovePerTick: 0.75,
   playerYReset: -100,

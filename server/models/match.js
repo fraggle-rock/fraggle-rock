@@ -22,10 +22,9 @@ module.exports = function Match(deleteMatch) {
   this.startPhysics = startPhysics.bind(this);
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
-  this.physicsEmitClock;
-  this.physicsEmitTick = config.physicsEmitTick; //period between physics emits
   this.physicsClock;
   this.physicsTick = config.physicsTick;
+  this.emittedAtLastTick = false;
   this.killFloor = killFloor.bind(this);
   kill = function() {deleteMatch(this.guid)}.bind(this);
   this.timeoutDelay = config.serverTimeout;
@@ -47,6 +46,37 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
 
 const startPhysics = function startPhysics(io) {
   const context = this;
+  const roundToDec = function round(num, decimals) {
+    decimals = decimals || 3;
+    const mult = Math.pow(10, decimals);
+    return Math.round(num * mult) / mult;
+  }
+  const roundPosition = function roundPosition (position, decimals) {
+    const newPosition = {};
+    newPosition.x = roundToDec(position.x, decimals);
+    newPosition.y = roundToDec(position.y, decimals);
+    newPosition.z = roundToDec(position.z, decimals);
+    return newPosition;
+  };
+  const roundQuaternion = function roundQuaternion (quaternion, decimals) {
+    const newQuaternion = {};
+    newQuaternion.w = roundToDec(quaternion.w, decimals);
+    newQuaternion.x = roundToDec(quaternion.x, decimals);
+    newQuaternion.y = roundToDec(quaternion.y, decimals);
+    newQuaternion.z = roundToDec(quaternion.z, decimals);
+    return newQuaternion;
+  };
+  const physicsEmit = function physicsEmit () {
+    const balls = [];
+    const boxes = [];
+    context.balls.forEach(function(ball) {
+      balls.push({uuid: ball.id, position: roundPosition(ball.position), quaternion: roundQuaternion(ball.quaternion), mass: ball.mass})
+    })
+    context.boxes.forEach(function(box) {
+      boxes.push({uuid: box.uuid, position: roundPosition(box.position), quaternion: roundQuaternion(box.quaternion), geometry: box.userData.geometry, type: box.userData.shapeType, mass: box.mass})
+    })
+    io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
+  }; 
 
   this.physicsClock = setInterval(function() {
     const expiredBoxIndices = [];
@@ -113,42 +143,16 @@ const startPhysics = function startPhysics(io) {
         offset--;
       });
     }
-
+    if (!context.emittedAtLastTick) {
+      physicsEmit();
+      context.emittedAtLastTick = true;
+    } else {
+      context.emittedAtLastTick = false;
+    }
   }, this.physicsTick)
 
 
 
-  const roundToDec = function round(num, decimals) {
-    decimals = decimals || 3;
-    const mult = Math.pow(10, decimals);
-    return Math.round(num * mult) / mult;
-  }
-  const roundPosition = function roundPosition (position, decimals) {
-    const newPosition = {};
-    newPosition.x = roundToDec(position.x, decimals);
-    newPosition.y = roundToDec(position.y, decimals);
-    newPosition.z = roundToDec(position.z, decimals);
-    return newPosition;
-  };
-  const roundQuaternion = function roundQuaternion (quaternion, decimals) {
-    const newQuaternion = {};
-    newQuaternion.w = roundToDec(quaternion.w, decimals);
-    newQuaternion.x = roundToDec(quaternion.x, decimals);
-    newQuaternion.y = roundToDec(quaternion.y, decimals);
-    newQuaternion.z = roundToDec(quaternion.z, decimals);
-    return newQuaternion;
-  };
-  this.physicsEmitClock = setInterval(function() {
-    const balls = [];
-    const boxes = [];
-    context.balls.forEach(function(ball) {
-      balls.push({uuid: ball.id, position: roundPosition(ball.position), quaternion: roundQuaternion(ball.quaternion), mass: ball.mass})
-    })
-    context.boxes.forEach(function(box) {
-      boxes.push({uuid: box.uuid, position: roundPosition(box.position), quaternion: roundQuaternion(box.quaternion), geometry: box.userData.geometry, type: box.userData.shapeType, mass: box.mass})
-    })
-    io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
-  }, this.physicsEmitTick)
 };
 
 const shootBall = function shootBall(camera) {
