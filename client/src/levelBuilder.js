@@ -97,9 +97,9 @@ const buildLevelOne = function buildLevelOne() {
     return Math.floor(Math.random()*(high - low + 1)) + low;
   }
 
-  for (var i = 0; i < 25; i++) {
+  for (var i = 0; i < 10; i++) {
     const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
-    const size = random(2, 8);
+    const size = random(4, 6);
     const x = random(-50, 50);
     const y = random(5, 40);
     const z = random(-50, 50);

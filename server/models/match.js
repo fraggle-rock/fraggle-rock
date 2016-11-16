@@ -98,8 +98,6 @@ const startPhysics = function startPhysics(io) {
       expiredBoxes.forEach(function(box) {
         box.position.set((Math.random() - Math.random()) * 30, 30 + Math.random() * 10, (Math.random() - Math.random()) * 30);
         box.velocity.set(0, 0, 0);
-        box.mass = 1;
-        box.updateMassProperties()
       });
     }
     const update = {boxMeshes: boxes, ballMeshes: balls, players: context.clients};;
