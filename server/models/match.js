@@ -61,6 +61,7 @@ const startPhysics = function startPhysics(io) {
       balls.push(flat.ball(ball));
       if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
         expiredBallIndices.push(i);
+        context.world.remove(ball);
       }
     });
     context.boxes.forEach(function(box, i) {
@@ -81,7 +82,6 @@ const startPhysics = function startPhysics(io) {
       console.log('Deleted out of bounds ball!');
       let offset = 0;
       expiredBallIndices.forEach(function(index) {
-        context.world.remove(context.balls[index - offset]);
         context.balls.splice(index - offset, 1);
         offset--;
       });
