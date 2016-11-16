@@ -66,16 +66,16 @@ const startPhysics = function startPhysics(io) {
     context.boxes.forEach(function(box, i) {
       if (box.mass) {
         boxes.push(flat.box(box));
-        if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-          if (box.userData.shapeType === 'grassFloor') {
-            //do not replace fallen floor tiles
-            context.world.remove(box);
-          } else {
-            expiredBoxes.push(box);
-            expiredBoxIndices.push(i);
-          }
-        }
       };
+      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
+        if (box.userData.shapeType === 'grassFloor') {
+          //do not replace fallen floor tiles
+          context.world.remove(box);
+        } else {
+          expiredBoxes.push(box);
+          expiredBoxIndices.push(i);
+        }
+      }
     });
     if (expiredBallIndices.length > 0) {
       console.log('Deleted out of bounds ball!');
@@ -129,7 +129,8 @@ const startPhysics = function startPhysics(io) {
     }
 
     
-    context.world.step(1/60);
+    context.world.step(1/120);
+    context.world.step(1/120);  
     physicsEmit();
 
     

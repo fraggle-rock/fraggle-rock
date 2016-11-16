@@ -5,9 +5,9 @@ const roundToDec = function round(num, decimals) {
 }
 const roundPosition = function roundPosition (position) {
   const newPosition = {};
-  newPosition.x = roundToDec(position.x, 1);
-  newPosition.y = roundToDec(position.y, 1);
-  newPosition.z = roundToDec(position.z, 1);
+  newPosition.x = roundToDec(position.x, 2);
+  newPosition.y = roundToDec(position.y, 2);
+  newPosition.z = roundToDec(position.z, 2);
   return newPosition;
 };
 const roundQuaternion = function roundQuaternion (quaternion) {
