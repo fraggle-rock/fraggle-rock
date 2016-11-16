@@ -98,8 +98,7 @@ const startPhysics = function startPhysics(io) {
     }
     io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
   };
-
-  this.physicsClock = setInterval(function() {
+  const physicsLoop = function physicsLoop() {
     for (var key in context.clients) {
       const client = context.clients[key];
       const clientBody = context.clientToCannon[client.uuid];
@@ -127,19 +126,15 @@ const startPhysics = function startPhysics(io) {
           client.jump = false;
       }
     }
-
     
     context.world.step(1/100);
     context.world.step(1/100);  
     physicsEmit();
 
-    
-  //   if (context.updatesSinceLastEmit === config.physicsEmitRatio - 1) {
-  //     context.updatesSinceLastEmit = 0;
-  //   } else {
-  //     context.updatesSinceLastEmit++;;
-  //   }
-  }, this.physicsTick)
+    setTimeout(physicsLoop, 1/60*1000);
+  }.bind(this)
+
+  physicsLoop();
 };
 
 const shootBall = function shootBall(camera) {
