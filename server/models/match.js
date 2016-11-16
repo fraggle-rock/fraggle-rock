@@ -162,6 +162,8 @@ const shootBall = function shootBall(camera) {
   ballBody.addShape(ballShape);
   this.world.add(ballBody);
   this.balls.push(ballBody);
+  ballBody.linearDamping = .1;
+  ballBody.angularDamping = .1;
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
@@ -181,6 +183,8 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.position.y = y;
   ballBody.position.z = z;
   ballBody.addShape(ballShape);
+  ballBody.linearDamping = config.playerDamping;
+  ballBody.angularDamping = config.playerDamping;
   this.clientToCannon[player.object.uuid] = ballBody;
   this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
   this.world.add(ballBody);

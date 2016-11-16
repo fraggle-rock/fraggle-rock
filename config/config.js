@@ -22,11 +22,12 @@ module.exports = {
   physicsEmitTick: 1 / 60 * 1000,
   physicsTick: 1 / 60 * 1000,
   serverTimeout: 30 * 1000,
-  playerMovePerTick: 1.5,
+  playerMovePerTick: 5,
   playerYReset: -100,
-  jumpVelocity: 50,
+  jumpVelocity: 75,
   gravity: -98,
   physicsBounds: 200,
   physicsEmitRatio: 2,
-  uuidLength: 5
+  uuidLength: 5,
+  playerDamping: .9
 };
