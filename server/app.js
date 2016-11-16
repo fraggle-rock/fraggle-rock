@@ -10,7 +10,7 @@ const matchController = require('./controllers/matchController.js');
 const userController = require('./db/controllers/UserController');
 const gameController = require('./db/controllers/GameController');
 const scoreController = require('./db/controllers/ScoreController');
-const requestHandler = require('./leaderBoard/requestHandler');
+// const requestHandler = require('./leaderBoard/requestHandler');
 
 const allowCrossDomain = (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
