@@ -35,10 +35,10 @@ io.on('connection', (socket) => {
     socket.on('disconnect', function (e) {
       matchController.deleteMatch(match.guid);
     })
+    socket.join(match.guid);
     match.loadFullScene(scene, player);
     match.startPhysics(io);
     match.killFloor();
-    socket.join(match.guid);
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);
     });
@@ -54,8 +54,8 @@ io.on('connection', (socket) => {
     if (!match) {
       return;
     }
-    match.loadNewClient(player);
     socket.join(match.guid);
+    match.loadNewClient(player);
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);
     });
