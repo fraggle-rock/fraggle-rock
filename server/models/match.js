@@ -12,6 +12,7 @@ const getGuid = function getGuid() {
 
 module.exports = function Match(deleteMatch) {
   this.guid = getGuid();
+  this.open = true;
   this.clients = {}; // key is client UUID, value is current information about client
   this.clientToCannon = {}; // key is client UUID, value is cannon body
   this.boxes = [];
@@ -131,7 +132,9 @@ const startPhysics = function startPhysics(io) {
     context.world.step(1/100);  
     physicsEmit();
 
-    setTimeout(physicsLoop, 1/60*1000);
+    if (this.open) {
+      this.physicsClock = setTimeout(physicsLoop, 1/60*1000);
+    }
   }.bind(this)
 
   physicsLoop();
@@ -277,8 +280,8 @@ const killFloor = function killFloor() {
 }
 
 const shutdown = function shutdown() {
+  this.open = false;
   clearTimeout(this.timeout);
-  clearInterval(this.physicsClock);
-  clearInterval(this.physicsEmitClock);
+  clearTimout(this.physicsClock);
   clearInterval(this.killFloorInterval);
 };
