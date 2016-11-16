@@ -140,8 +140,8 @@ const startPhysics = function startPhysics(io) {
       }
     }
     
-    context.world.step(1/100);
-    context.world.step(1/100);  
+    context.world.step(1/150);
+    context.world.step(1/150);  
     physicsEmit();
   }
 
