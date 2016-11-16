@@ -10,7 +10,7 @@ const userModel = require('./../models/UserModel');
 
 module.exports = {
   insertUser(user) {
-    userModel.build({ username: user.username,
+    return userModel.build({ username: user.username,
       email: user.email,
       token: user.token,
       facebookid: user.facebookid })
@@ -29,7 +29,7 @@ module.exports = {
     return userModel.find({ where: { facebookid } });
   },
   clear() {
-    userModel.destroy({
+    return userModel.destroy({
       where: {
       },
     });

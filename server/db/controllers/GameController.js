@@ -3,10 +3,12 @@ const gameModel = require('./../models/GameModel');
 /*
 {"username":"Riyaz","uuid":"123-qwe-asd"}
 */
+/*
 
+*/
 module.exports = {
   insertGame(game) {
-    gameModel.build({ uuid: game.uuid, user_id: game.user_id })
+    return gameModel.build({ uuid: game.uuid, user_id: game.user_id })
     .save();
   },
   searchGameByUUIDandUserID(uuid, userid) {
@@ -22,7 +24,7 @@ module.exports = {
     return gameModel.findAll({ where: { } });
   },
   clear() {
-    gameModel.destroy({
+    return gameModel.destroy({
       where: {
       },
     });
