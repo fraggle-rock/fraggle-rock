@@ -6,10 +6,10 @@ const io = require('socket.io')(server);
 const morgan = require('morgan'); // middleware for logging request details
 const bodyParser = require('body-parser'); // middleware supports unicode encoding of the body
 const compression = require('compression'); // middleware for gzip compression
-const matchController = require('./controllers/matchController.js');
-const userController = require('./db/controllers/UserController');
-const gameController = require('./db/controllers/GameController');
-const scoreController = require('./db/controllers/ScoreController');
+// const matchController = require('./controllers/matchController.js');
+// const userController = require('./db/controllers/UserController');
+// const gameController = require('./db/controllers/GameController');
+// const scoreController = require('./db/controllers/ScoreController');
 // const requestHandler = require('./leaderBoard/requestHandler');
 
 const allowCrossDomain = (req, res, next) => {
