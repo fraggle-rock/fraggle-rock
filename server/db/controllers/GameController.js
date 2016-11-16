@@ -23,6 +23,17 @@ module.exports = {
   getAllGames() {
     return gameModel.findAll({ where: { } });
   },
+  searchUserByids(idArray) {
+    const arrIds = [];
+    idArray.forEach((id) => {
+      arrIds.push({ id });
+    });
+    return gameModel.findAll({
+      where: {
+        $or: arrIds,
+      },
+    });
+  },
   clear() {
     return gameModel.destroy({
       where: {

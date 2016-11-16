@@ -26,6 +26,7 @@ app.use(compression());
 app.use('/api', requestHandler.userHandler);
 app.use('/api', requestHandler.scoreHandler);
 app.use('/api', requestHandler.gameHandler);
+app.use('/api', requestHandler.leaderBoardHandler);
 
 app.use(express.static(path.join(__dirname, './../client')));
 

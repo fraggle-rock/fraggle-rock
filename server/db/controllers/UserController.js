@@ -28,6 +28,17 @@ module.exports = {
   searchUserByFacebookid(facebookid) {
     return userModel.find({ where: { facebookid } });
   },
+  searchUserByids(idArray) {
+    const arrIds = [];
+    idArray.forEach((id) => {
+      arrIds.push({ id });
+    });
+    return userModel.findAll({
+      where: {
+        $or: arrIds,
+      },
+    });
+  },
   clear() {
     return userModel.destroy({
       where: {
