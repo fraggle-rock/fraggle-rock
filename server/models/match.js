@@ -76,10 +76,10 @@ const startPhysics = function startPhysics(io) {
       boxes.push({uuid: box.uuid, position: roundPosition(box.position), quaternion: roundQuaternion(box.quaternion), geometry: box.userData.geometry, type: box.userData.shapeType, mass: box.mass})
     })
     io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
-  }; 
+  };
 
   this.physicsClock = setInterval(function() {
-    const expiredBoxIndices = [];
+    let expiredBoxes = [];
     const expiredBallIndices = [];
     for (var key in context.clients) {
       const client = context.clients[key];
@@ -127,21 +127,29 @@ const startPhysics = function startPhysics(io) {
       });
     }
 
-    // Update box positions
+    // Get a list of boxes outside bounds
     for(var i=0; i<context.boxes.length; i++){
       const box = context.boxes[i];
 
-      if (Math.abs(box.position.x) > config.physicsBounds || Math.abs(box.position.y) > config.physicsBounds || Math.abs(box.position.z) > config.physicsBounds) {
-        expiredBoxIndices.push(i);
+      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
+        if (box.userData.shapeType === 'grassFloor') {
+          //do not replace fallen floor tiles
+          context.world.remove(box);
+        } else {
+          expiredBoxes.push(box);
+        }
       }
     }
-    if (expiredBoxIndices.length > 0) {
+    // Replace boxes randomly above the field if they fall off
+    if (expiredBoxes.length > 0) {
       console.log('Deleted out of bounds box!');
-      let offset = 0;
-      expiredBoxIndices.forEach(function(index) {
-        context.boxes.splice(index - offset, 1);
-        offset--;
+      expiredBoxes.forEach(function(box, index) {
+        box.position.set((Math.random() - Math.random()) * 30, 30 + Math.random() * 10, (Math.random() - Math.random()) * 30);
+        box.velocity.set(0, 0, 0);
+        box.mass = 1;
+        box.updateMassProperties()
       });
+      expiredBoxes = [];
     }
     if (context.updatesSinceLastEmit === config.physicsEmitRatio - 1) {
       physicsEmit();
@@ -237,7 +245,12 @@ const loadFullScene = function loadFullScene(scene, player) {
       const depth = meshGeometry.depth;
       const cannonPosition = new CANNON.Vec3(position.x, position.y, position.z);
       const cannonQuat = new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-      const cannonSize = new CANNON.Vec3(width / 2 + .065, height / 2 + .065, depth / 2 + .065);
+      let cannonSize;
+      if (mesh.userData.name === 'grassFloor') {
+        cannonSize = new CANNON.Vec3(width / 2 - .065, height / 2 + .065, depth / 2 - .065);
+      } else {
+        cannonSize = new CANNON.Vec3(width / 2 + .065, height / 2 + .065, depth / 2 + .065);
+      }
       const cannonBox = new CANNON.Box(cannonSize);
       const cannonBody = new CANNON.Body({mass: mesh.userData.mass});
       cannonBody.addShape(cannonBox);
@@ -256,13 +269,37 @@ const loadFullScene = function loadFullScene(scene, player) {
   this.loadNewClient(player);
 };
 
+// Remove floor tiles periodically
 const killFloor = function killFloor() {
-  let killFloorTick = 2000;
-  // this.killFloorInterval = setInterval(() => {
-  //   // this.world.children.userData.shapeType === 'grassFloor'
-  //   // cannonBody.mass = 100 //then it falls
-  //   //add physics 1 block
-  // }.bind(this), killFloorTick);
+  let killFloorTick = 500;
+  let floorTiles = [];
+  let spacer = 76;
+
+  setTimeout(() => {
+    this.world.bodies.forEach((ele) => {
+      if(ele.userData && ele.userData.shapeType && ele.userData.shapeType === 'grassFloor') {
+        floorTiles.push(ele);
+      }
+    });
+
+    this.killFloorInterval = setInterval(() => {
+      if (floorTiles.length === 0) {
+        clearInterval(this.killFloorInterval);
+      }
+      if (floorTiles.length < spacer * 2) {
+        spacer /= 2;
+      }
+      let randIndex = Math.floor(Math.random() * spacer);
+      let tile = floorTiles[randIndex];
+      if (floorTiles[randIndex]) {
+        tile.mass = 1000;
+        tile.updateMassProperties()
+        tile.type = 1;
+        tile.velocity.y = 50;
+        floorTiles.splice(randIndex, 1)
+      }
+    }.bind(this), killFloorTick);
+  }, 5000);
 }
 
 const shutdown = function shutdown() {
