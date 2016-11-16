@@ -15,6 +15,6 @@ const Score = db.define('Score', {
 });
 Score.belongsTo(userModel, { foreignKey: 'user_id' });
 Score.belongsTo(gameModel, { foreignKey: 'game_id' });
-Score.sync();
+// Score.sync();
 
 module.exports = Score;

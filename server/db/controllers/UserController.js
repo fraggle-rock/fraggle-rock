@@ -10,7 +10,7 @@ const userModel = require('./../models/UserModel');
 
 module.exports = {
   insertUser(user) {
-    userModel.build({ username: user.username,
+    return userModel.build({ username: user.username,
       email: user.email,
       token: user.token,
       facebookid: user.facebookid })
@@ -28,8 +28,19 @@ module.exports = {
   searchUserByFacebookid(facebookid) {
     return userModel.find({ where: { facebookid } });
   },
+  searchUserByids(idArray) {
+    const arrIds = [];
+    idArray.forEach((id) => {
+      arrIds.push({ id });
+    });
+    return userModel.findAll({
+      where: {
+        $or: arrIds,
+      },
+    });
+  },
   clear() {
-    userModel.destroy({
+    return userModel.destroy({
       where: {
       },
     });
