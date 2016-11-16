@@ -2,6 +2,7 @@
 const CANNON = require('cannon');
 const THREE = require('three');
 const config = require('../../config/config.js');
+const flat = require('../../config/flat.js')
 let kill;
 
 const getGuid = function getGuid() {
@@ -50,26 +51,6 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
 
 const startPhysics = function startPhysics(io) {
   const context = this;
-  const roundToDec = function round(num, decimals) {
-    decimals = decimals || 3;
-    const mult = Math.pow(10, decimals);
-    return Math.round(num * mult) / mult;
-  }
-  const roundPosition = function roundPosition (position, decimals) {
-    const newPosition = {};
-    newPosition.x = roundToDec(position.x, decimals);
-    newPosition.y = roundToDec(position.y, decimals);
-    newPosition.z = roundToDec(position.z, decimals);
-    return newPosition;
-  };
-  const roundQuaternion = function roundQuaternion (quaternion, decimals) {
-    const newQuaternion = {};
-    newQuaternion.w = roundToDec(quaternion.w, decimals);
-    newQuaternion.x = roundToDec(quaternion.x, decimals);
-    newQuaternion.y = roundToDec(quaternion.y, decimals);
-    newQuaternion.z = roundToDec(quaternion.z, decimals);
-    return newQuaternion;
-  };
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
@@ -77,28 +58,30 @@ const startPhysics = function startPhysics(io) {
     const expiredBoxIndices = [];
     const expiredBallIndices = [];
     context.balls.forEach(function(ball, i) {
-      balls.push({uuid: ball.id, position: roundPosition(ball.position), quaternion: roundQuaternion(ball.quaternion), mass: ball.mass})
+      balls.push(flat.ball(ball));
       if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
         expiredBallIndices.push(i);
       }
-    })
+    });
     context.boxes.forEach(function(box, i) {
-      boxes.push({uuid: box.uuid, position: roundPosition(box.position), quaternion: roundQuaternion(box.quaternion), geometry: box.userData.geometry, type: box.userData.shapeType, mass: box.mass})
-      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-        if (box.userData.shapeType === 'grassFloor') {
-          //do not replace fallen floor tiles
-          context.world.remove(box);
-        } else {
-          expiredBoxes.push(box);
-          expiredBoxIndices.push(i);
+      if (box.mass) {
+        boxes.push(flat.box(box));
+        if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
+          if (box.userData.shapeType === 'grassFloor') {
+            //do not replace fallen floor tiles
+            context.world.remove(box);
+          } else {
+            expiredBoxes.push(box);
+            expiredBoxIndices.push(i);
+          }
         }
-      }
-    })
+      };
+    });
     if (expiredBallIndices.length > 0) {
       console.log('Deleted out of bounds ball!');
       let offset = 0;
       expiredBallIndices.forEach(function(index) {
-        context.world.remove(context.balls[index]);
+        context.world.remove(context.balls[index - offset]);
         context.balls.splice(index - offset, 1);
         offset--;
       });
@@ -144,18 +127,18 @@ const startPhysics = function startPhysics(io) {
           client.jump = false;
       }
     }
-    context.world.step(context.physicsTick/1000);
+
     
-    if (context.updatesSinceLastEmit === config.physicsEmitRatio - 1) {
-      physicsEmit();
-      context.updatesSinceLastEmit = 0;
-    } else {
-      context.updatesSinceLastEmit++;;
-    }
+    context.world.step(1/60);
+    physicsEmit();
+
+    
+  //   if (context.updatesSinceLastEmit === config.physicsEmitRatio - 1) {
+  //     context.updatesSinceLastEmit = 0;
+  //   } else {
+  //     context.updatesSinceLastEmit++;;
+  //   }
   }, this.physicsTick)
-
-
-
 };
 
 const shootBall = function shootBall(camera) {
@@ -204,8 +187,8 @@ const loadFullScene = function loadFullScene(scene, player) {
   world.defaultContactMaterial.contactEquationStiffness = 1e9;
   world.defaultContactMaterial.contactEquationRelaxation = 4;
 
-  solver.iterations = 2;
-  solver.tolerance = 0.5;
+  solver.iterations = 20;
+  solver.tolerance = 0.1;
   world.solver = new CANNON.SplitSolver(solver);
 
   world.gravity.set(0, config.gravity, 0);
@@ -253,7 +236,7 @@ const loadFullScene = function loadFullScene(scene, player) {
       cannonBody.quaternion = cannonQuat;
       cannonBody.linearDamping = 0.01;
       cannonBody.angularDamping = 0.01;
-      cannonBody.uuid = mesh.uuid;
+      cannonBody.uuid = mesh.uuid.slice(0, config.uuidLength);
       cannonBody.userData = {shapeType: mesh.userData.name, geometry: {width, height, depth}};
 
       context.boxes.push(cannonBody);

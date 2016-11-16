@@ -1,6 +1,7 @@
 const THREE = require('three');
 const objectBuilder = require('./objectBuilder');
 const config = require('../../config/config.js');
+const flat = require('../../config/flat.js');
 
 const remoteClients = {};
 const remoteScene = {};
@@ -14,6 +15,7 @@ let jumpCount = config.maxJumps;
 let jumpRegen = false;
 let latestServerUpdate;
 const serverShapeMap = {};
+const meshLookup = {length: 0};
 
 //DEBUGGING
 let ticks = 0;
@@ -159,15 +161,17 @@ module.exports = {
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
     const serverClients = meshObject.players;
-    const meshLookup = {};
-    currentGame.scene.children.forEach((mesh) => {
-      meshLookup[mesh.uuid] = mesh;
-    });
+    const sceneChildren = currentGame.scene.children;
+    while(sceneChildren.length > meshLookup.length) {
+      meshLookup[sceneChildren[meshLookup.length].uuid.slice(0, config.uuidLength)] = sceneChildren[meshLookup.length];
+      meshLookup.length++;
+    }
+    let localMesh;
     boxMeshes.forEach((serverMesh) => {
-      let localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
+      serverMesh = flat.reBox(serverMesh);
+      localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
-        const serverQuaternion = serverMesh.quaternion;
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
         const serverGeometry = serverMesh.geometry;
@@ -175,20 +179,22 @@ module.exports = {
         const serverQuaternion = serverMesh.quaternion;
         const serverType = serverMesh.type;
         const boxMesh = objectBuilder[serverType](serverGeometry, serverPosition, serverQuaternion)
-        serverShapeMap[serverMesh.uuid] = boxMesh.uuid;
+        serverShapeMap[serverMesh.uuid] = boxMesh.uuid.slice(0, config.uuidLength);
         currentGame.scene.add(boxMesh);
       }
+      localMesh = undefined;
     });
     ballMeshes.forEach((serverMesh) => {
-      let localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
+      localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
         let ballMesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
-        serverShapeMap[serverMesh.uuid] = ballMesh.uuid;
+        serverShapeMap[serverMesh.uuid] = ballMesh.uuid.slice(0, config.uuidLength);
         currentGame.scene.add(ballMesh);
       }
+      localMesh = undefined;
     });
     for (var key in serverClients) {
       module.exports.loadClientUpdate(serverClients[key]);
