@@ -39,7 +39,6 @@ module.exports = function Match(deleteMatch) {
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
-  // clearTimeout(this.timeout);
   clientPosition = JSON.parse(clientPosition);
   const localClient = this.clients[clientPosition.uuid];
   localClient.up = clientPosition.up;
@@ -48,7 +47,6 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
   localClient.down = clientPosition.down;
   localClient.direction = clientPosition.direction;
   localClient.jump = clientPosition.jump;
-  // this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
 const startPhysics = function startPhysics(io) {
