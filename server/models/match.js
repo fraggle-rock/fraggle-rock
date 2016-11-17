@@ -100,7 +100,6 @@ const startPhysics = function startPhysics(io) {
     const sockets = io.to(context.guid).sockets;
     let players = 0;
     for(var key in sockets) {
-      console.log(`Emitting physics to ${key}`);
       players++;
     }
     if (players > 0) {
@@ -146,12 +145,8 @@ const startPhysics = function startPhysics(io) {
     context.world.step(context.physicsTick);
     context.world.step(context.physicsTick);  
     physicsEmit();
-  }
-  
-  physicsEmit();
-  setTimeout(function() {
-    context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
-  }, 3000);
+  } 
+  context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
 };
 
 const shootBall = function shootBall(camera) {

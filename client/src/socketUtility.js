@@ -68,11 +68,13 @@ module.exports = {
   },
   joinMatch: function joinMatch(matchNumber, game) {
     socket = socket || io();
-    const player = game.camera.toJSON();
-    player.position = game.camera.position;
-    player.direction = game.camera.getWorldDirection();
-    socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
-    addPhysicsUpdateListener(socket);
+    setTimeout(function() {
+      const player = game.camera.toJSON();
+      player.position = game.camera.position;
+      player.direction = game.camera.getWorldDirection();
+      socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
+      addPhysicsUpdateListener(socket);
+    }, 200);
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
     if (hasChangedInput(playerInput)) {
