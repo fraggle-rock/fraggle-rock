@@ -43,17 +43,17 @@ io.on('connection', (socket) => {
     const scene = fullScene.scene;
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
-    socket.emit('hi', 'there');
     console.log(`Player ${socket.id} has requested a new match.`)
-    socket.join(match.guid);
-    match.loadFullScene(scene, player);
-    match.startPhysics(io);
-    match.killFloor();
-    socket.on('shootBall', function(camera) {
-      match.shootBall(camera);
-    });
-    socket.on('clientUpdate', function (camera) { // listener for client position updates
-      match.loadClientUpdate(camera); // update server's copy of client position
+    socket.join(match.guid, function() {
+      match.loadFullScene(scene, player);
+      match.startPhysics(io);
+      match.killFloor();
+      socket.on('shootBall', function(camera) {
+        match.shootBall(camera);
+      });
+      socket.on('clientUpdate', function (camera) { // listener for client position updates
+        match.loadClientUpdate(camera); // update server's copy of client position
+      });
     });
   });
 
