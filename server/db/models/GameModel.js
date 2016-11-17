@@ -18,5 +18,5 @@ const Game = db.define('Game', {
   },
 });
 Game.belongsTo(userModel, { foreignKey: 'user_id' });
-Game.sync();
+// Game.sync();
 module.exports = Game;

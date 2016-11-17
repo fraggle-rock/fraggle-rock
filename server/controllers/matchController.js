@@ -27,13 +27,15 @@ module.exports = {
     return match;
   },
   getMatch: function getMatch(matchId) { //TODO fix to find match by id
-    let sent = false;
-    for (var key in liveMatches) {
-      if (!sent) {
-        sent = true;
-        return liveMatches[key];
-      }
+    return liveMatches[matchId];
+  },
+  liveGames: function liveGames(res) {
+    // return res.send(JSON.stringify(liveMatches))
+    var liveMatchesArray = []
+    for(var key in liveMatches) {
+      liveMatchesArray.push(key)
     }
+    res.send(liveMatchesArray)
   },
   deleteMatch: deleteMatch,
 };

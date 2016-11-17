@@ -5,7 +5,7 @@ const scoreModel = require('./../models/ScoreModel');
 */
 module.exports = {
   insertScore(scoreObj) {
-    scoreModel.build({ score: scoreObj.score,
+    return scoreModel.build({ score: scoreObj.score,
       user_id: scoreObj.user_id,
       game_id: scoreObj.game_id })
     .save();
@@ -24,7 +24,7 @@ module.exports = {
     return scoreModel.findAll({ where: { } });
   },
   clear() {
-    scoreModel.destroy({
+    return scoreModel.destroy({
       where: {
       },
     });
