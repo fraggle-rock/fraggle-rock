@@ -1,5 +1,5 @@
 const THREE = require('three');
-let socket;
+const socket = io();
 const sceneUtility = require('./sceneUtility');
 const lastEmittedClient = {};
 let canEmit = true;
@@ -56,25 +56,19 @@ const hasChangedInput = function hasChangedInput(playerInput) {
 
 module.exports = {
   requestNewMatch: function requestNewMatch(game) {
-    socket = socket || io();
-    setTimeout(function() {
-      const camera = game.camera.toJSON();
-      camera.position = game.camera.position;
-      camera.direction = game.camera.getWorldDirection();
-      const fullScene = {camera: camera, scene: game.scene.toJSON()};
-      socket.emit('fullScene', fullScene);
-      addPhysicsUpdateListener(socket);
-    }, 500);
+    const camera = game.camera.toJSON();
+    camera.position = game.camera.position;
+    camera.direction = game.camera.getWorldDirection();
+    const fullScene = {camera: camera, scene: game.scene.toJSON()};
+    socket.emit('fullScene', fullScene);
+    addPhysicsUpdateListener(socket);
   },
   joinMatch: function joinMatch(matchNumber, game) {
-    socket = socket || io();
-    setTimeout(function() {
-      const player = game.camera.toJSON();
-      player.position = game.camera.position;
-      player.direction = game.camera.getWorldDirection();
-      socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
-      addPhysicsUpdateListener(socket);
-    }, 500);
+    const player = game.camera.toJSON();
+    player.position = game.camera.position;
+    player.direction = game.camera.getWorldDirection();
+    socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
+    addPhysicsUpdateListener(socket);
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
     if (hasChangedInput(playerInput)) {

@@ -43,7 +43,6 @@ io.on('connection', (socket) => {
     const scene = fullScene.scene;
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
-    console.log(`Player ${socket.id} has requested a new match.`)
     socket.join(match.guid);
     match.loadFullScene(scene, player);
     match.startPhysics(io);
