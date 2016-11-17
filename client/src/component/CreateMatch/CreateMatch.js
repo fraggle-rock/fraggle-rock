@@ -48,7 +48,6 @@ class CreateMatch extends React.Component {
   }
 
   ChooseMap() {
-  	console.log('hello')
     document.getElementById('MapSelector').style.display = 'block';
     document.getElementById('DawnMountainCreateBackground').style.display = 'none';
   }
@@ -70,7 +69,7 @@ class CreateMatch extends React.Component {
             <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
           </div>
           <div id='ChooseMap'>
-            <a onClick={this.ChooseMap}>Choose Map</a>
+            <a id='ChooseMapTitle' onClick={this.ChooseMap}>Choose Map</a>
           </div>
           <div id='MapSelector'>
             <MapSelector />

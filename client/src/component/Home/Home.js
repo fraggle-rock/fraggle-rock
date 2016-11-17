@@ -4,6 +4,8 @@ import LeaderBoardDataUser from '../LeaderBoard/LeaderBoardDataUser.js'
 import LeaderBoardDataScore from '../LeaderBoard/LeaderBoardDataScore.js'
 import CreateMatch from '../CreateMatch/CreateMatch.js'
 import MapSelector from '../CreateMatch/MapSelector.js'
+import JoinMatch from '../JoinMatch/JoinMatch.js'
+import JoinMatchData from '../JoinMatch/JoinMatchData.js'
 const clientScene = require('../../clientScene.js');
 
 class Home extends React.Component {
@@ -11,9 +13,11 @@ class Home extends React.Component {
 	  super(props);
 	  this.state = {
 	    user: null,
-      leaderBoards: [{'username': 'Will', 'score': 1000}, {'username': 'Ryaz', 'score': 1000}, {'username': 'Eric', 'score': 1000}, {'username': 'Nick', 'score': 1000}]
+      leaderBoards: [{'username': 'Will', 'score': 1000}, {'username': 'Ryaz', 'score': 1000}, {'username': 'Eric', 'score': 1000}, {'username': 'Nick', 'score': 1000}],
+      liveMatches: []
 	  };
-    this.showLeaderBoards = this.showLeaderBoards.bind(this)
+    this.showLeaderBoards = this.showLeaderBoards.bind(this);
+    this.JoinExisting = this.JoinExisting.bind(this);
   }
   
   CreateMatch() {
@@ -24,25 +28,15 @@ class Home extends React.Component {
 
 
   JoinExisting() {
-    var screenOverlay = document.getElementById( 'screenOverlay' );
-    var menuContainer = document.getElementById( 'menuContainer' );
-    screenOverlay.style.display = '';
-    document.addEventListener('keydown', function(e) {
-     if(e.keyCode === 16) {
-     screenOverlay.style.display = '-webkit-box';
-     screenOverlay.style.display = '-moz-box';
-     screenOverlay.style.display = 'box';
-     if(menuContainer.style.display === '') {
-       menuContainer.style.display = 'none';
-     }else {
-     menuContainer.style.display = '';
-     }   
+    $.ajax({
+      url: '/api/liveGames',
+      method: 'GET',
+      success: (data) => {
+        this.setState({liveMatches: data})
+        document.getElementById( 'HomeScene' ).style.display = 'none'; 
+        document.getElementById('JoinMatch').style.display = 'block';
       }
-     })
-   
-    document.getElementById( 'HomePage' ).style.display = 'none'; 
-    clientScene.joinGame(0);
-    document.querySelector('#testButtons').remove();
+    })
   }
 
   showLeaderBoards() {
@@ -65,6 +59,10 @@ class Home extends React.Component {
         </div>
         <div id='CreateMatch'>
           <CreateMatch />
+        </div>
+        <div id='JoinMatch'>
+          <JoinMatch />
+          {this.state.liveMatches.map(game => <JoinMatchData game={game}/>)}
         </div>
         <div id='LeaderBoard'>
           <LeaderBoard />

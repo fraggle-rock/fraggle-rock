@@ -23,7 +23,7 @@
               <div>
                 <img id='DawnMountain' src='../../../textures/dawnmountain-xpos.png' />
                 <div>
-                  <button onClick={this.DawnMountain}>Dawn Mountain</button>
+                  <button onClick={this.DawnMountain} className='btn btn-primary'>Dawn Mountain</button>
                 </div>
               </div>
             </div>

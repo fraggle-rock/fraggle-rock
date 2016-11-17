@@ -10,8 +10,6 @@ class LeaderBoard extends React.Component {
   }
 
   backToHome() {
-    console.log(this)
-    window.test = this;
   	document.getElementById('HomeScene').style.display = 'block';
   	document.getElementById('LeaderBoard').style.display = 'none';
   }
