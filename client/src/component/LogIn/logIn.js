@@ -2,6 +2,7 @@ import React from 'react';
 import Home from '../Home/Home.js'
 import FacebookLogin from 'react-facebook-login'
 
+
 class LogIn extends React.Component {
   constructor(props) {
 	  super(props);
@@ -19,6 +20,11 @@ class LogIn extends React.Component {
   }
 
   responseFacebook(e) {
+    //save username and userId on local storage
+
+    //send request to server with username and id
+
+
     this.setState({ user: true })
       if(e.name) {
         document.getElementById('LogIn').style.display = 'none'; 

@@ -11,6 +11,7 @@ const userController = require('./db/controllers/UserController');
 const gameController = require('./db/controllers/GameController');
 const scoreController = require('./db/controllers/ScoreController');
 const requestHandler = require('./leaderBoard/requestHandler');
+const matchHandler = require('./match/matchHandler.js');
 
 const allowCrossDomain = (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -27,6 +28,7 @@ app.use('/api', requestHandler.userHandler);
 app.use('/api', requestHandler.scoreHandler);
 app.use('/api', requestHandler.gameHandler);
 app.use('/api', requestHandler.leaderBoardHandler);
+app.use('/api', matchHandler);
 
 app.use(express.static(path.join(__dirname, './../client')));
 
