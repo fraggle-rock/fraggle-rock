@@ -82,6 +82,6 @@ module.exports = {
     }
   },
   emitShootBall: function emitShootBall(camera) {
-    socket.emit('shootBall', camera);
+    socket.emit('shootBall', JSON.stringify(flat.shootBall(camera)));
   }
 };

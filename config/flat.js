@@ -38,6 +38,32 @@ const shapeDecoder = (function() {
 })()
 
 module.exports = {
+  shootBall: function shootBall (shot) {
+    const rPosition = roundPosition(shot.position);
+    const rDirection = roundPosition(shot.direction);
+    return [
+      rPosition.x,
+      rPosition.y,
+      rPosition.z,
+      rDirection.x,
+      rDirection.y,
+      rDirection.z,
+    ];
+  },
+  reShootBall: function reShootBall (flatShot) {
+    return {
+      position: {
+        x: flatShot[0],
+        y: flatShot[1],
+        z: flatShot[2]
+      },
+      direction: {
+        x: flatShot[3],
+        y: flatShot[4],
+        z: flatShot[5]
+      }
+    }
+  },
   playerInput: function playerInput (playerInput) {
     const rDirection = roundPosition(playerInput.direction);
     return [

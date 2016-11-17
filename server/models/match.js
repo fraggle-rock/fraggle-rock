@@ -155,6 +155,7 @@ const startPhysics = function startPhysics(io) {
 };
 
 const shootBall = function shootBall(camera) {
+  camera = flat.reShootBall(JSON.parse(camera));
   let x = camera.position.x;
   let y = camera.position.y;
   let z = camera.position.z;
