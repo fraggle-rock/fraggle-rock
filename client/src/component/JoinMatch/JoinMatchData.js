@@ -21,17 +21,17 @@ var JoinMatchData = props => {
 		}
 	   })
 	 
-    document.getElementById( 'HomePage' ).style.display = 'none';
+    document.getElementById( 'JoinMatchTitle' ).style.display = 'none';
 	  clientScene.joinGame(this);
   }
 
   return (
-	<div>
+	<div id='JoinGame'>
 	  <div id='JoinMatchGameID'>
-	   {props.game}
+	   {props.games}
 	  </div>
 	  <div id='JoinGameButton'>
-		<button onClick={JoinGame.bind(props.game)} className='btn btn-warning'>Join Game</button>
+		<button onClick={JoinGame.bind(props.games)} className='btn btn-warning'>Join Game</button>
 	  </div>
 	</div>
   )   

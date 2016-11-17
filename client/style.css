@@ -95,10 +95,6 @@
 /*Home Page CSS*/
 /*
 -----------------------------------------------------------------------------------*/
-#Home {
-	display: none;
-}
-
 #HomePage {
   text-align: center;
   width: 100%;
@@ -132,10 +128,6 @@
 /*LeaderBoard CSS*/
 /*
 -----------------------------------------------------------------------------------*/
-#LeaderBoard {
-  display: none;
-}
-
 #LeaderBoardData {
   background-color: white;
   margin: 3% 40% 0 40%;
@@ -143,11 +135,12 @@
 
 #HOMEButton {
   margin-bottom: 5px;
+  font-style: 
 }
 
 #LeaderBoardTitle {
+  text-align: center;
   color: white;
-  font-family: 'Press Start 2P', cursive;
 }
 
 #LeaderBoardUserNameTitle {
@@ -161,18 +154,22 @@
 #LeaderBoardScore {
   float: right;
   clear: right;
+  margin-right: 400px;
+  color: black;
 }
 
 #LeaderBoardUser {
   float: left;
+  margin-left: 400px;
+  color: black;
 }
 
 /*Create Match*/
 /*-----------------------------*/
 
 #CreateMatch {
-  display: none;
   margin-top: 16%;
+  text-align: center;
 }
 
 #CreateMatchBackground {
@@ -228,8 +225,8 @@
 }
 
 #DawnMountainCreateBackground {
-  margin-right: 550px;
-  margin-left: 550px;
+  margin-right: 475px;
+  margin-left: 475px;
   border-radius: 20px;
   padding-top: 16px;
   padding-bottom: 3px;
@@ -273,4 +270,5 @@ font-size: 20px;
 
 #JoinMatchTitle {
   margin-bottom: 10px;
+  text-align: center;
 }
