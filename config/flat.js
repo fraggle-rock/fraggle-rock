@@ -18,13 +18,6 @@ const roundQuaternion = function roundQuaternion (quaternion) {
   newQuaternion.z = roundToDec(quaternion.z, 3);
   return newQuaternion;
 };
-
-// {
-//   uuid: ball.id,
-//   position: roundPosition(ball.position),
-//   quaternion: roundQuaternion(ball.quaternion),
-//   mass: ball.mass
-// }
 const shapeEncoder = {
   grassFloor: 1,
   rockFloor: 2,
@@ -42,6 +35,12 @@ const shapeDecoder = (function() {
 })()
 
 module.exports = {
+  player: function player (player) {
+    
+  },
+  rePlayer: function player (player) {
+
+  },
   ball: function ball (ball) {
     return {
       uuid: ball.id,

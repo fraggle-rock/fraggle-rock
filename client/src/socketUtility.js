@@ -1,6 +1,7 @@
 const THREE = require('three');
 const socket = io();
 const sceneUtility = require('./sceneUtility');
+const flat = require('../../config/flat');
 const lastEmittedClient = {};
 let canEmit = true;
 

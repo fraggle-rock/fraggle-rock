@@ -65,7 +65,6 @@ const buildLevelOne = function buildLevelOne() {
   };
 
   const buildFloor = function buildFloor(n) {
-    console.log('buildfloor', n)
     let block;
     if (n < 5) {
       block = addRockBlock;
