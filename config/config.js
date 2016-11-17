@@ -15,7 +15,7 @@ module.exports = {
   shotRegen: 1000,
   maxJumps: 3,
   jumpRegen: 2000,
-  mouseSensitivity: 0.001,
+  mouseSensitivity: 0.0015,
   ballRadius: 0.5,
   ballMass: 450,
   ballVelocity: 350,
