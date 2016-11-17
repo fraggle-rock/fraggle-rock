@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
     socket.on('disconnect', function (e) {
-      matchController.deleteMatch(match.guid);
+      // matchController.deleteMatch(match.guid);
     })
     socket.join(match.guid);
     match.loadFullScene(scene, player);
