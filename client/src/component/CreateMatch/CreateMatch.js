@@ -14,36 +14,42 @@ class CreateMatch extends React.Component {
   StartMatch() {
     var screenOverlay = document.getElementById( 'screenOverlay' );
     var menuContainer = document.getElementById( 'menuContainer' );
+    var hud = document.getElementById( 'HUD' );
     screenOverlay.style.display = '';
+    hud.style.display = 'none';
     document.addEventListener('keydown', function(e) {
-     if(e.keyCode === 16) {
+     if(e.keyCode === 192) {
      screenOverlay.style.display = '-webkit-box';
      screenOverlay.style.display = '-moz-box';
      screenOverlay.style.display = 'box';
      if(menuContainer.style.display === '') {
       menuContainer.style.display = 'none';
-      document.body.requestPointerLock()  
+      hud.style.display = '';
+      document.body.requestPointerLock()
      }else {
       menuContainer.style.display = '';
+      hud.style.display = 'none';
       document.exitPointerLock()
-     }   
+     }
       }
     })
-    
+
     var button = document.getElementById('resume');
     button.addEventListener('click', function(e) {
-     screenOverlay.style.display = '-webkit-box';
-     screenOverlay.style.display = '-moz-box';
-     screenOverlay.style.display = 'box';
-     if(menuContainer.style.display === '') {
-       menuContainer.style.display = 'none';
-       document.body.requestPointerLock()  
-     }else {
-       menuContainer.style.display = '';
-     }   
-    })
+      screenOverlay.style.display = '-webkit-box';
+      screenOverlay.style.display = '-moz-box';
+      screenOverlay.style.display = 'box';
+      if(menuContainer.style.display === '') {
+        menuContainer.style.display = 'none';
+        hud.style.display = '';
+        document.body.requestPointerLock()
+      }else {
+        menuContainer.style.display = '';
+        hud.style.display = 'none';
+      }
+    });
 
-    document.getElementById( 'CreateMatch' ).style.display = 'none'; 
+    document.getElementById( 'CreateMatch' ).style.display = 'none';
     clientScene.startGame();
   }
 
@@ -80,10 +86,8 @@ class CreateMatch extends React.Component {
         </div>
       </div>
     );
-  	
+
   }
 }
-
-
 
 export default CreateMatch;
