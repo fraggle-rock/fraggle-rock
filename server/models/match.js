@@ -124,11 +124,18 @@ const startPhysics = function startPhysics(io) {
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
       const movePerTick = config.playerMovePerTick;
+      const damping = config.playerDamping;
       if (clientBody.position.y < config.playerYReset) {
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
         continue;
       }
+      //player x-z damping
+      let sign = clientBody.velocity.x >= 0 ? 1 : -1;
+      clientBody.velocity.x -= sign * damping * (clientBody.velocity.x * clientBody.velocity.x);
+      sign = clientBody.velocity.z >= 0 ? 1 : -1;
+      clientBody.velocity.z -= sign * damping * (clientBody.velocity.z * clientBody.velocity.z);
+      
       if (client.up) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
       }
@@ -145,6 +152,7 @@ const startPhysics = function startPhysics(io) {
           clientBody.velocity.set(currVelocity.x, currVelocity.y + config.jumpVelocity, currVelocity.z);
           client.jump = false;
       }
+
     }
     
     context.world.step(context.physicsTick);
@@ -170,9 +178,9 @@ const shootBall = function shootBall(camera) {
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
-  x += shootDirection.x;
-  y += shootDirection.y;
-  z += shootDirection.z;
+  x += shootDirection.x * 2.5;
+  y += shootDirection.y * 2.5;
+  z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
 };
 
@@ -187,8 +195,6 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.position.y = y;
   ballBody.position.z = z;
   ballBody.addShape(ballShape);
-  ballBody.linearDamping = config.playerDamping;
-  ballBody.angularDamping = config.playerDamping;
   this.clientToCannon[player.object.uuid] = ballBody;
   this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
   this.world.add(ballBody);

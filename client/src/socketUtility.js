@@ -35,7 +35,7 @@ const hasChangedInput = function hasChangedInput(playerInput) {
   let hasChanged = false;
   const isMoving = lastEmittedClient.up || lastEmittedClient.down || lastEmittedClient.left || lastEmittedClient.right;
   const newTheta = Math.atan2(playerInput.direction.z, playerInput.direction.x);
-  if (isMoving && Math.abs(newTheta - lastEmittedClient.theta) > .3) {
+  if (isMoving && Math.abs(newTheta - lastEmittedClient.theta) > .1) {
     hasChanged = true;
   } else if (playerInput.up !== lastEmittedClient.up) {
     hasChanged = true;

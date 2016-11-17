@@ -12,7 +12,7 @@ module.exports = {
   playerModelRadius: 2,
   playerModelMass: 10,
   maxShots: 3,
-  shotRegen: 1000,
+  shotRegen: 600,
   maxJumps: 3,
   jumpRegen: 2000,
   mouseSensitivity: 0.0015,
@@ -21,11 +21,11 @@ module.exports = {
   ballVelocity: 350,
   gameSpeed: .7,
   serverTimeout: 30 * 1000,
-  playerMovePerTick: 5,
+  playerMovePerTick: 25,
   playerYReset: -100,
-  jumpVelocity: 75,
+  jumpVelocity: 30,
   gravity: -98,
   physicsBounds: 200,
   uuidLength: 5,
-  playerDamping: .9
+  playerDamping: .01
 };
