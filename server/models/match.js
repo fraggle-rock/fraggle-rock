@@ -33,6 +33,7 @@ module.exports = function Match(deleteMatch) {
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
   clientPosition = JSON.parse(clientPosition);
+  clientPosition = flat.rePlayerInput(clientPosition);
   const localClient = this.clients[clientPosition.uuid];
   localClient.up = clientPosition.up;
   localClient.left = clientPosition.left;

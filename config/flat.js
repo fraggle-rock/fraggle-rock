@@ -38,6 +38,35 @@ const shapeDecoder = (function() {
 })()
 
 module.exports = {
+  playerInput: function playerInput (playerInput) {
+    const rDirection = roundPosition(playerInput.direction);
+    return [
+      playerInput.uuid,
+      flatBoolean(playerInput.up),
+      flatBoolean(playerInput.left),
+      flatBoolean(playerInput.down),
+      flatBoolean(playerInput.right),
+      flatBoolean(playerInput.jump),
+      rDirection.x,
+      rDirection.y,
+      rDirection.z
+    ]
+  },
+  rePlayerInput: function rePlayerInput (flatPlayerInput) {
+    return {
+      uuid: flatPlayerInput[0],
+      up: flatPlayerInput[1],
+      left: flatPlayerInput[2],
+      down: flatPlayerInput[3],
+      right: flatPlayerInput[4],
+      jump: flatPlayerInput[5],
+      direction: {
+        x: flatPlayerInput[6],
+        y: flatPlayerInput[7],
+        z: flatPlayerInput[8]
+      }
+    }
+  },
   player: function player (player) {
     const rPosition = roundPosition(player.position);
     const rDirection = roundPosition(player.direction);
