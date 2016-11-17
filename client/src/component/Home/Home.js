@@ -20,6 +20,12 @@ class Home extends React.Component {
     this.JoinExisting = this.JoinExisting.bind(this);
   }
 
+  CreateMatch() {
+    document.getElementById('HomeScene').style.display = 'none';
+    document.getElementById('DawnMountainCreateBackground').style.display = 'none';
+    document.getElementById('CreateMatch').style.display = 'block';
+  }
+
   JoinExisting() {
     $.ajax({
       url: '/api/liveGames',
@@ -41,8 +47,8 @@ class Home extends React.Component {
   render() {
     return (
       <div id='HomePage'>
-        <div id='HomeScene'>
         <img id='HomeBackground' src='./textures/menubg.png' />
+        <div id='HomeScene'>
         <img src='../../../textures/logo.png' />
         <div id="testButtons">
           <button id="joinMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
