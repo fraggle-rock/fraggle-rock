@@ -64,7 +64,7 @@ module.exports = {
       const fullScene = {camera: camera, scene: game.scene.toJSON()};
       socket.emit('fullScene', fullScene);
       addPhysicsUpdateListener(socket);
-    }, 200);
+    }, 500);
   },
   joinMatch: function joinMatch(matchNumber, game) {
     socket = socket || io();
@@ -74,7 +74,7 @@ module.exports = {
       player.direction = game.camera.getWorldDirection();
       socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
       addPhysicsUpdateListener(socket);
-    }, 200);
+    }, 500);
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
     if (hasChangedInput(playerInput)) {
