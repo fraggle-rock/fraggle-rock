@@ -180,15 +180,12 @@ module.exports = {
     return sky;
   },
   sidePanel: function(size, position, quaternion) {
-    let yquat = new THREE.Quaternion();
-    yquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 6);
     // let zquat = new THREE.Quaternion();
     // zquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
-    // let quat = yquat.multiply(zquat);
+    // let quat = quat.multiply(zquat);
     let mesh = new THREE.Mesh(BoxGeometry(size), sidePanelMaterial);
     initPosition(mesh, position);
     mesh.userData.name = 'sidePanel';
-    mesh.rotation.x = - Math.PI / 6; //(30degrees)
     addShadow(mesh);
     mesh.userData.mass = 0;
     return mesh;
