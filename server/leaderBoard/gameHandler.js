@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 const UserController = require('./../db/controllers/UserController');
 const GameController = require('./../db/controllers/GameController');
