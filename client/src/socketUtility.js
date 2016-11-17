@@ -57,12 +57,14 @@ const hasChangedInput = function hasChangedInput(playerInput) {
 module.exports = {
   requestNewMatch: function requestNewMatch(game) {
     socket = socket || io();
-    const camera = game.camera.toJSON();
-    camera.position = game.camera.position;
-    camera.direction = game.camera.getWorldDirection();
-    const fullScene = {camera: camera, scene: game.scene.toJSON()};
-    socket.emit('fullScene', fullScene);
-    addPhysicsUpdateListener(socket);
+    setTimeout(function() {
+      const camera = game.camera.toJSON();
+      camera.position = game.camera.position;
+      camera.direction = game.camera.getWorldDirection();
+      const fullScene = {camera: camera, scene: game.scene.toJSON()};
+      socket.emit('fullScene', fullScene);
+      addPhysicsUpdateListener(socket);
+    }, 200);
   },
   joinMatch: function joinMatch(matchNumber, game) {
     socket = socket || io();
