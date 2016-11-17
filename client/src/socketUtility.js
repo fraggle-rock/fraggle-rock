@@ -2,7 +2,7 @@ const THREE = require('three');
 const socket = io();
 const sceneUtility = require('./sceneUtility');
 const flat = require('../../config/flat');
-const lastEmittedClient = {};
+const lastEmittedClient = {theta: 0};
 let canEmit = true;
 
 const addPhysicsUpdateListener = function addPhysicsUpdateListener(socket) {
@@ -33,7 +33,11 @@ const roundQuaternion = function roundQuaternion (quaternion, decimals) {
 };
 const hasChangedInput = function hasChangedInput(playerInput) {
   let hasChanged = false;
-  if (playerInput.up !== lastEmittedClient.up) {
+  const isMoving = lastEmittedClient.up || lastEmittedClient.down || lastEmittedClient.left || lastEmittedClient.right;
+  const newTheta = Math.atan2(playerInput.direction.z, playerInput.direction.x);
+  if (isMoving && Math.abs(newTheta - lastEmittedClient.theta) > .3) {
+    hasChanged = true;
+  } else if (playerInput.up !== lastEmittedClient.up) {
     hasChanged = true;
   } else if (playerInput.down !== lastEmittedClient.down) {
     hasChanged = true;
@@ -50,6 +54,7 @@ const hasChangedInput = function hasChangedInput(playerInput) {
     lastEmittedClient.right = playerInput.right;
     lastEmittedClient.left = playerInput.left;
     lastEmittedClient.jump = playerInput.jump;
+    lastEmittedClient.theta = newTheta;
   }
   return hasChanged;
 }
@@ -72,8 +77,8 @@ module.exports = {
     addPhysicsUpdateListener(socket);
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
+    playerInput.direction = camera.getWorldDirection();
     if (hasChangedInput(playerInput)) {
-      playerInput.direction = camera.getWorldDirection();
       socket.emit('clientUpdate', JSON.stringify(flat.playerInput(playerInput)));
       if (playerInput.jump) {
         playerInput.jump = false;
