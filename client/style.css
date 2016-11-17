@@ -7,7 +7,19 @@ font-family: 'Play', sans-serif;
 
 /*FOR DEBUGGING WIREFRAME*/
 /*div {
+  border: 1px solid green;
+}
+div > div {
+  border: 1px solid blue;
+}
+div > div > div {
   border: 1px solid red;
+}
+div > div > div > div {
+  border: 1px solid yellow;
+}
+div > div > div > div > div {
+  border: 1px solid pink;
 }*/
 
 
@@ -118,45 +130,49 @@ font-family: 'Play', sans-serif;
   background: url('./textures/brushstroke-pink.png');
 }
 
+.crosshairContainer {
+  width: 36px;
+  height: 15px;
+  margin: 25% auto 0;
+}
+
 #crosshair {
-  position: absolute;
-  top: 49.5%;
-  left: 49.5%;
-  width: 1%;
-  height: auto;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0;
 }
 .jumpBox {
-  position: absolute;
-  top: 48.2%;
-  left: 48.4%;
-  height: 4%;
-  width: 2%;
+  width: 5px;
+  height: 15px;
+  display: inline-block;
+  margin-right: 6px;
+  float: left;
+  line-height: 8px;
 }
 
 #jump1, #jump2, #jump3 {
   display: block;
   /*background-color: white;*/
   color: white;
-  width: 20%;
-  height: 20%;
-  margin:8%;
-  font-size: 2px;
+  margin: 0;
+  font-size: 1.9px;
 }
 .ammoBox {
-  position: absolute;
-  top: 48.7%;
-  right: 47.2%;
-  height: 4%;
-  width: 2%;
+  display: inline-block;
+  margin-left: 5px;
+  height: 15px;
+  width: 5px;
+  float: right;
 }
 
 #ammo1, #ammo2, #ammo3 {
   display: block;
   border-radius: 50%;
   background-color: white;
-  width: 20%;
-  height: 20%;
-  margin:8%;
+  width: 5px;
+  height: 5px;
+  margin: 2px 0;
 }
 
 #menuContainer {

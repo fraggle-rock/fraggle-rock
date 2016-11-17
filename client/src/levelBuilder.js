@@ -9,10 +9,6 @@ const buildLevelOne = function buildLevelOne() {
     scene.add(mesh);
   };
 
-  //FLOOR
-  // let mesh = objectBuilder.grassFloor({width: 40, height: 4, depth: 40}, {x: 0, y: -2.5, z: 0});
-  // scene.add(mesh);
-
   //Side Panels
   mesh = objectBuilder.sidePanel(
     {width: 50, height: 1, depth: 3},
@@ -67,31 +63,32 @@ const buildLevelOne = function buildLevelOne() {
     scene.add(mesh);
   };
 
-  const buildFloor = function buildFloor(n) {
+  const buildFloor = function buildFloor(A, B) {
     let block;
-    if (n < 5) {
+    if (A <= B) {
       block = addRockBlock;
     } else {
       block = addGrassBlock;
     }
-    for (let x = 0; x < n + 1; x++) {
-      block((-n / 2 + x) * 4, -n * 2);
+    for (let x = 0; x < A + 1; x++) {
+      block((-A / 2 + x) * 4, -A * 2);
     }
-    for (let z = 1; z < n + 1; z++) {
-      block(n * 2, (-n / 2 + z) * 4)
+    for (let z = 1; z < A + 1; z++) {
+      block(A * 2, (-A / 2 + z) * 4)
     }
-    for (let x = 1; x < n + 1; x++) {
-      block((n / 2 - x) * 4, n * 2);
+    for (let x = 1; x < A + 1; x++) {
+      block((A / 2 - x) * 4, A * 2);
     }
-    for (let z = 1; z < n; z++) {
-      block(-n * 2, (n / 2 - z) * 4)
+    for (let z = 1; z < A; z++) {
+      block(-A * 2, (A / 2 - z) * 4)
     }
-    if (n >= 2) {
-      buildFloor(n-2);
+    if (A >= 2) {
+      buildFloor(A-2, B);
     }
   }
 
-  buildFloor(20);
+  // buildFloor(A, B) builds square grass floor of A by A with rock center of B by B
+  buildFloor(20, 5);
 
 
   //RANDOM SHAPE GENERATOR

@@ -29,7 +29,7 @@ const grass = function() {
          grassTopMaterial,
          grassSideMaterial,
          grassSideMaterial
-  ]
+  ];
   return materials;
 }
 const rock = function() {
@@ -40,7 +40,7 @@ const rock = function() {
          rockTopMaterial,
          grassSideMaterial,
          grassSideMaterial
-  ]
+  ];
   return materials;
 }
 
@@ -252,19 +252,3 @@ module.exports = {
 //   mesh.rotation.y = Math.PI / 2;
 //   scene.add(mesh);
 // });
-
-
-// futureTile = new THREE.TextureLoader().load( 'textures/scoreboard.png' );
-// // futureTile.wrapS = THREE.RepeatWrapping;
-// // futureTile.wrapT = THREE.RepeatWrapping;
-// // futureTile.repeat.set( 9/4 , 1 );
-// geometry = new THREE.BoxGeometry(9, 0.1, 4);
-// material = new THREE.MeshPhongMaterial({ map: futureTile,  transparent: true, opacity: 1 });
-// mesh = new THREE.Mesh(geometry, material);
-// mesh.position.y = 7.5;
-// mesh.position.x = -22.3;
-// mesh.receiveShadow = true;
-// mesh.rotation.x = - Math.PI / 2;
-// mesh.rotation.z = Math.PI / 2;
-// scene.add(mesh);
-
