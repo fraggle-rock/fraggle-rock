@@ -48,9 +48,13 @@ const startPhysics = function startPhysics(io) {
     const balls = [];
     const boxes = [];
     const clear = [];
+    const players = [];
     const expiredBoxes = [];
     const expiredBoxIndices = [];
     const expiredBallIndices = [];
+    for (var key in context.clients) {
+      players.push(flat.player(context.clients[key]));
+    }
     context.balls.forEach(function(ball, i) {
       if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
         expiredBallIndices.push(i);
@@ -93,16 +97,16 @@ const startPhysics = function startPhysics(io) {
         box.velocity.set(0, 0, 0);
       });
     }
-    const update = {boxMeshes: boxes, ballMeshes: balls, players: context.clients};;
+    const update = [boxes, balls, players];;
     if (clear.length > 0) {
       update.clear = clear; 
     }
     const sockets = io.to(context.guid).sockets;
-    let players = 0;
+    let playerCount = 0;
     for(var key in sockets) {
-      players++;
+      playerCount++;
     }
-    if (players > 0) {
+    if (playerCount > 0) {
       if (context.sendFull || clear.length > 0) {
         io.to(context.guid).emit('physicsUpdate', JSON.stringify(update));
       } else {
@@ -174,6 +178,7 @@ const loadNewClient = function loadNewClient(player) {
   const x = player.position.x;
   const y = player.position.y;
   const z = player.position.z;
+  player.object.uuid = player.object.uuid.slice(0, config.uuidLength);
   const ballBody = new CANNON.Body({ mass: config.playerModelMass });
   const ballShape = new CANNON.Sphere(config.playerModelRadius);
   ballBody.position.x = x;

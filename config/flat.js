@@ -18,6 +18,9 @@ const roundQuaternion = function roundQuaternion (quaternion) {
   newQuaternion.z = roundToDec(quaternion.z, 3);
   return newQuaternion;
 };
+const flatBoolean = function flatBoolean (boolean) {
+  return boolean ? 1 : 0;
+}
 const shapeEncoder = {
   grassFloor: 1,
   rockFloor: 2,
@@ -36,24 +39,62 @@ const shapeDecoder = (function() {
 
 module.exports = {
   player: function player (player) {
-    
+    const rPosition = roundPosition(player.position);
+    const rDirection = roundPosition(player.direction);
+    return [
+      player.uuid,
+      rPosition.x,
+      rPosition.y,
+      rPosition.z,
+      rDirection.x,
+      rDirection.y,
+      rDirection.z,
+    ];
   },
-  rePlayer: function player (player) {
-
+  rePlayer: function player (flatPlayer) {
+    return  {
+        uuid: flatPlayer[0],
+        position: {
+          x: flatPlayer[1],
+          y: flatPlayer[2],
+          z: flatPlayer[3]
+        },
+        direction: {
+          x: flatPlayer[4],
+          y: flatPlayer[5],
+          z: flatPlayer[6]
+        },
+      }
   },
   ball: function ball (ball) {
-    return {
-      uuid: ball.id,
-      position: roundPosition(ball.position),
-      quaternion: roundQuaternion(ball.quaternion),
-    }; 
+    const rPosition = roundPosition(ball.position);
+    const rQuaternion = roundQuaternion(ball.quaternion);
+    return [
+      ball.id,
+      rPosition.x,
+      rPosition.y,
+      rPosition.z,
+      rQuaternion.w,
+      rQuaternion.x,
+      rQuaternion.y,
+      rQuaternion.z
+    ]; 
   },
   reBall: function reBall (flatBall) {
     return {
-      uuid: ball.id,
-      position: roundPosition(ball.position),
-      quaternion: roundQuaternion(ball.quaternion),
-    }
+      uuid: flatBall[0],
+      position: {
+        x: flatBall[1],
+        y: flatBall[2],
+        z: flatBall[3]
+      },
+      quaternion: {
+        w: flatBall[4],
+        x: flatBall[5],
+        y: flatBall[6],
+        z: flatBall[7],
+      }
+    };
   },
   box: function box (box) {
     const rPosition = roundPosition(box.position);
