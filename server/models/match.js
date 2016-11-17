@@ -147,8 +147,11 @@ const startPhysics = function startPhysics(io) {
     context.world.step(context.physicsTick);  
     physicsEmit();
   }
-
-  context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
+  
+  physicsEmit();
+  setTimeout(function() {
+    context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
+  }, 3000);
 };
 
 const shootBall = function shootBall(camera) {
