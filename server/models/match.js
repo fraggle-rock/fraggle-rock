@@ -26,7 +26,7 @@ module.exports = function Match(deleteMatch) {
   this.shutdown = shutdown.bind(this);
   this.deleteMatch = deleteMatch;
   this.physicsTick = config.gameSpeed * 1 / 60 / 2;
-  this.killFloor = killFloor.bind(this);
+  this.killFloor = killFloor.bind(this);  
   this.sendFull = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
 };
@@ -98,8 +98,9 @@ const startPhysics = function startPhysics(io) {
       update.clear = clear; 
     }
     const sockets = io.to(context.guid).sockets;
-    let players = -1;
+    let players = 0;
     for(var key in sockets) {
+      console.log(`Emitting physics to ${key}`);
       players++;
     }
     if (players > 0) {
