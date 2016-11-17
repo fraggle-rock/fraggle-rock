@@ -3,6 +3,7 @@ const objectBuilder = require('./objectBuilder');
 
 const buildLevelOne = function buildLevelOne() {
   const scene = this.buildBlankLevelOne();
+  let mesh;
 
   var asynchAddMesh = function (mesh) {
     scene.add(mesh);
@@ -13,13 +14,15 @@ const buildLevelOne = function buildLevelOne() {
   // scene.add(mesh);
 
   //Side Panels
-  let mesh = objectBuilder.sidePanel({width: 1, height: 2.5, depth: 40}, {x: 0, y: .5, z: -42},
+  mesh = objectBuilder.sidePanel(
+    {width: 50, height: 1, depth: 3},
+    {x: 0, y: .5, z: -48},
     {x: 0, y: 0, z: 0, w: 0 });
   scene.add(mesh);
 
   mesh = objectBuilder.sidePanel(
-    {width: 1, height: 2.5, depth: 40},
-    {x: 0, y: .5, z: 42},
+    {width: 50, height: 1, depth: 3},
+    {x: 0, y: .5, z: 48},
     {x: 0, y: 0, z: 0, w: 0 }
   );
   scene.add(mesh);
@@ -65,7 +68,6 @@ const buildLevelOne = function buildLevelOne() {
   };
 
   const buildFloor = function buildFloor(n) {
-    console.log('buildfloor', n)
     let block;
     if (n < 5) {
       block = addRockBlock;
@@ -97,12 +99,12 @@ const buildLevelOne = function buildLevelOne() {
     return Math.floor(Math.random()*(high - low + 1)) + low;
   }
 
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i < 12; i++) {
     const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
     const size = random(4, 6);
-    const x = random(-50, 50);
-    const y = random(5, 40);
-    const z = random(-50, 50);
+    const x = random(-40, 40);
+    const y = random(15, 25);
+    const z = random(-40, 40);
     const type = random(0, types.length - 1);
     mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
     scene.add(mesh);
@@ -111,29 +113,29 @@ const buildLevelOne = function buildLevelOne() {
 }
 
 const buildBlankLevelOne = function buildBlankLevelOne() {
-const scene = new THREE.Scene();
-scene.add(new THREE.AmbientLight(0x111111));
+  const scene = new THREE.Scene();
+  scene.add(new THREE.AmbientLight(0x111111));
 
-// Sunlight
-let sunlight = new THREE.DirectionalLight();
-sunlight.position.set(30, 30, 39);
-sunlight.intensity = 1.9;
-sunlight.castShadow = true;
-// sunlight.shadow.mapSize.Width = sunlight.shadow.mapSize.Height = 2048;
-sunlight.shadow.mapSize.x = sunlight.shadow.mapSize.y = 2048;
-sunlight.shadow.camera.near = 10;
-sunlight.shadow.camera.far = 400;
-sunlight.shadow.camera.left = -80;
-sunlight.shadow.camera.right = 70;
-sunlight.shadow.camera.top = 60;
-sunlight.shadow.camera.bottom = -60;
+  // Sunlight
+  let sunlight = new THREE.DirectionalLight();
+  sunlight.position.set(30, 30, 39);
+  sunlight.intensity = 1.9;
+  sunlight.castShadow = true;
+  // sunlight.shadow.mapSize.Width = sunlight.shadow.mapSize.Height = 2048;
+  sunlight.shadow.mapSize.x = sunlight.shadow.mapSize.y = 2048;
+  sunlight.shadow.camera.near = 10;
+  sunlight.shadow.camera.far = 400;
+  sunlight.shadow.camera.left = -80;
+  sunlight.shadow.camera.right = 70;
+  sunlight.shadow.camera.top = 60;
+  sunlight.shadow.camera.bottom = -60;
 
-scene.add(sunlight);
+  scene.add(sunlight);
 
-const sky = objectBuilder.sky();
-scene.add(sky);
+  const sky = objectBuilder.sky();
+  scene.add(sky);
 
-return scene;
+  return scene;
 }
 
 module.exports = function LevelBuilder() {

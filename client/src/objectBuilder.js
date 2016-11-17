@@ -53,7 +53,7 @@ const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
 const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
 const ancientCrateMaterial = MeshLambertMaterial('textures/ancientcrate.jpg');
 const scoreBoardMaterial = new THREE.MeshPhongMaterial({ map: futureTile(9/4, 1), transparent: true, opacity: .8  });
-const sidePanelMaterial = new THREE.MeshPhongMaterial({ map: futureTile(15, 5/6), transparent: true, opacity: .8  });
+const sidePanelMaterial = new THREE.MeshPhongMaterial({ map: futureTile(50/3, 1), transparent: true, opacity: .8  });
 const grassMaterial =  new THREE.MeshFaceMaterial( grass() );
 const rockMaterial = new THREE.MeshFaceMaterial( rock() );
 
@@ -180,9 +180,6 @@ module.exports = {
     return sky;
   },
   sidePanel: function(size, position, quaternion) {
-    // let zquat = new THREE.Quaternion();
-    // zquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
-    // let quat = quat.multiply(zquat);
     let mesh = new THREE.Mesh(BoxGeometry(size), sidePanelMaterial);
     initPosition(mesh, position);
     mesh.userData.name = 'sidePanel';

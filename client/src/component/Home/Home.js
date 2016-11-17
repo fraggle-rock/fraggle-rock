@@ -19,13 +19,6 @@ class Home extends React.Component {
     this.showLeaderBoards = this.showLeaderBoards.bind(this);
     this.JoinExisting = this.JoinExisting.bind(this);
   }
-  
-  CreateMatch() {
-    document.getElementById('HomeScene').style.display = 'none';
-    document.getElementById('DawnMountainCreateBackground').style.display = 'none';
-    document.getElementById('CreateMatch').style.display = 'block';
-  }
-
 
   JoinExisting() {
     $.ajax({
@@ -33,7 +26,7 @@ class Home extends React.Component {
       method: 'GET',
       success: (data) => {
         this.setState({liveMatches: data})
-        document.getElementById( 'HomeScene' ).style.display = 'none'; 
+        document.getElementById( 'HomeScene' ).style.display = 'none';
         document.getElementById('JoinMatch').style.display = 'block';
       }
     })
@@ -48,8 +41,8 @@ class Home extends React.Component {
   render() {
     return (
       <div id='HomePage'>
-        <img id='HomeBackground' src='https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png' />
         <div id='HomeScene'>
+        <img id='HomeBackground' src='./textures/menubg.png' />
         <img src='../../../textures/logo.png' />
         <div id="testButtons">
           <button id="joinMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
@@ -79,10 +72,8 @@ class Home extends React.Component {
         </div>
       </div>
     );
-  	
+
   }
 }
-
-
 
 export default Home;
