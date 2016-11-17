@@ -9,6 +9,9 @@ const addPhysicsUpdateListener = function addPhysicsUpdateListener(socket) {
   socket.on('physicsUpdate', function(meshesObject) {
     sceneUtility.savePhysicsUpdate(meshesObject);
   });
+  socket.on('fullPhysicsUpdate', function(meshesObject) {
+    sceneUtility.loadPhysicsUpdate(meshesObject);
+  });
 }
 
 const roundToDec = function round(num, decimals) {
@@ -62,19 +65,19 @@ const hasChangedInput = function hasChangedInput(playerInput) {
 
 module.exports = {
   requestNewMatch: function requestNewMatch(game) {
+    addPhysicsUpdateListener(socket);
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
     camera.direction = game.camera.getWorldDirection();
     const fullScene = {camera: camera, scene: game.scene.toJSON()};
     socket.emit('fullScene', fullScene);
-    addPhysicsUpdateListener(socket);
   },
   joinMatch: function joinMatch(matchNumber, game) {
+    addPhysicsUpdateListener(socket);
     const player = game.camera.toJSON();
     player.position = game.camera.position;
     player.direction = game.camera.getWorldDirection();
     socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
-    addPhysicsUpdateListener(socket);
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
     playerInput.direction = camera.getWorldDirection();

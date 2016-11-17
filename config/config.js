@@ -10,7 +10,7 @@ module.exports = {
   woodCrateDensity: 3,
   ancientCrateDensity: 10,
   playerModelRadius: 2,
-  playerModelMass: 10,
+  playerModelMass: 25,
   maxShots: 3,
   shotRegen: 600,
   maxJumps: 3,

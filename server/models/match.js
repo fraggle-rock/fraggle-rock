@@ -109,7 +109,7 @@ const startPhysics = function startPhysics(io) {
     }
     if (playerCount > 0) {
       if (context.sendFull || clear.length > 0) {
-        io.to(context.guid).emit('physicsUpdate', JSON.stringify(update));
+        io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
         io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
       }
