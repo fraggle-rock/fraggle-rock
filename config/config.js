@@ -12,7 +12,7 @@ module.exports = {
   playerModelRadius: 2,
   playerModelMass: 25,
   maxShots: 3,
-  shotRegen: 400,
+  shotRegen: 500,
   maxJumps: 3,
   jumpRegen: 2000,
   mouseSensitivity: 0.0015,
@@ -30,5 +30,6 @@ module.exports = {
   playerDamping: .01,
   maxPlayerDecel: 25,
   killFloorInterval: 1000,
-  killFloorUpVelocity: 50
+  killFloorUpVelocity: 50,
+  maxBalls: 15
 };

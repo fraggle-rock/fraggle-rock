@@ -56,6 +56,11 @@ const startPhysics = function startPhysics(io) {
     for (var key in context.clients) {
       players.push(flat.player(context.clients[key]));
     }
+    while (context.balls.length > config.maxBalls) {
+      const ball = context.balls.shift();
+      context.world.remove(ball);
+      clear.push(ball.id);
+    }
     context.balls.forEach(function(ball, i) {
       if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
         expiredBallIndices.push(i);
