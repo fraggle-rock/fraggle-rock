@@ -53,23 +53,22 @@ const buildLevelOne = function buildLevelOne() {
 
   //FLOOR BUILDER
   const addGrassBlock = function addGrassBlock(x, y, z, width, height, depth) {
-    if (!height) {
-      height = width;
-    }
-    if (!depth) {
-      depth = width;
-    }
+    depth = depth || width;
+    height = height || width;
+
     let mesh = objectBuilder.grassFloor({width: width, height: height, depth: depth},
       {x: x, y: y, z: z});
     scene.add(mesh);
   };
   const addRockBlock = function addRockBlock(x, y, z, width, height, depth) {
-    if (!height) {
-      height = width;
-    }
-    if (!depth) {
-      depth = width;
-    }
+    depth = depth || width;
+    height = height || width;
+
+    let mesh = objectBuilder.rockFloor({width: width, height: height, depth: depth},
+      {x: x, y: y, z: z});
+    scene.add(mesh);
+  };
+  const addRockCenter = function addRockCenter(width, height, depth, x, y, z) {
     let mesh = objectBuilder.rockFloor({width: width, height: height, depth: depth},
       {x: x, y: y, z: z});
     scene.add(mesh);
@@ -79,17 +78,14 @@ const buildLevelOne = function buildLevelOne() {
   // buildFloor(A, B, y, width, height, depth) builds square grass floor of A by A with a rock center of B by B, at y height.
     // Blocks will be width x height x depth;
   const buildFloor = function buildFloor(A, B, fx, fy, fz, width, height, depth) {
-    if (!depth) {
-      depth = width;
-    }
-    if (!height) {
-      height = 6;
-    }
-    let block;
+    let block = addGrassBlock;
+
+    depth = depth || width;
+    height = height || 6;
+
     if (A <= B) {
-      block = addRockBlock;
-    } else {
-      block = addGrassBlock;
+      addRockCenter(B * width, height, B * depth, fx, fy, fz);
+      return;
     }
 
     for (let x = 0; x < A + 1; x++) {
@@ -104,6 +100,7 @@ const buildLevelOne = function buildLevelOne() {
     for (let z = 1; z < A; z++) {
       block(-A * width / 2 + fx, fy, (A / 2 - z) * depth + fz, width, height, depth)
     }
+
     if (A >= 2) {
       buildFloor(A-2, B, fx, fy, fz, width, height, depth);
     }

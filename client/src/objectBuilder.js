@@ -17,10 +17,19 @@ const futureTile = function(xTile, zTile) {
   return texture;
 }
 
+const rockTexture = function(xTile, zTile) {
+  let texture = new THREE.TextureLoader().load('textures/rockygrass.jpg')
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(xTile, zTile);
+  return texture;
+}
+
 const grassSideMaterial = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load('textures/grass-side.jpg')});
 const grassBottomMaterial = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load('textures/grass-bottom.jpg')});
 const grassTopMaterial = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load('textures/grass-repeating4.jpg')});
-const rockTopMaterial = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load('textures/rockygrass.jpg')});
+const rockTopMaterial = new THREE.MeshLambertMaterial({map: rockTexture(4, 4)});
+
 const grass = function() {
   let materials = [
          grassSideMaterial,
