@@ -1,6 +1,8 @@
 import React from 'react';
 import MapSelector from './MapSelector.js'
 import { browserHistory } from 'react-router';
+import userProfile from '../userProfile.js';
+import SkinSelector from './SkinSelector.js';
 const clientScene = require('../../clientScene.js');
 
 class CreateMatch extends React.Component {

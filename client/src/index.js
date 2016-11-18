@@ -7,6 +7,7 @@ import Home from './component/Home/Home.js';
 import CreateMatch from './component/CreateMatch/CreateMatch.js';
 import JoinMatch from './component/JoinMatch/JoinMatch.js';
 import LeaderBoard from './component/LeaderBoard/LeaderBoard.js';
+import Store from './component/Store/Store.js'
 
 ReactDOM.render((
   <div>
@@ -17,6 +18,7 @@ ReactDOM.render((
         <Route path='CreateMatch' component={CreateMatch} />
         <Route path='JoinMatch' component={JoinMatch} />
         <Route path='LeaderBoard' component={LeaderBoard} />
+        <Route path='Store' component={Store} />
       </Route>
     </Router>
   </div>

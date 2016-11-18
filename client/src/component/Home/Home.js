@@ -26,6 +26,10 @@ class Home extends React.Component {
     browserHistory.push('/LeaderBoard')
   }
 
+  store() {
+    browserHistory.push('/Store')
+  }
+
   render() {
     return (
       <div id='HomePage'>
@@ -37,6 +41,9 @@ class Home extends React.Component {
           <button id="joinExisting" onClick={this.JoinExisting} className='btn btn-primary'>Join Match</button>
         </div>
           <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View LeaderBoards</button>
+        </div>
+        <div id='ShoppingCart'>
+          <button className='btn btn-warning' onClick={this.store}>Select a Skin</button>
         </div>
       </div>
     );

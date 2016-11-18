@@ -290,6 +290,10 @@ div > div > div > div > div {
   margin-top: 5px;
 }
 
+#ShoppingCart {
+  margin-top: 150px;
+}
+
 /*LeaderBoard CSS*/
 /*
 -----------------------------------------------------------------------------------*/
@@ -353,7 +357,7 @@ div > div > div > div > div {
 
 #CreateMatchBackground {
   position: absolute;
-  height: 400px;
+  height: 425px;
   width: 600px;
   top: 20%;
   right: 27%;
@@ -376,17 +380,27 @@ div > div > div > div > div {
 
 #StartMatch {
   position: absolute;
-  bottom: 20%;
+  bottom: 16%;
   width: 10%;
   right: 45%;
 }
 
-#ChooseLevelTitle {
-  margin-top: -10px;
-}
-
 #ChooseMap {
   margin-bottom: 5px;
+}
+
+#SkinSelector {
+  margin-top: 5px;
+  margin-right: 475px;
+  margin-left: 475px;
+  padding-top: 16px;
+  padding-bottom: 3px;
+  background-color: rgb(255, 255, 255);
+  height: 175px;
+  overflow:scroll;
+  overflow-x:hidden;
+  width: 200px;
+  display: none;
 }
 
 #Levels {
@@ -417,7 +431,6 @@ div > div > div > div > div {
   padding-top: 16px;
   padding-bottom: 3px;
   background-color: rgb(255, 255, 255);
-  display: none;
 }
 
 #MapSelector {
@@ -431,6 +444,10 @@ div > div > div > div > div {
 }
 
 #ChooseMapTitle {
+  font-size: 20px;
+}
+
+#ChooseSkinTitle {
   font-size: 20px;
 }
 
@@ -472,4 +489,32 @@ div > div > div > div > div {
 #JoinJoinTitle, #JoinUserTitle, #JoinLevelTitle {
   float: left;
   margin-top: 5px;
+}
+
+
+/*Store*/
+/*------------------------------------------------------*/
+
+#SkinPic {
+  height: 140px;
+  width: 140px;
+  margin-top: 10px;
+}
+
+#SkinButton {
+  margin-bottom: 10px;
+}
+
+#Skins {
+  height: 200px;
+  overflow:scroll;
+  overflow-x:hidden;
+  width: 300px;
+  background-color: white;
+  margin-left: 420px;
+  margin-top: 10px;
+}
+
+#SkinName {
+  color: black;
 }
