@@ -61,9 +61,9 @@ module.exports = {
         playerInput.right = true;
       }
       if (event.keyCode === 32) {
-        audio.smashBrawl.shootRound(0, 1, 0.08, 0, 0);
         event.preventDefault();
         if (jumpCount > 0 && playerInput.jump === false) {
+          audio.smashBrawl.shootRound(0, 1, 0.08, 0, 0);
           document.getElementById('jump' + jumpCount).style.opacity = '0';
           jumpCount--;
           playerInput.jump = true;

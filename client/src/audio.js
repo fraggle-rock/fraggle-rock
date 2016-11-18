@@ -48,12 +48,6 @@ BufferLoader.prototype.load = function() {
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const context = new AudioContext();
 const smashBrawl = new SmashBrawl(context);
-const onKeyDown = function onKeyDown(event) {
-  if(event.keyCode === 32) {
-    smashBrawl.shootRound(0, 1, 0.08, 0, 0);
-  }
-};
-
 
 function SmashBrawl(currContext) {
   const ctx = this;
