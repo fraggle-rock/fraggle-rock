@@ -91,7 +91,7 @@ const buildLevelOne = function buildLevelOne() {
     }
   }
 
-  buildFloor(20);
+  buildFloor(30);
 
 
   //RANDOM SHAPE GENERATOR
