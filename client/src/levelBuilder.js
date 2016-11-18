@@ -9,10 +9,6 @@ const buildLevelOne = function buildLevelOne() {
     scene.add(mesh);
   };
 
-  //FLOOR
-  // let mesh = objectBuilder.grassFloor({width: 40, height: 4, depth: 40}, {x: 0, y: -2.5, z: 0});
-  // scene.add(mesh);
-
   //Side Panels
   mesh = objectBuilder.sidePanel(
     {width: 50, height: 1, depth: 3},
@@ -56,42 +52,67 @@ const buildLevelOne = function buildLevelOne() {
   );
 
   //FLOOR BUILDER
-  const addGrassBlock = function addGrassBlock(x, z) {
-    let mesh = objectBuilder.grassFloor({width:4, height: 4, depth: 4},
-      {x: x, y: -5, z: z});
+  const addGrassBlock = function addGrassBlock(x, y, z, width, height, depth) {
+    if (!height) {
+      height = width;
+    }
+    if (!depth) {
+      depth = width;
+    }
+    let mesh = objectBuilder.grassFloor({width: width, height: height, depth: depth},
+      {x: x, y: y, z: z});
     scene.add(mesh);
   };
-  const addRockBlock = function addRockBlock(x, z) {
-    let mesh = objectBuilder.rockFloor({width:4, height: 4, depth: 4},
-      {x: x, y: -5, z: z});
+  const addRockBlock = function addRockBlock(x, y, z, width, height, depth) {
+    if (!height) {
+      height = width;
+    }
+    if (!depth) {
+      depth = width;
+    }
+    let mesh = objectBuilder.rockFloor({width: width, height: height, depth: depth},
+      {x: x, y: y, z: z});
     scene.add(mesh);
   };
 
-  const buildFloor = function buildFloor(n) {
+
+  // buildFloor(A, B, y, width, height, depth) builds square grass floor of A by A with a rock center of B by B, at y height.
+    // Blocks will be width x height x depth;
+  const buildFloor = function buildFloor(A, B, y, width, height, depth) {
+    if (!depth) {
+      depth = width;
+    }
+    if (!height) {
+      height = 6;
+    }
     let block;
-    if (n < 5) {
+    if (A <= B) {
       block = addRockBlock;
     } else {
       block = addGrassBlock;
     }
-    for (let x = 0; x < n + 1; x++) {
-      block((-n / 2 + x) * 4, -n * 2);
+
+
+
+    for (let x = 0; x < A + 1; x++) {
+      block((-A / 2 + x) * width, y, -A * depth / 2, width, height, depth);
     }
-    for (let z = 1; z < n + 1; z++) {
-      block(n * 2, (-n / 2 + z) * 4)
+    for (let z = 1; z < A + 1; z++) {
+      block(A * width / 2, y, (-A / 2 + z) * depth, width, height, depth)
     }
-    for (let x = 1; x < n + 1; x++) {
-      block((n / 2 - x) * 4, n * 2);
+    for (let x = 1; x < A + 1; x++) {
+      block((A / 2 - x) * width, y, A * depth / 2, width, height, depth);
     }
-    for (let z = 1; z < n; z++) {
-      block(-n * 2, (n / 2 - z) * 4)
+    for (let z = 1; z < A; z++) {
+      block(-A * width / 2, y, (A / 2 - z) * depth, width, height, depth)
     }
-    if (n >= 2) {
-      buildFloor(n-2);
+    if (A >= 2) {
+      buildFloor(A-2, B, y, width, height, depth);
     }
   }
 
-  buildFloor(20);
+  buildFloor(20, 5, -10, 10, 10, 10);
+
 
 
   //RANDOM SHAPE GENERATOR

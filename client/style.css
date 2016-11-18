@@ -7,7 +7,19 @@ font-family: 'Play', sans-serif;
 
 /*FOR DEBUGGING WIREFRAME*/
 /*div {
+  border: 1px solid green;
+}
+div > div {
+  border: 1px solid blue;
+}
+div > div > div {
   border: 1px solid red;
+}
+div > div > div > div {
+  border: 1px solid yellow;
+}
+div > div > div > div > div {
+  border: 1px solid pink;
 }*/
 
 
@@ -29,16 +41,14 @@ font-family: 'Play', sans-serif;
 }
 
 .playerBoxContainer {
-  width: 435px;
-  height: 125px;
+  width: 380px;
+  height: 90px;
   position: absolute;
-  top: 10px;
+  bottom: 10px;
   right: 10px;
 }
 
 .playerBox {
-  width: 95px;
-  height: 125px;
   margin: 0 5px;
   display: inline-block;
   position: relative;
@@ -46,117 +56,90 @@ font-family: 'Play', sans-serif;
 }
 
 .playerBox > img {
-  width: 70px;
-  height: auto;
   display: inline-block;
   float:left;
-  border: 2px solid #ddd;
-  border-radius: 50%;
   z-index: 2;
+  width: 80px;
+  height: auto;
 }
 
 .playerLives {
-  width: 17px;
-  height: 65px;
+  width: 65px;
+  height: 17px;
   position: absolute;
   z-index: 4;
-  top: 12px;
-  left: 62px;
+  top: 62px;
+  left: 12px;
   /*margin: 15px 0 0 2px;*/
 }
 
 .playerLives img {
-  width: 17px;
+  width: 16px;
   height: auto;
-  /*margin: 1px 0px;*/
+  margin: 3px 0 0;
 }
 
-.life1 {
-  margin-left: -10px;
-  margin-top: -2px;
-  color: red;
-}
-
-.life3 {
-  margin-left: -2px;
-  margin-top: -2px;
-  color: white;
-}
 
 .playerNameBox {
-  font-family: 'Play', sans-serif;
-  position: relative;
-  font-size: 10px;
-  color: white;
-  width: 75px;
+  position: absolute;
+  top: 51px;
+  left: 0;
+  width: 80px;
   height: 29px;
-  background-size: 75px 29px;
   text-align: center;
-  margin-top: 65px;
-  z-index: 5;
 }
 
 .playerName {
-  margin-top: 0;
-  position: relative;
+  font-family: 'Play', sans-serif;
+  font-size: 11px;
+  color: white;
   z-index: 6;
+  text-shadow: 1px 1px black;
 }
 
-.playerNameBox.player1 {
-  background: url('./textures/brushstroke-red.png');
-}
-
-.playerNameBox.player2 {
-  background: url('./textures/brushstroke-blue.png');
-}
-
-.playerNameBox.player3 {
-  background: url('./textures/brushstroke-green.png');
-}
-
-.playerNameBox.player4 {
-  background: url('./textures/brushstroke-pink.png');
+.crosshairContainer {
+  width: 36px;
+  height: 15px;
+  margin: 25% auto 0;
 }
 
 #crosshair {
-  position: absolute;
-  top: 49.5%;
-  left: 49.5%;
-  width: 1%;
-  height: auto;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0;
 }
 .jumpBox {
-  position: absolute;
-  top: 48.2%;
-  left: 48.4%;
-  height: 4%;
-  width: 2%;
+  width: 5px;
+  height: 15px;
+  display: inline-block;
+  margin-right: 6px;
+  float: left;
+  line-height: 8px;
 }
 
 #jump1, #jump2, #jump3 {
   display: block;
   /*background-color: white;*/
   color: white;
-  width: 20%;
-  height: 20%;
-  margin:8%;
-  font-size: 2px;
+  margin: 0;
+  font-size: 1.9px;
 }
 .ammoBox {
-  position: absolute;
-  top: 48.7%;
-  right: 47.2%;
-  height: 4%;
-  width: 2%;
+  display: inline-block;
+  margin-left: 5px;
+  height: 15px;
+  width: 5px;
+  float: right;
 }
 
 #ammo1, #ammo2, #ammo3 {
   display: block;
   border-radius: 50%;
   background-color: white;
-  width: 20%;
-  height: 20%;
-  margin:8%;
+  width: 5px;
+  height: 5px;
+  margin: 2px 0;
 }
 
 #menuContainer {

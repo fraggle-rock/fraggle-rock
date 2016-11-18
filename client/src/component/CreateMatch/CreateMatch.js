@@ -18,19 +18,19 @@ class CreateMatch extends React.Component {
     screenOverlay.style.display = '';
     hud.style.display = 'none';
     document.addEventListener('keydown', function(e) {
-     if(e.keyCode === 192) {
-     screenOverlay.style.display = '-webkit-box';
-     screenOverlay.style.display = '-moz-box';
-     screenOverlay.style.display = 'box';
-     if(menuContainer.style.display === '') {
-      menuContainer.style.display = 'none';
-      hud.style.display = '';
-      document.body.requestPointerLock()
-     }else {
-      menuContainer.style.display = '';
-      hud.style.display = 'none';
-      document.exitPointerLock()
-     }
+      if(e.keyCode === 192) {
+      screenOverlay.style.display = '-webkit-box';
+      screenOverlay.style.display = '-moz-box';
+      screenOverlay.style.display = 'box';
+        if (menuContainer.style.display === '') {
+          menuContainer.style.display = 'none';
+          hud.style.display = '';
+          document.body.requestPointerLock();
+        } else {
+          menuContainer.style.display = '';
+          hud.style.display = 'none';
+          document.exitPointerLock();
+        }
       }
     })
 
@@ -39,11 +39,11 @@ class CreateMatch extends React.Component {
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
       screenOverlay.style.display = 'box';
-      if(menuContainer.style.display === '') {
+      if (menuContainer.style.display === '') {
         menuContainer.style.display = 'none';
         hud.style.display = '';
-        document.body.requestPointerLock()
-      }else {
+        document.body.requestPointerLock();
+      } else {
         menuContainer.style.display = '';
         hud.style.display = 'none';
       }
@@ -79,7 +79,7 @@ class CreateMatch extends React.Component {
             <MapSelector />
           </div>
           <div id='DawnMountainCreateBackground'>
-            <img id='DawnMountainCreate' src='../../../textures/dawnmountain-xpos.png' />
+            <img id='DawnMountainCreate' src='../../../textures/dawnmountainThumb.jpg' />
             <div>Dawn Mountain</div>
           </div>
           <button id='StartMatch' className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
