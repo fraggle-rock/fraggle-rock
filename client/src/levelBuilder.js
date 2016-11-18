@@ -112,6 +112,7 @@ const buildLevelOne = function buildLevelOne() {
   buildFloor(10, 5, 20, -15, 70, 2, 2, 2);
   buildFloor(10, 5, -20, 15, -70, 2, 2, 2);
 
+
   //RANDOM SHAPE GENERATOR
   const random = function random(low, high) {
     return Math.floor(Math.random()*(high - low + 1)) + low;
