@@ -18,45 +18,32 @@ const futureTile = function(xTile, zTile) {
 }
 
 const grassSideMaterial = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load('textures/grass-side.jpg')});
+const grassBottomMaterial = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load('textures/grass-bottom.jpg')});
+const grassTopMaterial = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load('textures/grass-repeating4.jpg')});
+const rockTopMaterial = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load('textures/rockygrass.jpg')});
 const grass = function() {
   let materials = [
          grassSideMaterial,
          grassSideMaterial,
-         new THREE.MeshLambertMaterial({
-             map: new THREE.TextureLoader().load('textures/grass-bottom.jpg') //bottom
-         }),
-         new THREE.MeshLambertMaterial({
-             map: new THREE.TextureLoader().load('textures/grass-repeating4.jpg') //top
-         }),
+         grassBottomMaterial,
+         grassTopMaterial,
          grassSideMaterial,
          grassSideMaterial
-  ]
+  ];
+  return materials;
+}
+const rock = function() {
+  let materials = [
+         grassSideMaterial,
+         grassSideMaterial,
+         grassBottomMaterial,
+         rockTopMaterial,
+         grassSideMaterial,
+         grassSideMaterial
+  ];
   return materials;
 }
 
-const rock = function() {
-  let materials = [
-         new THREE.MeshLambertMaterial({
-             map: new THREE.TextureLoader().load('textures/grass-side.jpg') //side
-         }),
-         new THREE.MeshLambertMaterial({
-             map: new THREE.TextureLoader().load('textures/grass-side.jpg') //side
-         }),
-         new THREE.MeshLambertMaterial({
-             map: new THREE.TextureLoader().load('textures/grass-bottom.jpg') //bottom
-         }),
-         new THREE.MeshLambertMaterial({
-             map: new THREE.TextureLoader().load('textures/rockygrass.jpg') //top
-         }),
-         new THREE.MeshLambertMaterial({
-             map: new THREE.TextureLoader().load('textures/grass-side.jpg') //side
-         }),
-         new THREE.MeshLambertMaterial({
-             map: new THREE.TextureLoader().load('textures/grass-side.jpg') //side
-         })
-  ]
-  return materials;
-}
 
 const redBallMaterial = new THREE.MeshLambertMaterial(
   {map: new THREE.TextureLoader().load( 'textures/redball2.jpg' )} );
@@ -66,7 +53,7 @@ const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
 const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
 const ancientCrateMaterial = MeshLambertMaterial('textures/ancientcrate.jpg');
 const scoreBoardMaterial = new THREE.MeshPhongMaterial({ map: futureTile(9/4, 1), transparent: true, opacity: .8  });
-const sidePanelMaterial = new THREE.MeshPhongMaterial({ map: futureTile(15, 5/6), transparent: true, opacity: .8  });
+const sidePanelMaterial = new THREE.MeshPhongMaterial({ map: futureTile(50/3, 1), transparent: true, opacity: .8  });
 const grassMaterial =  new THREE.MeshFaceMaterial( grass() );
 const rockMaterial = new THREE.MeshFaceMaterial( rock() );
 
@@ -74,7 +61,7 @@ const sky = (() => {
   let sky = {};
   let imagePrefix = "textures/dawnmountain-";
   let directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
-  let imageSuffix = ".png";
+  let imageSuffix = ".jpg";
   sky.geometry = new THREE.CubeGeometry( config.skyboxSize, config.skyboxSize, config.skyboxSize );
 
   let materialArray = [];
@@ -107,7 +94,13 @@ const initPosition = function initPosition(mesh, position, quaternion) {
     quaternion.x = quaternion.x || quaternion._x || 0;
     quaternion.y = quaternion.y || quaternion._y || 0;
     quaternion.z = quaternion.z || quaternion._z || 0;
+    quaternion._w = quaternion.w;
+    quaternion._x = quaternion.x;
+    quaternion._y = quaternion.y;
+    quaternion._z = quaternion.z;
     mesh.quaternion.copy(quaternion);
+  } else {
+    mesh.quaternion.copy({w: 0, x: 1, y: 0, z: 0});
   }
 }
 
@@ -187,15 +180,9 @@ module.exports = {
     return sky;
   },
   sidePanel: function(size, position, quaternion) {
-    let yquat = new THREE.Quaternion();
-    yquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 6);
-    // let zquat = new THREE.Quaternion();
-    // zquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
-    // let quat = yquat.multiply(zquat);
     let mesh = new THREE.Mesh(BoxGeometry(size), sidePanelMaterial);
     initPosition(mesh, position);
     mesh.userData.name = 'sidePanel';
-    mesh.rotation.x = - Math.PI / 6; //(30degrees)
     addShadow(mesh);
     mesh.userData.mass = 0;
     return mesh;
@@ -265,19 +252,3 @@ module.exports = {
 //   mesh.rotation.y = Math.PI / 2;
 //   scene.add(mesh);
 // });
-
-
-// futureTile = new THREE.TextureLoader().load( 'textures/scoreboard.png' );
-// // futureTile.wrapS = THREE.RepeatWrapping;
-// // futureTile.wrapT = THREE.RepeatWrapping;
-// // futureTile.repeat.set( 9/4 , 1 );
-// geometry = new THREE.BoxGeometry(9, 0.1, 4);
-// material = new THREE.MeshPhongMaterial({ map: futureTile,  transparent: true, opacity: 1 });
-// mesh = new THREE.Mesh(geometry, material);
-// mesh.position.y = 7.5;
-// mesh.position.x = -22.3;
-// mesh.receiveShadow = true;
-// mesh.rotation.x = - Math.PI / 2;
-// mesh.rotation.z = Math.PI / 2;
-// scene.add(mesh);
-

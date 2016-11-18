@@ -62,12 +62,14 @@ module.exports = {
       if (event.keyCode === 32) {
         event.preventDefault();
         if (jumpCount > 0 && playerInput.jump === false) {
+          document.getElementById('jump' + jumpCount).style.opacity = '0';
           jumpCount--;
           playerInput.jump = true;
         }
         const regen = function regen() {
           if (jumpCount < config.maxJumps) {
             jumpCount++;
+            document.getElementById('jump' + jumpCount).style.opacity = '1';
           }
           if (jumpCount < config.maxJumps) {
             setTimeout(regen, config.jumpRegen)
@@ -108,6 +110,7 @@ module.exports = {
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
       if (shotCount > 0) {
+        document.getElementById('ammo' + shotCount).style.opacity = '0';
         shotCount--;
         socketUtility.emitShootBall({
           position: currentGame.camera.position,
@@ -117,6 +120,7 @@ module.exports = {
       const regen = function regen() {
         if (shotCount < config.maxShots) {
           shotCount++;
+          document.getElementById('ammo' + shotCount).style.opacity = '1';
         }
         if (shotCount < config.maxShots) {
           setTimeout(regen, config.shotRegen)

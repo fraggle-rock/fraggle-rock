@@ -7,21 +7,21 @@ var JoinButtonData = props => {
 	  var menuContainer = document.getElementById( 'menuContainer' );
 	  screenOverlay.style.display = '';
 	  document.addEventListener('keydown', function(e) {
-      if(e.keyCode === 16) {
+      if(e.keyCode === 192) {
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
       screenOverlay.style.display = 'box';
       if(menuContainer.style.display === '') {
     	menuContainer.style.display = 'none';
-      document.body.requestPointerLock()  
+    	hud.style.display = '';
+      document.body.requestPointerLock()
       }else {
       menuContainer.style.display = '';
+      hud.style.display = 'none';
       document.exitPointerLock()
-      }   
+      }
 		}
 	   })
-	 
-    document.getElementById( 'JoinMatchTitle' ).style.display = 'none';
 	  clientScene.joinGame(this);
   }
 
@@ -31,7 +31,7 @@ var JoinButtonData = props => {
 		<button onClick={JoinGame.bind(props.games)} className='btn btn-warning'>Join Game</button>
 	  </span>
 	</div>
-  )   
+  )
 }
 
 export default JoinButtonData

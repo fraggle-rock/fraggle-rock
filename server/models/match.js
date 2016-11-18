@@ -24,18 +24,11 @@ module.exports = function Match(deleteMatch) {
   this.startPhysics = startPhysics.bind(this);
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
-  this.physicsClock;
-  this.physicsTick = config.physicsTick;
-  this.updatesSinceLastEmit = config.physicsEmitRatio - 1;
-  this.killFloor = killFloor.bind(this);
+  this.deleteMatch = deleteMatch;
+  this.physicsTick = config.gameSpeed * 1 / 60 / 2;
+  this.killFloor = killFloor.bind(this);  
   this.sendFull = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
-  // this.timeoutDelay = config.serverTimeout;
-  // this.timeout = setTimeout(kill, this.timeoutDelay);
-  this.t0 = 0;
-  this.t1 = 0;
-  this.t2 = 0;
-  this.t3 = 0;
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
@@ -104,10 +97,19 @@ const startPhysics = function startPhysics(io) {
     if (clear.length > 0) {
       update.clear = clear; 
     }
-    if (context.sendFull || clear.length > 0) {
-      io.to(context.guid).emit('physicsUpdate', JSON.stringify(update));
+    const sockets = io.to(context.guid).sockets;
+    let players = 0;
+    for(var key in sockets) {
+      players++;
+    }
+    if (players > 0) {
+      if (context.sendFull || clear.length > 0) {
+        io.to(context.guid).emit('physicsUpdate', JSON.stringify(update));
+      } else {
+        io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+      }
     } else {
-      io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+      context.deleteMatch(context.guid);
     }
     context.sendFull = false;
   };
@@ -140,12 +142,11 @@ const startPhysics = function startPhysics(io) {
       }
     }
     
-    context.world.step(1/150);
-    context.world.step(1/150);  
+    context.world.step(context.physicsTick);
+    context.world.step(context.physicsTick);  
     physicsEmit();
-  }
-
-  context.physicsClock = setInterval(physicsLoop, 1/60*1000);
+  } 
+  context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
 };
 
 const shootBall = function shootBall(camera) {

@@ -19,15 +19,13 @@ module.exports = {
   ballRadius: 0.5,
   ballMass: 350,
   ballVelocity: 175,
-  physicsEmitTick: 1 / 60 * 1000,
-  physicsTick: 1 / 60 * 1000,
+  gameSpeed: .9,
   serverTimeout: 30 * 1000,
   playerMovePerTick: 5,
   playerYReset: -100,
   jumpVelocity: 75,
   gravity: -98,
   physicsBounds: 200,
-  physicsEmitRatio: 2,
   uuidLength: 5,
   playerDamping: .9
 };
