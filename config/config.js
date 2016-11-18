@@ -19,7 +19,7 @@ module.exports = {
   ballRadius: 0.5,
   ballMass: 400,
   ballVelocity: 400,
-  gameSpeed: .7,
+  gameSpeed: .4,
   serverTimeout: 30 * 1000,
   playerMovePerTick: 25,
   playerYReset: -100,
