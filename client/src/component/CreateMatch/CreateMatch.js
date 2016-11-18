@@ -70,7 +70,6 @@ class CreateMatch extends React.Component {
         <div id='CreateMatch'>
           <h1 id='CreateMatchTitle'>Create Match</h1>
           <div id='CreateMatchBackground'/>
-          <div>
             <div>
               <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
             </div>
