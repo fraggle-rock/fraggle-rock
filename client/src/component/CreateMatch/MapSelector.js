@@ -18,7 +18,7 @@ DawnMountain() {
  render() {
    return (
       <div id="Levels">
-        <div> 
+        <div>
           <div>
             <h3 id='ChooseLevelTitle'>Choose Level Below</h3>
             <div>
@@ -28,10 +28,9 @@ DawnMountain() {
               </div>
             </div>
           </div>
-        </div> 
+        </div>
       </div>
    );
-  
  }
 }
 
