@@ -111,9 +111,8 @@ const buildLevelOne = function buildLevelOne() {
     }
   }
 
+
   buildFloor(20, 5, -10, 10, 10, 10);
-
-
 
   //RANDOM SHAPE GENERATOR
   const random = function random(low, high) {

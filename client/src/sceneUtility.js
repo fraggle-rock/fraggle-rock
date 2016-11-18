@@ -2,6 +2,7 @@ const THREE = require('three');
 const objectBuilder = require('./objectBuilder');
 const config = require('../../config/config.js');
 const flat = require('../../config/flat.js');
+const audio = require('./audio');
 
 const remoteClients = {};
 const remoteScene = {};
@@ -62,6 +63,7 @@ module.exports = {
       if (event.keyCode === 32) {
         event.preventDefault();
         if (jumpCount > 0 && playerInput.jump === false) {
+          audio.smashBrawl.shootRound(0, 1, 0.08, 0, 0);
           document.getElementById('jump' + jumpCount).style.opacity = '0';
           jumpCount--;
           playerInput.jump = true;
@@ -110,6 +112,7 @@ module.exports = {
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
       if (shotCount > 0) {
+        audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
         document.getElementById('ammo' + shotCount).style.opacity = '0';
         shotCount--;
         socketUtility.emitShootBall({
