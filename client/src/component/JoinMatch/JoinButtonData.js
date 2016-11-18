@@ -9,18 +9,18 @@ var JoinButtonData = props => {
 	  screenOverlay.style.display = '';
     hud.style.display = 'none';
 	  document.addEventListener('keydown', function(e) {
-      if(e.keyCode === 192) {
-      screenOverlay.style.display = '-webkit-box';
-      screenOverlay.style.display = '-moz-box';
-      screenOverlay.style.display = 'box';
-      if(menuContainer.style.display === '') {
-    	menuContainer.style.display = 'none';
-    	hud.style.display = '';
-      document.body.requestPointerLock()
-      }else {
-      menuContainer.style.display = '';
-      hud.style.display = 'none';
-      document.exitPointerLock()
+      if (e.keyCode === 192) {
+        screenOverlay.style.display = '-webkit-box';
+        screenOverlay.style.display = '-moz-box';
+        screenOverlay.style.display = 'box';
+      if (menuContainer.style.display === '') {
+      	menuContainer.style.display = 'none';
+      	hud.style.display = '';
+        document.body.requestPointerLock();
+      } else {
+        menuContainer.style.display = '';
+        hud.style.display = 'none';
+        document.exitPointerLock();
       }
 		}
 	   })
@@ -44,11 +44,11 @@ var JoinButtonData = props => {
   }
 
   return (
-	<div id='JoinGameButton'>
-	  <span>
-		<button onClick={JoinGame.bind(props.games)} className='btn btn-warning'>Join Game</button>
-	  </span>
-	</div>
+  	<div id='JoinGameButton'>
+  	  <span>
+  		  <button onClick={JoinGame.bind(props.games)} className='btn btn-warning'>Join Game</button>
+  	  </span>
+  	</div>
   )
 }
 
