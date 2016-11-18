@@ -2,13 +2,13 @@ function BufferLoader(context, urlList, callback) {
   this.context = context;
   this.urlList = urlList;
   this.onload = callback;
-  this.bufferList = new Array();
+  this.bufferList = [];
   this.loadCount = 0;
 }
 
-BufferLoader.prototype.loadBuffer = function(url, index) {
+BufferLoader.prototype.loadBuffer = function (url, index) {
   // Load buffer asynchronously
-  var request = new XMLHttpRequest();
+  const request = new XMLHttpRequest();
   request.open("GET", url, true);
   request.responseType = "arraybuffer";
 
@@ -20,7 +20,7 @@ BufferLoader.prototype.loadBuffer = function(url, index) {
       request.response,
       function(buffer) {
         if (!buffer) {
-          alert('error decoding file data: ' + url);
+          console.error('error decoding file data: ' + url);
           return;
         }
         loader.bufferList[index] = buffer;
@@ -31,19 +31,20 @@ BufferLoader.prototype.loadBuffer = function(url, index) {
         console.error('decodeAudioData error', error);
       }
     );
-  }
+  };
 
-  request.onerror = function() {
-    alert('BufferLoader: XHR error');
-  }
+  request.onerror = function () {
+    console.log('BufferLoader error Error loading audio file');
+  };
 
   request.send();
-}
+};
 
-BufferLoader.prototype.load = function() {
-  for (var i = 0; i < this.urlList.length; ++i)
-  this.loadBuffer(this.urlList[i], i);
-}
+BufferLoader.prototype.load = function () {
+  for (let i = 0; i < this.urlList.length; i += 1) {
+    this.loadBuffer(this.urlList[i], i);
+  }
+};
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const context = new AudioContext();
@@ -51,8 +52,10 @@ const smashBrawl = new SmashBrawl(context);
 
 function SmashBrawl(currContext) {
   const ctx = this;
-  const loader = new BufferLoader(currContext, ['../assets/jump.mp3',
-    '../assets/shoot.mp3'], onLoaded);
+  const loader = new BufferLoader(currContext, ['../assets/jump.wav',
+    '../assets/shoot.wav',
+    '../assets/collide.wav',
+    '../assets/die.wav'], onLoaded);
   function onLoaded(buffers) {
     ctx.buffers = buffers;
   }
