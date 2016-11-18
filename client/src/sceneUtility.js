@@ -111,8 +111,8 @@ module.exports = {
   },
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
-      audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
       if (shotCount > 0) {
+        audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
         document.getElementById('ammo' + shotCount).style.opacity = '0';
         shotCount--;
         socketUtility.emitShootBall({
