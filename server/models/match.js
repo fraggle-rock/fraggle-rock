@@ -28,10 +28,11 @@ module.exports = function Match(deleteMatch) {
   this.physicsTick = config.gameSpeed * 1 / 60 / 2;
   this.killFloor = killFloor.bind(this);  
   this.sendFull = true;
-  kill = function() {deleteMatch(this.guid)}.bind(this);
+  this.kill = function() {deleteMatch(this.guid)}.bind(this);
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
+  clearTimeout(this.timeout);
   clientPosition = JSON.parse(clientPosition);
   clientPosition = flat.rePlayerInput(clientPosition);
   const localClient = this.clients[clientPosition.uuid];
@@ -41,6 +42,7 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
   localClient.down = clientPosition.down;
   localClient.direction = clientPosition.direction;
   localClient.jump = clientPosition.jump;
+  this.timeout = setTimeout(this.kill, config.serverTimeout);
 };
 
 const startPhysics = function startPhysics(io) {
@@ -172,6 +174,7 @@ const startPhysics = function startPhysics(io) {
 };
 
 const shootBall = function shootBall(camera) {
+  clearTimeout(this.timeout);
   camera = flat.reShootBall(JSON.parse(camera));
   let x = camera.position.x;
   let y = camera.position.y;
@@ -191,6 +194,7 @@ const shootBall = function shootBall(camera) {
   y += shootDirection.y * 2.5;
   z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
+  this.timeout = setTimeout(this.kill, config.serverTimeout);
 };
 
 const loadNewClient = function loadNewClient(player) {
