@@ -22,7 +22,7 @@ var JoinMatchData = props => {
       hud.style.display = 'none';
       document.exitPointerLock()
      }
-      }
+    }
     })
 
     var button = document.getElementById('resume');

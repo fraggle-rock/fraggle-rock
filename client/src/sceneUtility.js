@@ -165,7 +165,7 @@ module.exports = {
     const boxMeshes = meshObject[0];
     const ballMeshes = meshObject[1];
     const serverClients = meshObject[2];
-    const clear = meshObject.clear || [];
+    const clear = meshObject[3] || [];
     const sceneChildren = currentGame.scene.children;
     while(sceneChildren.length > meshLookup.length) {
       meshLookup[sceneChildren[meshLookup.length].uuid.slice(0, config.uuidLength)] = sceneChildren[meshLookup.length];

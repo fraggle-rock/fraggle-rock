@@ -94,13 +94,13 @@ const startPhysics = function startPhysics(io) {
     if (expiredBoxes.length > 0) {
       console.log('Deleted out of bounds box!');
       expiredBoxes.forEach(function(box) {
-        box.position.set((Math.random() - Math.random()) * 30, 30 + Math.random() * 10, (Math.random() - Math.random()) * 30);
-        box.velocity.set(0, 0, 0);
+        box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
+        box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
     const update = [boxes, balls, players];;
     if (clear.length > 0) {
-      update.clear = clear; 
+      update.push(clear); 
     }
     const sockets = io.to(context.guid).sockets;
     let playerCount = 0;
@@ -123,7 +123,7 @@ const startPhysics = function startPhysics(io) {
       const client = context.clients[key];
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
-      const movePerTick = config.playerMovePerTick;
+      let movePerTick = config.playerMovePerTick;
       const damping = config.playerDamping;
       if (clientBody.position.y < config.playerYReset) {
         clientBody.position.set(0,10,0);
@@ -132,10 +132,14 @@ const startPhysics = function startPhysics(io) {
       }
       //player x-z damping
       let sign = clientBody.velocity.x >= 0 ? 1 : -1;
-      clientBody.velocity.x -= sign * damping * (clientBody.velocity.x * clientBody.velocity.x);
+      const xDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.x * clientBody.velocity.x));
+      clientBody.velocity.x -= xDamping;
       sign = clientBody.velocity.z >= 0 ? 1 : -1;
-      clientBody.velocity.z -= sign * damping * (clientBody.velocity.z * clientBody.velocity.z);
-      
+      const zDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.z * clientBody.velocity.z));
+      clientBody.velocity.z -= zDamping;
+      if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
+        movePerTick = movePerTick * .707;
+      }
       if (client.up) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
       }
@@ -274,7 +278,7 @@ const loadFullScene = function loadFullScene(scene, player) {
 
 // Remove floor tiles periodically
 const killFloor = function killFloor() {
-  let killFloorTick = 250;
+  let killFloorTick = config.killFloorInterval;
   let floorTiles = [];
   let spacer = 76;
 
@@ -298,7 +302,7 @@ const killFloor = function killFloor() {
         tile.mass = 1000;
         tile.updateMassProperties()
         tile.type = 1;
-        tile.velocity.y = 100;
+        tile.velocity.y = config.killFloorUpVelocity;
         floorTiles.splice(randIndex, 1)
       }
     }, killFloorTick);
