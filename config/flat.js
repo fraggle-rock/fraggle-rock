@@ -18,13 +18,9 @@ const roundQuaternion = function roundQuaternion (quaternion) {
   newQuaternion.z = roundToDec(quaternion.z, 3);
   return newQuaternion;
 };
-
-// {
-//   uuid: ball.id,
-//   position: roundPosition(ball.position),
-//   quaternion: roundQuaternion(ball.quaternion),
-//   mass: ball.mass
-// }
+const flatBoolean = function flatBoolean (boolean) {
+  return boolean ? 1 : 0;
+}
 const shapeEncoder = {
   grassFloor: 1,
   rockFloor: 2,
@@ -42,19 +38,118 @@ const shapeDecoder = (function() {
 })()
 
 module.exports = {
-  ball: function ball (ball) {
+  shootBall: function shootBall (shot) {
+    const rPosition = roundPosition(shot.position);
+    const rDirection = roundPosition(shot.direction);
+    return [
+      rPosition.x,
+      rPosition.y,
+      rPosition.z,
+      rDirection.x,
+      rDirection.y,
+      rDirection.z,
+    ];
+  },
+  reShootBall: function reShootBall (flatShot) {
     return {
-      uuid: ball.id,
-      position: roundPosition(ball.position),
-      quaternion: roundQuaternion(ball.quaternion),
-    }; 
+      position: {
+        x: flatShot[0],
+        y: flatShot[1],
+        z: flatShot[2]
+      },
+      direction: {
+        x: flatShot[3],
+        y: flatShot[4],
+        z: flatShot[5]
+      }
+    }
+  },
+  playerInput: function playerInput (playerInput) {
+    const rDirection = roundPosition(playerInput.direction);
+    return [
+      playerInput.uuid,
+      flatBoolean(playerInput.up),
+      flatBoolean(playerInput.left),
+      flatBoolean(playerInput.down),
+      flatBoolean(playerInput.right),
+      flatBoolean(playerInput.jump),
+      rDirection.x,
+      rDirection.y,
+      rDirection.z
+    ]
+  },
+  rePlayerInput: function rePlayerInput (flatPlayerInput) {
+    return {
+      uuid: flatPlayerInput[0],
+      up: flatPlayerInput[1],
+      left: flatPlayerInput[2],
+      down: flatPlayerInput[3],
+      right: flatPlayerInput[4],
+      jump: flatPlayerInput[5],
+      direction: {
+        x: flatPlayerInput[6],
+        y: flatPlayerInput[7],
+        z: flatPlayerInput[8]
+      }
+    }
+  },
+  player: function player (player) {
+    const rPosition = roundPosition(player.position);
+    const rDirection = roundPosition(player.direction);
+    return [
+      player.uuid,
+      rPosition.x,
+      rPosition.y,
+      rPosition.z,
+      rDirection.x,
+      rDirection.y,
+      rDirection.z,
+    ];
+  },
+  rePlayer: function player (flatPlayer) {
+    return  {
+        uuid: flatPlayer[0],
+        position: {
+          x: flatPlayer[1],
+          y: flatPlayer[2],
+          z: flatPlayer[3]
+        },
+        direction: {
+          x: flatPlayer[4],
+          y: flatPlayer[5],
+          z: flatPlayer[6]
+        },
+      }
+  },
+  ball: function ball (ball) {
+    const rPosition = roundPosition(ball.position);
+    const rQuaternion = roundQuaternion(ball.quaternion);
+    return [
+      ball.id,
+      rPosition.x,
+      rPosition.y,
+      rPosition.z,
+      rQuaternion.w,
+      rQuaternion.x,
+      rQuaternion.y,
+      rQuaternion.z
+    ]; 
   },
   reBall: function reBall (flatBall) {
     return {
-      uuid: ball.id,
-      position: roundPosition(ball.position),
-      quaternion: roundQuaternion(ball.quaternion),
-    }
+      uuid: flatBall[0],
+      position: {
+        x: flatBall[1],
+        y: flatBall[2],
+        z: flatBall[3]
+      },
+      quaternion: {
+        w: flatBall[4],
+        x: flatBall[5],
+        y: flatBall[6],
+        z: flatBall[7],
+      }
+    };
   },
   box: function box (box) {
     const rPosition = roundPosition(box.position);
