@@ -2,7 +2,7 @@ import React from 'react';
 
 var LeaderBoardDataUser = props => {
       return (
-        <div>
+        <div id='LeaderBoardDataUser'>
           <div>
           <span>{props.leader.username}</span>
           </div>
