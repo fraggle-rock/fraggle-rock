@@ -28,11 +28,13 @@ module.exports = function Match(deleteMatch) {
   this.physicsTick = config.gameSpeed * 1 / 60 / 2;
   this.killFloor = killFloor.bind(this);  
   this.sendFull = true;
-  kill = function() {deleteMatch(this.guid)}.bind(this);
+  this.kill = function() {deleteMatch(this.guid)}.bind(this);
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
+  clearTimeout(this.timeout);
   clientPosition = JSON.parse(clientPosition);
+  clientPosition = flat.rePlayerInput(clientPosition);
   const localClient = this.clients[clientPosition.uuid];
   localClient.up = clientPosition.up;
   localClient.left = clientPosition.left;
@@ -40,6 +42,7 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
   localClient.down = clientPosition.down;
   localClient.direction = clientPosition.direction;
   localClient.jump = clientPosition.jump;
+  this.timeout = setTimeout(this.kill, config.serverTimeout);
 };
 
 const startPhysics = function startPhysics(io) {
@@ -48,9 +51,18 @@ const startPhysics = function startPhysics(io) {
     const balls = [];
     const boxes = [];
     const clear = [];
+    const players = [];
     const expiredBoxes = [];
     const expiredBoxIndices = [];
     const expiredBallIndices = [];
+    for (var key in context.clients) {
+      players.push(flat.player(context.clients[key]));
+    }
+    while (context.balls.length > config.maxBalls) {
+      const ball = context.balls.shift();
+      context.world.remove(ball);
+      clear.push(ball.id);
+    }
     context.balls.forEach(function(ball, i) {
       if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
         expiredBallIndices.push(i);
@@ -89,22 +101,22 @@ const startPhysics = function startPhysics(io) {
     if (expiredBoxes.length > 0) {
       console.log('Deleted out of bounds box!');
       expiredBoxes.forEach(function(box) {
-        box.position.set((Math.random() - Math.random()) * 30, 30 + Math.random() * 10, (Math.random() - Math.random()) * 30);
-        box.velocity.set(0, 0, 0);
+        box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
+        box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
-    const update = {boxMeshes: boxes, ballMeshes: balls, players: context.clients};;
+    const update = [boxes, balls, players];;
     if (clear.length > 0) {
-      update.clear = clear; 
+      update.push(clear); 
     }
     const sockets = io.to(context.guid).sockets;
-    let players = 0;
+    let playerCount = 0;
     for(var key in sockets) {
-      players++;
+      playerCount++;
     }
-    if (players > 0) {
+    if (playerCount > 0) {
       if (context.sendFull || clear.length > 0) {
-        io.to(context.guid).emit('physicsUpdate', JSON.stringify(update));
+        io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
         io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
       }
@@ -118,11 +130,22 @@ const startPhysics = function startPhysics(io) {
       const client = context.clients[key];
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
-      const movePerTick = config.playerMovePerTick;
-      if (clientBody.position.y < config.playerYReset) {
+      let movePerTick = config.playerMovePerTick;
+      const damping = config.playerDamping;
+      if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
         continue;
+      }
+      //player x-z damping
+      let sign = clientBody.velocity.x >= 0 ? 1 : -1;
+      const xDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.x * clientBody.velocity.x));
+      clientBody.velocity.x -= xDamping;
+      sign = clientBody.velocity.z >= 0 ? 1 : -1;
+      const zDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.z * clientBody.velocity.z));
+      clientBody.velocity.z -= zDamping;
+      if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
+        movePerTick = movePerTick * .707;
       }
       if (client.up) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
@@ -140,6 +163,7 @@ const startPhysics = function startPhysics(io) {
           clientBody.velocity.set(currVelocity.x, currVelocity.y + config.jumpVelocity, currVelocity.z);
           client.jump = false;
       }
+
     }
     
     context.world.step(context.physicsTick);
@@ -150,6 +174,8 @@ const startPhysics = function startPhysics(io) {
 };
 
 const shootBall = function shootBall(camera) {
+  clearTimeout(this.timeout);
+  camera = flat.reShootBall(JSON.parse(camera));
   let x = camera.position.x;
   let y = camera.position.y;
   let z = camera.position.z;
@@ -164,24 +190,24 @@ const shootBall = function shootBall(camera) {
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
-  x += shootDirection.x;
-  y += shootDirection.y;
-  z += shootDirection.z;
+  x += shootDirection.x * 2.5;
+  y += shootDirection.y * 2.5;
+  z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
+  this.timeout = setTimeout(this.kill, config.serverTimeout);
 };
 
 const loadNewClient = function loadNewClient(player) {
   const x = player.position.x;
   const y = player.position.y;
   const z = player.position.z;
+  player.object.uuid = player.object.uuid.slice(0, config.uuidLength);
   const ballBody = new CANNON.Body({ mass: config.playerModelMass });
   const ballShape = new CANNON.Sphere(config.playerModelRadius);
   ballBody.position.x = x;
   ballBody.position.y = y;
   ballBody.position.z = z;
   ballBody.addShape(ballShape);
-  ballBody.linearDamping = config.playerDamping;
-  ballBody.angularDamping = config.playerDamping;
   this.clientToCannon[player.object.uuid] = ballBody;
   this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
   this.world.add(ballBody);
@@ -261,7 +287,7 @@ const loadFullScene = function loadFullScene(scene, player) {
 
 // Remove floor tiles periodically
 const killFloor = function killFloor() {
-  let killFloorTick = 250;
+  let killFloorTick = config.killFloorInterval;
   let floorTiles = [];
   let spacer = 76;
 
@@ -285,7 +311,7 @@ const killFloor = function killFloor() {
         tile.mass = 1000;
         tile.updateMassProperties()
         tile.type = 1;
-        tile.velocity.y = 100;
+        tile.velocity.y = config.killFloorUpVelocity;
         floorTiles.splice(randIndex, 1)
       }
     }, killFloorTick);

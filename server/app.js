@@ -35,6 +35,8 @@ app.use(express.static(path.join(__dirname, './../client')));
 server.listen(process.env.PORT || 9999, () => {
   console.log(`listening on port ${process.env.PORT || 9999}`);
 });
+
+app.get('*', (req, res) => res.sendFile('index.html', {root: './client'}))
 // userController.insertUser();
 // gameController.insertGame();
 // scoreController.insertScore();

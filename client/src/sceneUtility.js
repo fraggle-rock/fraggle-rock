@@ -46,7 +46,7 @@ module.exports = {
     playerInput.down = false;
     playerInput.right = false;
     playerInput.jump = false;
-    playerInput.uuid = camera.uuid;
+    playerInput.uuid = camera.uuid.slice(0, config.uuidLength);
     const onKeyDown = function onKeyDown(event) {
       if (event.keyCode === 87 || event.keyCode === 38) {
         playerInput.up = true;
@@ -148,7 +148,7 @@ module.exports = {
     requestAnimationFrame(animate.bind(null, game));
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
-    if (currentGame.camera.uuid !== clientPosition.uuid) {
+    if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
       } else {
@@ -165,10 +165,10 @@ module.exports = {
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
     meshObject = JSON.parse(meshObject);
-    const boxMeshes = meshObject.boxMeshes;
-    const ballMeshes = meshObject.ballMeshes;
-    const serverClients = meshObject.players;
-    const clear = meshObject.clear || [];
+    const boxMeshes = meshObject[0];
+    const ballMeshes = meshObject[1];
+    const serverClients = meshObject[2];
+    const clear = meshObject[3] || [];
     const sceneChildren = currentGame.scene.children;
     while(sceneChildren.length > meshLookup.length) {
       meshLookup[sceneChildren[meshLookup.length].uuid.slice(0, config.uuidLength)] = sceneChildren[meshLookup.length];
@@ -198,6 +198,7 @@ module.exports = {
       localMesh = undefined;
     });
     ballMeshes.forEach((serverMesh) => {
+      serverMesh = flat.reBall(serverMesh);
       localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
@@ -209,8 +210,8 @@ module.exports = {
       }
       localMesh = undefined;
     });
-    for (var key in serverClients) {
-      module.exports.loadClientUpdate(serverClients[key]);
-    }
+    serverClients.forEach(function(client) {
+      module.exports.loadClientUpdate(flat.rePlayer(client));
+    });
   },
 };
