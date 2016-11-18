@@ -53,23 +53,22 @@ const buildLevelOne = function buildLevelOne() {
 
   //FLOOR BUILDER
   const addGrassBlock = function addGrassBlock(x, y, z, width, height, depth) {
-    if (!height) {
-      height = width;
-    }
-    if (!depth) {
-      depth = width;
-    }
+    depth = depth || width;
+    height = height || width;
+
     let mesh = objectBuilder.grassFloor({width: width, height: height, depth: depth},
       {x: x, y: y, z: z});
     scene.add(mesh);
   };
   const addRockBlock = function addRockBlock(x, y, z, width, height, depth) {
-    if (!height) {
-      height = width;
-    }
-    if (!depth) {
-      depth = width;
-    }
+    depth = depth || width;
+    height = height || width;
+
+    let mesh = objectBuilder.rockFloor({width: width, height: height, depth: depth},
+      {x: x, y: y, z: z});
+    scene.add(mesh);
+  };
+  const addRockCenter = function addRockCenter(width, height, depth, x, y, z) {
     let mesh = objectBuilder.rockFloor({width: width, height: height, depth: depth},
       {x: x, y: y, z: z});
     scene.add(mesh);
@@ -78,41 +77,40 @@ const buildLevelOne = function buildLevelOne() {
 
   // buildFloor(A, B, y, width, height, depth) builds square grass floor of A by A with a rock center of B by B, at y height.
     // Blocks will be width x height x depth;
-  const buildFloor = function buildFloor(A, B, y, width, height, depth) {
-    if (!depth) {
-      depth = width;
-    }
-    if (!height) {
-      height = 6;
-    }
-    let block;
+  const buildFloor = function buildFloor(A, B, fx, fy, fz, width, height, depth) {
+    let block = addGrassBlock;
+
+    depth = depth || width;
+    height = height || 6;
+
     if (A <= B) {
-      block = addRockBlock;
-    } else {
-      block = addGrassBlock;
+      addRockCenter(B * width, height, B * depth, fx, fy, fz);
+      return;
     }
-
-
 
     for (let x = 0; x < A + 1; x++) {
-      block((-A / 2 + x) * width, y, -A * depth / 2, width, height, depth);
+      block((-A / 2 + x) * width + fx, fy, -A * depth / 2 + fz, width, height, depth);
     }
     for (let z = 1; z < A + 1; z++) {
-      block(A * width / 2, y, (-A / 2 + z) * depth, width, height, depth)
+      block(A * width / 2 + fx, fy, (-A / 2 + z) * depth + fz, width, height, depth)
     }
     for (let x = 1; x < A + 1; x++) {
-      block((A / 2 - x) * width, y, A * depth / 2, width, height, depth);
+      block((A / 2 - x) * width + fx, fy, A * depth / 2 + fz, width, height, depth);
     }
     for (let z = 1; z < A; z++) {
-      block(-A * width / 2, y, (A / 2 - z) * depth, width, height, depth)
+      block(-A * width / 2 + fx, fy, (A / 2 - z) * depth + fz, width, height, depth)
     }
+
     if (A >= 2) {
-      buildFloor(A-2, B, y, width, height, depth);
+      buildFloor(A-2, B, fx, fy, fz, width, height, depth);
     }
   }
 
-
-  buildFloor(20, 5, -10, 10, 10, 10);
+  buildFloor(8, 5, 0, -5, 0, 4, 6, 4);
+  buildFloor(10, 5, 70, -15, 20, 2, 2, 2);
+  buildFloor(10, 5, -70, 15, -20, 2, 2, 2);
+  buildFloor(10, 5, 20, -15, 70, 2, 2, 2);
+  buildFloor(10, 5, -20, 15, -70, 2, 2, 2);
 
   //RANDOM SHAPE GENERATOR
   const random = function random(low, high) {
