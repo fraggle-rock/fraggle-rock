@@ -17,6 +17,7 @@ let jumpRegen = false;
 let latestServerUpdate;
 const serverShapeMap = {};
 const meshLookup = {length: 0};
+const clearLookup = {};
 
 //DEBUGGING
 let ticks = 0;
@@ -181,6 +182,13 @@ module.exports = {
       const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]];
       currentGame.scene.remove(mesh);
       meshLookup.length--;
+      clearLookup[uuid] = true;
+      if (meshLookup[uuid]) {
+        delete meshLookup[uuid];
+      } else if (meshLookup[serverShapeMap[uuid]]) {
+        delete meshLookup[serverShapeMap[uuid]];
+        delete serverShapeMap[uuid];
+      }
     });
     let localMesh;
     boxMeshes.forEach((serverMesh) => {
@@ -189,7 +197,7 @@ module.exports = {
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         localMesh.quaternion.copy(serverMesh.quaternion);
-      } else {
+      } else if (!clearLookup[serverMesh.uuid]) {
         const serverGeometry = serverMesh.geometry;
         const serverPosition = serverMesh.position;
         const serverQuaternion = serverMesh.quaternion;
@@ -206,7 +214,7 @@ module.exports = {
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         localMesh.quaternion.copy(serverMesh.quaternion);
-      } else {
+      } else if (!clearLookup[serverMesh.uuid]) {
         let ballMesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
         serverShapeMap[serverMesh.uuid] = ballMesh.uuid.slice(0, config.uuidLength);
         currentGame.scene.add(ballMesh);
