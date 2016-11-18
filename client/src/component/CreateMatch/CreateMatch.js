@@ -63,7 +63,7 @@ class CreateMatch extends React.Component {
         <img id='HomeBackground' src='https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png' />
         <div id='CreateMatch'>
           <h1 id='CreateMatchTitle'>Create Match</h1>
-          <img id='CreateMatchBackground' src='https://images.template.net/wp-content/uploads/2015/08/Fantastic-Free-Grey-background-for-You.png' />
+          <div id='CreateMatchBackground'/>
           <div>
             <div>
               <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
@@ -78,7 +78,7 @@ class CreateMatch extends React.Component {
               <img id='DawnMountainCreate' src='../../../textures/dawnmountain-xpos.png' />
               <div>Dawn Mountain</div>
             </div>
-            <button id='StartMatch' className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
+            <button id='StartMatch' className='btn btn-warning' onClick={this.StartMatch}>START MATCH</button>
           </div>
         </div>
       </div>

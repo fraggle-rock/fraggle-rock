@@ -43,7 +43,9 @@ class LogIn extends React.Component {
                 onClick={this.componentClicked}
                 callback={this.responseFacebook}
             />
-            <button onClick={this.playAsGuest} id='GuestLogIn'>Play As Guest</button>
+            <div id='Guest'>
+            <button onClick={this.playAsGuest} id='GuestLogIn' className='btn btn-warning'>Play As Guest</button>
+            </div>
           </div>
           <img id='LogInPageLogo' src="../../../textures/LogInPageLogo.jpg" />
         </div>

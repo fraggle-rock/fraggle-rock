@@ -1,11 +1,4 @@
 import React from 'react';
-import LeaderBoard from '../LeaderBoard/LeaderBoard.js'
-import LeaderBoardDataUser from '../LeaderBoard/LeaderBoardDataUser.js'
-import LeaderBoardDataScore from '../LeaderBoard/LeaderBoardDataScore.js'
-import CreateMatch from '../CreateMatch/CreateMatch.js'
-import MapSelector from '../CreateMatch/MapSelector.js'
-import JoinMatch from '../JoinMatch/JoinMatch.js'
-import JoinMatchData from '../JoinMatch/JoinMatchData.js'
 import { browserHistory } from 'react-router';
 const clientScene = require('../../clientScene.js');
 

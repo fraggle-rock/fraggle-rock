@@ -1,7 +1,7 @@
 import React from 'react';
 const clientScene = require('../../clientScene.js');
 
-var JoinMatchData = props => {
+var JoinButtonData = props => {
   var JoinGame = function(game) {
 	  var screenOverlay = document.getElementById( 'screenOverlay' );
 	  var menuContainer = document.getElementById( 'menuContainer' );
@@ -26,15 +26,12 @@ var JoinMatchData = props => {
   }
 
   return (
-	<div id='JoinGame'>
-	  <div id='JoinMatchGameID'>
-	   {props.games}
-	  </div>
-	  <div id='JoinGameButton'>
+	<div id='JoinGameButton'>
+	  <span>
 		<button onClick={JoinGame.bind(props.games)} className='btn btn-warning'>Join Game</button>
-	  </div>
+	  </span>
 	</div>
   )   
 }
 
-export default JoinMatchData
+export default JoinButtonData
