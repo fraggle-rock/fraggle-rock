@@ -52,43 +52,67 @@ const buildLevelOne = function buildLevelOne() {
   );
 
   //FLOOR BUILDER
-  const addGrassBlock = function addGrassBlock(x, z) {
-    let mesh = objectBuilder.grassFloor({width:4, height: 4, depth: 4},
-      {x: x, y: -5, z: z});
+  const addGrassBlock = function addGrassBlock(x, y, z, width, height, depth) {
+    if (!height) {
+      height = width;
+    }
+    if (!depth) {
+      depth = width;
+    }
+    let mesh = objectBuilder.grassFloor({width: width, height: height, depth: depth},
+      {x: x, y: y, z: z});
     scene.add(mesh);
   };
-  const addRockBlock = function addRockBlock(x, z) {
-    let mesh = objectBuilder.rockFloor({width:4, height: 4, depth: 4},
-      {x: x, y: -5, z: z});
+  const addRockBlock = function addRockBlock(x, y, z, width, height, depth) {
+    if (!height) {
+      height = width;
+    }
+    if (!depth) {
+      depth = width;
+    }
+    let mesh = objectBuilder.rockFloor({width: width, height: height, depth: depth},
+      {x: x, y: y, z: z});
     scene.add(mesh);
   };
 
-  const buildFloor = function buildFloor(A, B) {
+
+  // buildFloor(A, B, y, width, height, depth) builds square grass floor of A by A with a rock center of B by B, at y height.
+    // Blocks will be width x height x depth;
+  const buildFloor = function buildFloor(A, B, y, width, height, depth) {
+    if (!depth) {
+      depth = width;
+    }
+    if (!height) {
+      height = 6;
+    }
     let block;
     if (A <= B) {
       block = addRockBlock;
     } else {
       block = addGrassBlock;
     }
+
+
+
     for (let x = 0; x < A + 1; x++) {
-      block((-A / 2 + x) * 4, -A * 2);
+      block((-A / 2 + x) * width, y, -A * depth / 2, width, height, depth);
     }
     for (let z = 1; z < A + 1; z++) {
-      block(A * 2, (-A / 2 + z) * 4)
+      block(A * width / 2, y, (-A / 2 + z) * depth, width, height, depth)
     }
     for (let x = 1; x < A + 1; x++) {
-      block((A / 2 - x) * 4, A * 2);
+      block((A / 2 - x) * width, y, A * depth / 2, width, height, depth);
     }
     for (let z = 1; z < A; z++) {
-      block(-A * 2, (A / 2 - z) * 4)
+      block(-A * width / 2, y, (A / 2 - z) * depth, width, height, depth)
     }
     if (A >= 2) {
-      buildFloor(A-2, B);
+      buildFloor(A-2, B, y, width, height, depth);
     }
   }
 
-  // buildFloor(A, B) builds square grass floor of A by A with rock center of B by B
-  buildFloor(20, 5);
+  buildFloor(20, 5, -10, 10, 10, 10);
+
 
 
   //RANDOM SHAPE GENERATOR

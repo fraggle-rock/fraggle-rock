@@ -61,7 +61,7 @@ const sky = (() => {
   let sky = {};
   let imagePrefix = "textures/dawnmountain-";
   let directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
-  let imageSuffix = ".png";
+  let imageSuffix = ".jpg";
   sky.geometry = new THREE.CubeGeometry( config.skyboxSize, config.skyboxSize, config.skyboxSize );
 
   let materialArray = [];
