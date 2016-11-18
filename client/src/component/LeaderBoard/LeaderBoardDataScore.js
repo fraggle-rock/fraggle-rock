@@ -2,7 +2,7 @@ import React from 'react';
 
 var LeaderBoardDataScore = props => {
   return (
-    <div>
+    <div id='LeaderBoardDataScore'>
       <div>
         <span>{props.leader.score}</span>
       </div>

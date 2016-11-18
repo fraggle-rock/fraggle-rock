@@ -1,5 +1,6 @@
 import React from 'react';
 import MapSelector from './MapSelector.js'
+import { browserHistory } from 'react-router';
 const clientScene = require('../../clientScene.js');
 
 class CreateMatch extends React.Component {
@@ -18,19 +19,19 @@ class CreateMatch extends React.Component {
     screenOverlay.style.display = '';
     hud.style.display = 'none';
     document.addEventListener('keydown', function(e) {
-     if(e.keyCode === 192) {
-     screenOverlay.style.display = '-webkit-box';
-     screenOverlay.style.display = '-moz-box';
-     screenOverlay.style.display = 'box';
-     if(menuContainer.style.display === '') {
-      menuContainer.style.display = 'none';
-      hud.style.display = '';
-      document.body.requestPointerLock()
-     }else {
-      menuContainer.style.display = '';
-      hud.style.display = 'none';
-      document.exitPointerLock()
-     }
+      if(e.keyCode === 192) {
+      screenOverlay.style.display = '-webkit-box';
+      screenOverlay.style.display = '-moz-box';
+      screenOverlay.style.display = 'box';
+        if (menuContainer.style.display === '') {
+          menuContainer.style.display = 'none';
+          hud.style.display = '';
+          document.body.requestPointerLock();
+        } else {
+          menuContainer.style.display = '';
+          hud.style.display = 'none';
+          document.exitPointerLock();
+        }
       }
     })
 
@@ -39,11 +40,11 @@ class CreateMatch extends React.Component {
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
       screenOverlay.style.display = 'box';
-      if(menuContainer.style.display === '') {
+      if (menuContainer.style.display === '') {
         menuContainer.style.display = 'none';
         hud.style.display = '';
-        document.body.requestPointerLock()
-      }else {
+        document.body.requestPointerLock();
+      } else {
         menuContainer.style.display = '';
         hud.style.display = 'none';
       }
@@ -59,19 +60,19 @@ class CreateMatch extends React.Component {
   }
 
   backToHome() {
-  	document.getElementById('HomeScene').style.display = 'block';
-  	document.getElementById('CreateMatch').style.display = 'none';
+    browserHistory.push('/Home')
   }
 
   render() {
     return (
       <div>
-        <h1 id='CreateMatchTitle'>Create Match</h1>
-        <img id='CreateMatchBackground' src='https://images.template.net/wp-content/uploads/2015/08/Fantastic-Free-Grey-background-for-You.png' />
-        <div>
-          <div>
-            <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-          </div>
+        <img id='HomeBackground' src='https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png' />
+        <div id='CreateMatch'>
+          <h1 id='CreateMatchTitle'>Create Match</h1>
+          <div id='CreateMatchBackground'/>
+            <div>
+              <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+            </div>
           <div id='ChooseMap'>
             <a id='ChooseMapTitle' onClick={this.ChooseMap}>Choose Map</a>
           </div>
@@ -79,7 +80,7 @@ class CreateMatch extends React.Component {
             <MapSelector />
           </div>
           <div id='DawnMountainCreateBackground'>
-            <img id='DawnMountainCreate' src='../../../textures/dawnmountain-xpos.png' />
+            <img id='DawnMountainCreate' src='../../../textures/dawnmountainThumb.jpg' />
             <div>Dawn Mountain</div>
           </div>
           <button id='StartMatch' className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>

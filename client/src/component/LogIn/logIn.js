@@ -1,7 +1,7 @@
 import React from 'react';
 import Home from '../Home/Home.js'
 import FacebookLogin from 'react-facebook-login'
-
+import { browserHistory } from 'react-router';
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -15,8 +15,7 @@ class LogIn extends React.Component {
   }
   
   playAsGuest() {
-    document.getElementById('LogIn').style.display = 'none'; 
-    document.getElementById('Home').style.display = 'block';
+    browserHistory.push('/Home')
   }
 
   responseFacebook(e) {
@@ -27,9 +26,7 @@ class LogIn extends React.Component {
 
     this.setState({ user: true })
       if(e.name) {
-        document.getElementById('LogIn').style.display = 'none'; 
-        document.getElementById('Home').style.display = 'block';
-        
+        browserHistory.push('/Home') 
       }
     
   }
@@ -46,12 +43,11 @@ class LogIn extends React.Component {
                 onClick={this.componentClicked}
                 callback={this.responseFacebook}
             />
-            <button onClick={this.playAsGuest} id='GuestLogIn'>Play As Guest</button>
+            <div id='Guest'>
+            <button onClick={this.playAsGuest} id='GuestLogIn' className='btn btn-warning'>Play As Guest</button>
+            </div>
           </div>
           <img id='LogInPageLogo' src="../../../textures/LogInPageLogo.jpg" />
-        </div>
-        <div id='Home'>
-          <Home />
         </div>
         </div>
       );  
