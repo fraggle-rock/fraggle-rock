@@ -130,7 +130,7 @@ const startPhysics = function startPhysics(io) {
       const currVelocity = clientBody.velocity;
       let movePerTick = config.playerMovePerTick;
       const damping = config.playerDamping;
-      if (clientBody.position.y < config.playerYReset) {
+      if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
         continue;
