@@ -31,8 +31,9 @@ module.exports = function Match(deleteMatch) {
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
   this.io;
+  this.sendPoll = sendPoll.bind(this);
   this.clientPoll = setInterval(function() {
-    this.io.to(this.guid).emit('poll', true);
+    this.sendPoll();
   }.bind(this), 5000);
 };
 
@@ -40,6 +41,15 @@ const loadPoll = function loadPoll(clientUuid) {
   if (this.clients[clientUuid]) {
     this.clients[clientUuid].lastUpdate = performance.now();
   }
+};
+
+const sendPoll = function sendPoll() {
+  const matchInfo = {clients: []};
+  for (var key in this.clients) {
+    const client = this.clients[key];
+    matchInfo.clients.push({uuid: client.uuid, name: client.name, lives: client.lives, skin: client.skin})
+  }
+  this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
@@ -149,37 +159,39 @@ const startPhysics = function startPhysics(io) {
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
       let movePerTick = config.playerMovePerTick;
-      const damping = config.playerDamping;
+      let isMoving = false;
       if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
+        client.lives--;
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
         continue;
       }
-      //player x-z damping
-      let sign = clientBody.velocity.x >= 0 ? 1 : -1;
-      const xDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.x * clientBody.velocity.x));
-      clientBody.velocity.x -= xDamping;
-      sign = clientBody.velocity.z >= 0 ? 1 : -1;
-      const zDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.z * clientBody.velocity.z));
-      clientBody.velocity.z -= zDamping;
       if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
         movePerTick = movePerTick * .707;
       }
       if (client.up) {
+        isMoving = true;
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
       }
       if (client.down) {
+        isMoving = true;
         clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
       }
       if (client.right) {
+        isMoving = true;
         clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
       }
       if (client.left) {
+        isMoving = true;
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
       }
       if (client.jump) {
+        isMoving = true;
           clientBody.velocity.set(currVelocity.x, currVelocity.y + config.jumpVelocity, currVelocity.z);
           client.jump = false;
+      }
+      if (clientBody.velocity.x < 40 && clientBody.velocity.z < 40 && !isMoving) {
+        clientBody.velocity.set(clientBody.velocity.x / 4, clientBody.velocity.y, clientBody.velocity.z / 4);
       }
 
     }
@@ -224,8 +236,10 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.position.y = y;
   ballBody.position.z = z;
   ballBody.addShape(ballShape);
+  ballBody.linearDamping = config.playerDamping;
+  ballBody.angularDamping = config.playerDamping;
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now()};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skin: player.skin, name: player.name, lives: 3};
   this.world.add(ballBody);
 };
 
