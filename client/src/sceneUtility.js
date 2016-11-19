@@ -6,8 +6,12 @@ const audio = require('./audio');
 
 const remoteClients = {};
 const remoteScene = {};
-let currentGame;
+let currentGame = {};
+
+//STUB DATA
+currentGame.matchInfo = {clients: {uuidone: {}}}
 currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
+
 let pitch = 0;
 let yaw = 0;
 let host = false;

@@ -137,17 +137,17 @@ const buildBlankLevelOne = function buildBlankLevelOne() {
 
   // Sunlight
   let sunlight = new THREE.DirectionalLight();
-  sunlight.position.set(30, 30, 39);
+  sunlight.position.set(60, 60, 78);
   sunlight.intensity = 1.9;
   sunlight.castShadow = true;
   // sunlight.shadow.mapSize.Width = sunlight.shadow.mapSize.Height = 2048;
   sunlight.shadow.mapSize.x = sunlight.shadow.mapSize.y = 2048;
   sunlight.shadow.camera.near = 10;
   sunlight.shadow.camera.far = 400;
-  sunlight.shadow.camera.left = -80;
-  sunlight.shadow.camera.right = 70;
-  sunlight.shadow.camera.top = 60;
-  sunlight.shadow.camera.bottom = -60;
+  sunlight.shadow.camera.left = -200;
+  sunlight.shadow.camera.right = 200;
+  sunlight.shadow.camera.top = 200;
+  sunlight.shadow.camera.bottom = -200;
 
   scene.add(sunlight);
 
