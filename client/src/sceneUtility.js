@@ -148,6 +148,9 @@ module.exports = {
     game.renderer.render(game.scene, game.camera);
     requestAnimationFrame(animate.bind(null, game));
   },
+  loadMatchInfo: function loadMatchInfo(matchInfo) {
+    currentGame.matchInfo = matchInfo;
+  },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     if (Math.abs(clientPosition.position.y) > config.playerVerticalBound) {
       audio.smashBrawl.shootRound(3, 1, 0.08, 0, 1);
