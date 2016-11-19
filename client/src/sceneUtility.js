@@ -164,6 +164,7 @@ module.exports = {
       if (remoteClients[clientPosition.uuid]) {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
       } else if (!clearLookup[clientPosition.uuid]){
+        const uuid = clientPosition.uuid;
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
         currentGame.scene.add(mesh);
         // console.log('currentGame', currentGame.matchInfo);
