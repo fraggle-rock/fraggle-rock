@@ -77,7 +77,7 @@ module.exports = {
     camera.direction = game.camera.getWorldDirection();
 
     // declare your color and skin
-    camera.color = userProfile.color;
+    camera.color = 'red';
     camera.skinPath = userProfile.ChosenSkin;
 
     const fullScene = {camera: camera, scene: game.scene.toJSON()};

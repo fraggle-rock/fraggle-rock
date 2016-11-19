@@ -27,7 +27,7 @@ module.exports = function Match(deleteMatch) {
   this.loadPoll = loadPoll.bind(this);
   this.deleteMatch = deleteMatch;
   this.physicsTick = config.gameSpeed * 1 / 60 / 2;
-  this.killFloor = killFloor.bind(this);  
+  this.killFloor = killFloor.bind(this);
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
   this.io;
@@ -47,7 +47,7 @@ const sendPoll = function sendPoll() {
   const matchInfo = {clients: {}};
   for (var key in this.clients) {
     const client = this.clients[key];
-    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color})
+    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color, playerNumber: client.playerNumber})
   }
   this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
@@ -64,7 +64,7 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
     localClient.direction = clientPosition.direction;
     localClient.jump = clientPosition.jump;
     localClient.lastUpdate = performance.now();
-  }  
+  }
 };
 
 const startPhysics = function startPhysics() {
@@ -87,7 +87,7 @@ const startPhysics = function startPhysics() {
         delete context.clients[key];
         delete context.clientToCannon[client.uuid];
       } else {
-        players.push(flat.player(context.clients[key])); 
+        players.push(flat.player(context.clients[key]));
       }
     }
     while (context.balls.length > config.maxBalls) {
@@ -139,14 +139,14 @@ const startPhysics = function startPhysics() {
     }
     const update = [boxes, balls, players];;
     if (clear.length > 0) {
-      update.push(clear); 
+      update.push(clear);
     }
     if (players.length > 0) {
       if (context.sendFull || clear.length > 0) {
         context.io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
         context.io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
-      } 
+      }
     } else {
       context.deleteMatch(context.guid);
     }
@@ -194,11 +194,11 @@ const startPhysics = function startPhysics() {
       }
 
     }
-    
+
     context.world.step(context.physicsTick);
-    context.world.step(context.physicsTick);  
+    context.world.step(context.physicsTick);
     physicsEmit();
-  } 
+  }
   context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
 };
 
@@ -237,8 +237,9 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.addShape(ballShape);
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
+  const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: player.color, lives: 3};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
   this.world.add(ballBody);
   this.sendPoll();
 };
