@@ -2,6 +2,7 @@ import React from 'react';
 import Home from '../Home/Home.js'
 import FacebookLogin from 'react-facebook-login'
 import { browserHistory } from 'react-router';
+import userProfile from '../userProfile.js'
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -15,20 +16,19 @@ class LogIn extends React.Component {
   }
   
   playAsGuest() {
+    userProfile.User = 'Guest';
     browserHistory.push('/Home')
   }
 
   responseFacebook(e) {
-    //save username and userId on local storage
-
-    //send request to server with username and id
-
-
     this.setState({ user: true })
-      if(e.name) {
-        browserHistory.push('/Home') 
-      }
-    
+    if(e.name) {
+      userProfile.User = e.name;
+      userProfile.FacebookPicture = e.picture.data.url;
+      userProfile.Skins = [];
+      userProfile.ChosenSkin = null;
+      browserHistory.push('/Home') 
+    } 
   }
 
   render() {
