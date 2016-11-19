@@ -74,7 +74,8 @@ module.exports = {
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
     camera.direction = game.camera.getWorldDirection();
-    camera.skin = 'red';
+    camera.skinPath = 'red';
+    camera.color = 'black';
     const fullScene = {camera: camera, scene: game.scene.toJSON()};
     socket.emit('fullScene', fullScene);
   },
@@ -83,7 +84,8 @@ module.exports = {
     const player = game.camera.toJSON();
     player.position = game.camera.position;
     player.direction = game.camera.getWorldDirection();
-    player.skin = 'red';
+    player.skinPath = 'red';
+    player.color = 'black';
     socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
