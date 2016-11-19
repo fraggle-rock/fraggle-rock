@@ -26,7 +26,7 @@ module.exports = function Match(deleteMatch) {
   this.shutdown = shutdown.bind(this);
   this.deleteMatch = deleteMatch;
   this.physicsTick = config.gameSpeed * 1 / 60 / 2;
-  this.killFloor = killFloor.bind(this);  
+  this.killFloor = killFloor.bind(this);
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
 };
@@ -105,9 +105,9 @@ const startPhysics = function startPhysics(io) {
         box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
-    const update = [boxes, balls, players];;
+    const update = [boxes, balls, players];
     if (clear.length > 0) {
-      update.push(clear); 
+      update.push(clear);
     }
     const sockets = io.to(context.guid).sockets;
     let playerCount = 0;
@@ -132,32 +132,50 @@ const startPhysics = function startPhysics(io) {
       const currVelocity = clientBody.velocity;
       let movePerTick = config.playerMovePerTick;
       const damping = config.playerDamping;
-      if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
-        clientBody.position.set(0,10,0);
-        clientBody.velocity.set(0,0,0);
+      clientBody.addEventListener("collide",function(e){
+        if(e.body.userData && e.body.userData.shapeType === 3) {
+          console.log('Collision ', e);
+          // debugger;
+        }
+      });
+      if (Math.abs(clientBody.position.y) > config.playerVerticalBound ||
+      Math.abs(clientBody.position.x) > config.playerHorizontalBound ||
+      Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
+        clientBody.position.set(0, 10, 0);
+        clientBody.velocity.set(0, 0, 0);
         continue;
       }
-      //player x-z damping
+      //  player x-z damping
       let sign = clientBody.velocity.x >= 0 ? 1 : -1;
-      const xDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.x * clientBody.velocity.x));
+      const xDamping = Math.min(config.maxPlayerDecel, sign * damping *
+        (clientBody.velocity.x * clientBody.velocity.x));
       clientBody.velocity.x -= xDamping;
       sign = clientBody.velocity.z >= 0 ? 1 : -1;
-      const zDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.z * clientBody.velocity.z));
+      const zDamping = Math.min(config.maxPlayerDecel, sign * damping *
+        (clientBody.velocity.z * clientBody.velocity.z));
       clientBody.velocity.z -= zDamping;
-      if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
+      if (client.up && client.left || client.up && client.right
+        || client.down && client.left || client.down && client.right) {
         movePerTick = movePerTick * .707;
       }
       if (client.up) {
-        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
+        clientBody.velocity.set(currVelocity.x + movePerTick *
+          client.direction.x, currVelocity.y, currVelocity.z +
+          movePerTick * client.direction.z);
       }
       if (client.down) {
-        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
+        clientBody.velocity.set(currVelocity.x - movePerTick *
+          client.direction.x, currVelocity.y,
+          currVelocity.z - movePerTick * client.direction.z);
       }
       if (client.right) {
-        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
+        clientBody.velocity.set(currVelocity.x - movePerTick *
+          client.direction.z, currVelocity.y, currVelocity.z + movePerTick *
+          client.direction.x);
       }
       if (client.left) {
-        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
+        clientBody.velocity.set(currVelocity.x + movePerTick *
+          client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
       }
       if (client.jump) {
           clientBody.velocity.set(currVelocity.x, currVelocity.y + config.jumpVelocity, currVelocity.z);
@@ -165,11 +183,11 @@ const startPhysics = function startPhysics(io) {
       }
 
     }
-    
+
     context.world.step(context.physicsTick);
-    context.world.step(context.physicsTick);  
+    context.world.step(context.physicsTick);
     physicsEmit();
-  } 
+  }
   context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
 };
 
