@@ -44,10 +44,10 @@ const loadPoll = function loadPoll(clientUuid) {
 };
 
 const sendPoll = function sendPoll() {
-  const matchInfo = {clients: []};
+  const matchInfo = {clients: {}};
   for (var key in this.clients) {
     const client = this.clients[key];
-    matchInfo.clients.push({uuid: client.uuid, name: client.name, lives: client.lives, skin: client.skin})
+    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color})
   }
   this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
@@ -238,7 +238,7 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skin: player.skin, name: player.name, lives: 3};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: player.color, lives: 3};
   this.world.add(ballBody);
   this.sendPoll();
 };
