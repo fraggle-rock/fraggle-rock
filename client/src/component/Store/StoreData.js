@@ -16,7 +16,7 @@ var StoreData = props => {
   	    <button id='SkinButton' className='btn btn-warning' onClick={addSkin.bind(props.skin)}>Add Skin</button>
   	  </div>
   	</div>
-  )   
-  }
+  )
+}
 
 export default StoreData
