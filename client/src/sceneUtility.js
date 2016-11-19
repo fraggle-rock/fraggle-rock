@@ -149,6 +149,9 @@ module.exports = {
     requestAnimationFrame(animate.bind(null, game));
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
+    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound) {
+      audio.smashBrawl.shootRound(3, 1, 0.08, 0, 1);
+    }
     if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
