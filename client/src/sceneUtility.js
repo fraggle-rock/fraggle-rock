@@ -7,6 +7,7 @@ const audio = require('./audio');
 const remoteClients = {};
 const remoteScene = {};
 let currentGame;
+currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
 let pitch = 0;
 let yaw = 0;
 let host = false;
@@ -161,6 +162,7 @@ module.exports = {
       } else if (!clearLookup[clientPosition.uuid]){
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
         currentGame.scene.add(mesh);
+        // console.log('currentGame', currentGame.matchInfo);
         remoteClients[clientPosition.uuid] = mesh;
       }
     } else {
