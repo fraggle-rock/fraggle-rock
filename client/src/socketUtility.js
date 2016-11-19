@@ -4,7 +4,7 @@ const sceneUtility = require('./sceneUtility');
 const flat = require('../../config/flat');
 const config = require('../../config/config');
 const userProfile = require('./component/userProfile')
-const lastEmittedClient = {theta: 0};
+const lastEmittedClient = {theta: 0, alpha: 0};
 let canEmit = true;
 
 const addUpdateListeners = function addUpdateListeners(socket) {
@@ -42,9 +42,10 @@ const roundQuaternion = function roundQuaternion (quaternion, decimals) {
 };
 const hasChangedInput = function hasChangedInput(playerInput) {
   let hasChanged = false;
-  const isMoving = lastEmittedClient.up || lastEmittedClient.down || lastEmittedClient.left || lastEmittedClient.right;
   const newTheta = Math.atan2(playerInput.direction.z, playerInput.direction.x);
-  if (isMoving && Math.abs(newTheta - lastEmittedClient.theta) > .1) {
+  const newAlpha = Math.atan2(playerInput.direction.y, playerInput.direction.x);
+  if (Math.abs(newTheta - lastEmittedClient.theta) > .01 || Math.abs(newAlpha - lastEmittedClient.alpha) > .01) {
+    debugger;
     hasChanged = true;
   } else if (playerInput.up !== lastEmittedClient.up) {
     hasChanged = true;
@@ -63,7 +64,9 @@ const hasChangedInput = function hasChangedInput(playerInput) {
     lastEmittedClient.right = playerInput.right;
     lastEmittedClient.left = playerInput.left;
     lastEmittedClient.jump = playerInput.jump;
+    lastEmittedClient.direction = playerInput.direction;
     lastEmittedClient.theta = newTheta;
+    lastEmittedClient.alpha = newAlpha;
   }
   return hasChanged;
 }
@@ -96,11 +99,17 @@ module.exports = {
     socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
-    playerInput.direction = camera.getWorldDirection();
-    if (hasChangedInput(playerInput)) {
-      socket.emit('clientUpdate', JSON.stringify(flat.playerInput(playerInput)));
-      if (playerInput.jump) {
+    if (playerInput) {
+      playerInput.direction = camera.getWorldDirection();
+      if (hasChangedInput(playerInput)) {
+        socket.emit('clientUpdate', JSON.stringify(flat.playerInput(playerInput)));
         playerInput.jump = false;
+        lastEmittedClient.jump = false;
+      }
+    } else {
+      lastEmittedClient.direction = camera.getWorldDirection();
+      if (hasChangedInput(lastEmittedClient)) {
+        socket.emit('clientUpdate', JSON.stringify(flat.playerInput(lastEmittedClient)));
         lastEmittedClient.jump = false;
       }
     }

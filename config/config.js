@@ -21,7 +21,7 @@ module.exports = {
   ballVelocity: 500,
   gameSpeed: .65,
   tickRate: 1 / 60,
-  playerTimeout: 10 * 1000,
+  playerTimeout: 15 * 1000,
   playerMovePerTick: 3,
   playerVerticalBound: 100,
   playerHorizontalBound: 200,
