@@ -1,5 +1,6 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
+import Profile from './Profile.js';
 const clientScene = require('../../clientScene.js');
 
 class Home extends React.Component {
@@ -25,11 +26,7 @@ class Home extends React.Component {
     //send request for leaderBoards
     browserHistory.push('/LeaderBoard')
   }
-
-  store() {
-    browserHistory.push('/Store')
-  }
-
+  
   render() {
     return (
       <div id='HomePage'>
@@ -41,8 +38,8 @@ class Home extends React.Component {
         </div>
           <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View LeaderBoards</button>
         </div>
-        <div id='ShoppingCart'>
-          <button className='btn btn-warning' onClick={this.store}>Select a Skin</button>
+        <div id='Profile'>
+          <Profile />
         </div>
       </div>
     );

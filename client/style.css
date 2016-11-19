@@ -294,7 +294,64 @@ body {
 #ShoppingCart {
   margin-top: 150px;
 }
+#username {
+  float: right;
+  width: 160px;
+  font-size: 20px;
+}
 
+#username2 {
+  float: right;
+  width: 90px;
+  font-size: 20px;
+}
+
+#ProfileImgHome {
+  height: 53px;
+  width: 53px;
+  border-radius: 10px;
+  border-width: 2px;
+  border-style: outset;
+}
+
+#ProfileImgHome2 {
+  height: 50px;
+  width: 50px;
+}
+
+#Profile2 {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+}
+
+#Profile {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  margin-right: 15px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+#ImgHomeDiv {
+  float: left;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+#SignOut {
+  margin-top: 4px;
+  float: right;
+}
+
+#SelectSkin {
+  margin-top: 4px;
+  float: right;
+  margin-right: 10px;
+}
 /*LeaderBoard CSS*/
 /*
 -----------------------------------------------------------------------------------*/
@@ -469,10 +526,6 @@ body {
   margin-top: 10px;
 }
 
-#SkinButton {
-  margin-bottom: 15px;
-  margin-top: 5px;
-}
 
 #Skins {
   margin: 20px auto;
