@@ -17,6 +17,7 @@ class LogIn extends React.Component {
   
   playAsGuest() {
     userProfile.User = 'Guest';
+    userProfile.FacebookPicture = '../../textures/GuestPicture.png';
     browserHistory.push('/Home')
   }
 
@@ -27,7 +28,34 @@ class LogIn extends React.Component {
       userProfile.FacebookPicture = e.picture.data.url;
       userProfile.Skins = [];
       userProfile.ChosenSkin = null;
-      browserHistory.push('/Home') 
+      $.ajax({
+        url: '/api/getUserByFacebookID/' + e.id,
+        method: 'Get',
+        success: (data) => {
+          if(data.length == 0) {
+            var dataSent = {                
+                username: e.name,
+                token: e.accessToken,
+                email: 'fakeEmail@gmail.com',
+                facebookid: e.id
+              }
+            $.ajax({
+              url: '/api/addUser',
+              method: 'Post',
+              data: JSON.stringify(dataSent),
+              contentType: "application/json",
+              error: (error) => {
+                console.log(error)
+              },
+              success: (data) => {
+                browserHistory.push('Home')
+              }
+            }) 
+          } else {
+            browserHistory.push('Home')
+          }
+        }
+      })
     } 
   }
 
