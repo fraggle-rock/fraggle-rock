@@ -164,12 +164,19 @@ module.exports = {
       if (remoteClients[clientPosition.uuid]) {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
       } else if (!clearLookup[clientPosition.uuid]){
+        console.log('currentGame', currentGame.matchInfo);
         const uuid = clientPosition.uuid;
-        // const color = currentGame.matchInfo.clients[uuid].color;
-        // const skinPath = currentGame.matchInfo.clients[uuid].skinPath;
+        const client = currentGame.matchInfo.clients[uuid];
+        let color;
+        let skinPath;
+
+        if (client) {
+          color = currentGame.matchInfo.clients[uuid].color;
+          skinPath = currentGame.matchInfo.clients[uuid].skinPath;
+        }
+
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);
         currentGame.scene.add(mesh);
-        console.log('currentGame', currentGame);
         remoteClients[clientPosition.uuid] = mesh;
       }
     } else {

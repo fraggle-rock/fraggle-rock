@@ -56,7 +56,8 @@ const rock = function() {
 const playerMaterial = function(color, skinPath) {
   let colors = ['red', 'blue', 'magenta', 'green', 'teal'];
   let index = Math.floor(Math.random() * colors.length);
-  color = color || colors[index];
+  // color = color || colors[index];
+  color = color || 'magenta'
   let playerMaterial;
   if (skinPath) {
     playerMaterial = new THREE.MeshLambertMaterial({ color: color, map: new THREE.TextureLoader().load(skinPath) });

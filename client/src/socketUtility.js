@@ -74,8 +74,10 @@ module.exports = {
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
     camera.direction = game.camera.getWorldDirection();
-    camera.skinPath = 'red';
-    camera.color = 'black';
+
+    camera.color = 'blue';
+    camera.skinPath = 'textures/skins/8ball.png';
+
     const fullScene = {camera: camera, scene: game.scene.toJSON()};
     socket.emit('fullScene', fullScene);
   },
@@ -84,8 +86,10 @@ module.exports = {
     const player = game.camera.toJSON();
     player.position = game.camera.position;
     player.direction = game.camera.getWorldDirection();
-    player.skinPath = 'red';
-    player.color = 'black';
+
+    player.color = 'red';
+    player.skinPath = 'textures/skins/SoccerBall.png';
+
     socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
