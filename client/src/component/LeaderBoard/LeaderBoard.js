@@ -20,19 +20,21 @@ class LeaderBoard extends React.Component {
   render() {
     return (
       <div id='LeaderBoardTitle'>
-        <img id='HomeBackground' src='https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png' />
-        <h1 id='LeaderBoardTitle'>Smash Ball Brawl Leaderboard</h1>
-        <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-        <div id='CreateMatchBackground' />
-        <div>
-          <div id='LeaderBoardUser'>
-            <span id="LeaderBoardUserNameTitle">USERNAME</span>
-            {this.state.leaderBoards.map(leader => <LeaderBoardDataUser leader={leader} />)}
+        <div id='LeaderData'>
+          <div id='CreateMatchBackground'>
+          <h1 id='LeaderBoardTitle2'>Smash Ball Brawl Leaderboard</h1>
+          <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+          <div id='DataLeader'>
+            <div id='LeaderBoardUser'>
+              <div id="LeaderBoardUserNameTitle">USERNAME</div>
+              {this.state.leaderBoards.map(leader => <LeaderBoardDataUser leader={leader} />)}
+            </div>
+            <div id='LeaderBoardScore'>
+              <div id="LeaderBoardScoreTitle">SCORE</div>
+              {this.state.leaderBoards.map(leader => <LeaderBoardDataScore leader={leader} />)}
+            </div>
           </div>
-          <div id='LeaderBoardScore'>
-            <span id="LeaderBoardScoreTitle">SCORE</span>
-            {this.state.leaderBoards.map(leader => <LeaderBoardDataScore leader={leader} />)}
-          </div>
+        </div>
         </div>
       </div>
     );

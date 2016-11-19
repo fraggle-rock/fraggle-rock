@@ -33,7 +33,6 @@ class Home extends React.Component {
   render() {
     return (
       <div id='HomePage'>
-        <img id='HomeBackground' src='./textures/menubg.png' />
         <div id='HomeScene'>
         <img src='../../../textures/logo.png' />
         <div id="testButtons">

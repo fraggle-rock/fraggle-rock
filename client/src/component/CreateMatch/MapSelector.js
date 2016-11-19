@@ -10,9 +10,9 @@ class MapSelector extends React.Component {
  }
 
 DawnMountain() {
-  document.getElementById('MapSelector').style.display = 'none'
-  document.getElementById('DawnMountainCreateBackground').style.display = 'block'
-
+  document.getElementById('MapSelector').style.display = 'none';
+  document.getElementById('DawnMountainCreateBackground').style.display = 'block';
+  document.getElementById('StartMatch').style.display = 'block';
 }
 
  render() {

@@ -19,13 +19,15 @@ class Store extends React.Component {
 
   render() {
     return (
-      <div id='LeaderBoardTitle'>
-        <img id='HomeBackground' src='https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png' />
-        <h1 id='StoreTitle'>Smash Ball Brawl Store</h1>
-        <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-        <div id='CreateMatchBackground' />
-        <div id='Skins'>
-          {this.state.skins.map((skins) => <StoreData skins={skins} />)}
+      <div id='Store'>
+        <div id='CreateMatchBackground' >
+          <div>
+            <h1 id='Title'>Smash Ball Brawl Store</h1>
+          </div>
+          <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+          <div id='Skins'>
+            {this.state.skins.map((skins) => <StoreData skins={skins} />)}
+          </div>
         </div>
       </div>
     );
