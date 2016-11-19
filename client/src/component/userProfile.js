@@ -3,4 +3,5 @@ module.exports = {
   FacebookPicture: null,
   Skins: [],
   ChosenSkin: null,
+  color: 'teal'
 }

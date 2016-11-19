@@ -24,28 +24,50 @@ module.exports = function Match(deleteMatch) {
   this.startPhysics = startPhysics.bind(this);
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
+  this.loadPoll = loadPoll.bind(this);
   this.deleteMatch = deleteMatch;
   this.physicsTick = config.gameSpeed * 1 / 60 / 2;
   this.killFloor = killFloor.bind(this);  
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
+  this.io;
+  this.sendPoll = sendPoll.bind(this);
+  this.clientPoll = setInterval(function() {
+    this.sendPoll();
+  }.bind(this), 5000);
+};
+
+const loadPoll = function loadPoll(clientUuid) {
+  if (this.clients[clientUuid]) {
+    this.clients[clientUuid].lastUpdate = performance.now();
+  }
+};
+
+const sendPoll = function sendPoll() {
+  const matchInfo = {clients: {}};
+  for (var key in this.clients) {
+    const client = this.clients[key];
+    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color})
+  }
+  this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
-  clearTimeout(this.timeout);
   clientPosition = JSON.parse(clientPosition);
   clientPosition = flat.rePlayerInput(clientPosition);
   const localClient = this.clients[clientPosition.uuid];
-  localClient.up = clientPosition.up;
-  localClient.left = clientPosition.left;
-  localClient.right = clientPosition.right;
-  localClient.down = clientPosition.down;
-  localClient.direction = clientPosition.direction;
-  localClient.jump = clientPosition.jump;
-  this.timeout = setTimeout(this.kill, config.serverTimeout);
+  if (localClient) {
+    localClient.up = clientPosition.up;
+    localClient.left = clientPosition.left;
+    localClient.right = clientPosition.right;
+    localClient.down = clientPosition.down;
+    localClient.direction = clientPosition.direction;
+    localClient.jump = clientPosition.jump;
+    localClient.lastUpdate = performance.now();
+  }  
 };
 
-const startPhysics = function startPhysics(io) {
+const startPhysics = function startPhysics() {
   const context = this;
   const physicsEmit = function physicsEmit () {
     const balls = [];
@@ -55,8 +77,18 @@ const startPhysics = function startPhysics(io) {
     const expiredBoxes = [];
     const expiredBoxIndices = [];
     const expiredBallIndices = [];
+    const now = performance.now();
     for (var key in context.clients) {
-      players.push(flat.player(context.clients[key]));
+      const client = context.clients[key];
+      if (now - client.lastUpdate > config.playerTimeout) {
+        const clientBody = context.clientToCannon[client.uuid];
+        context.world.remove(clientBody);
+        clear.push(client.uuid);
+        delete context.clients[key];
+        delete context.clientToCannon[client.uuid];
+      } else {
+        players.push(flat.player(context.clients[key])); 
+      }
     }
     while (context.balls.length > config.maxBalls) {
       const ball = context.balls.shift();
@@ -109,17 +141,12 @@ const startPhysics = function startPhysics(io) {
     if (clear.length > 0) {
       update.push(clear); 
     }
-    const sockets = io.to(context.guid).sockets;
-    let playerCount = 0;
-    for(var key in sockets) {
-      playerCount++;
-    }
-    if (playerCount > 0) {
+    if (players.length > 0) {
       if (context.sendFull || clear.length > 0) {
-        io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
+        context.io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
-        io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
-      }
+        context.io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+      } 
     } else {
       context.deleteMatch(context.guid);
     }
@@ -131,37 +158,39 @@ const startPhysics = function startPhysics(io) {
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
       let movePerTick = config.playerMovePerTick;
-      const damping = config.playerDamping;
+      let isMoving = false;
       if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
+        client.lives--;
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
         continue;
       }
-      //player x-z damping
-      let sign = clientBody.velocity.x >= 0 ? 1 : -1;
-      const xDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.x * clientBody.velocity.x));
-      clientBody.velocity.x -= xDamping;
-      sign = clientBody.velocity.z >= 0 ? 1 : -1;
-      const zDamping = Math.min(config.maxPlayerDecel, sign * damping * (clientBody.velocity.z * clientBody.velocity.z));
-      clientBody.velocity.z -= zDamping;
       if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
         movePerTick = movePerTick * .707;
       }
       if (client.up) {
+        isMoving = true;
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
       }
       if (client.down) {
+        isMoving = true;
         clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
       }
       if (client.right) {
+        isMoving = true;
         clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
       }
       if (client.left) {
+        isMoving = true;
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
       }
       if (client.jump) {
+        isMoving = true;
           clientBody.velocity.set(currVelocity.x, currVelocity.y + config.jumpVelocity, currVelocity.z);
           client.jump = false;
+      }
+      if (clientBody.velocity.x < 40 && clientBody.velocity.z < 40 && !isMoving) {
+        clientBody.velocity.set(clientBody.velocity.x / 1.05, clientBody.velocity.y, clientBody.velocity.z / 1.05);
       }
 
     }
@@ -174,7 +203,6 @@ const startPhysics = function startPhysics(io) {
 };
 
 const shootBall = function shootBall(camera) {
-  clearTimeout(this.timeout);
   camera = flat.reShootBall(JSON.parse(camera));
   let x = camera.position.x;
   let y = camera.position.y;
@@ -194,7 +222,6 @@ const shootBall = function shootBall(camera) {
   y += shootDirection.y * 2.5;
   z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
-  this.timeout = setTimeout(this.kill, config.serverTimeout);
 };
 
 const loadNewClient = function loadNewClient(player) {
@@ -208,13 +235,17 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.position.y = y;
   ballBody.position.z = z;
   ballBody.addShape(ballShape);
+  ballBody.linearDamping = config.playerDamping;
+  ballBody.angularDamping = config.playerDamping;
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: player.color, lives: 3};
   this.world.add(ballBody);
+  this.sendPoll();
 };
 
-const loadFullScene = function loadFullScene(scene, player) {
+const loadFullScene = function loadFullScene(scene, player, io) {
   // Setup our world
+  this.io = io;
   const context = this;
   let world = new CANNON.World();
   world.quatNormalizeSkip = 0;
@@ -320,7 +351,7 @@ const killFloor = function killFloor() {
 
 const shutdown = function shutdown() {
   this.open = false;
-  clearTimeout(this.timeout);
+  clearInterval(this.clientPoll);
   clearInterval(this.physicsClock);
   clearInterval(this.killFloorInterval);
 };

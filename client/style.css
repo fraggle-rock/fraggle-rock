@@ -8,17 +8,22 @@ font-family: 'Play', sans-serif;
 /*FOR DEBUGGING WIREFRAME*/
 /*div {
   border: 1px solid green;
+  box-sizing: border-box;
 }
 div > div {
+  box-sizing: border-box;
   border: 1px solid blue;
 }
 div > div > div {
+  box-sizing: border-box;
   border: 1px solid red;
 }
 div > div > div > div {
+  box-sizing: border-box;
   border: 1px solid yellow;
 }
 div > div > div > div > div {
+  box-sizing: border-box;
   border: 1px solid pink;
 }*/
 
@@ -44,7 +49,6 @@ body {
   height: 100%;
   position: relative;
   z-index: 5;
-
 }
 
 .playerBoxContainer {
@@ -106,7 +110,7 @@ body {
 .crosshairContainer {
   width: 37px;
   height: 15px;
-  margin: 23% auto 0;
+  margin: 26% auto 0;
 }
 
 #crosshair {

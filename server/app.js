@@ -49,8 +49,8 @@ io.on('connection', (socket) => {
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
     socket.join(match.guid);
-    match.loadFullScene(scene, player);
-    match.startPhysics(io);
+    match.loadFullScene(scene, player, io);
+    match.startPhysics();
     match.killFloor();
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);
@@ -58,6 +58,9 @@ io.on('connection', (socket) => {
     socket.on('clientUpdate', function (camera) { // listener for client position updates
       match.loadClientUpdate(camera); // update server's copy of client position
     });
+    socket.on('poll', function(clientUuid) {
+      match.loadPoll(clientUuid);
+    })
   });
 
   socket.on('addMeToMatch', function (newMatchRequest) {

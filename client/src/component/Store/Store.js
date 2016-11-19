@@ -31,7 +31,7 @@ class Store extends React.Component {
         </div>
       </div>
     );
-  	
+
   }
 }
 

@@ -6,7 +6,12 @@ const audio = require('./audio');
 
 const remoteClients = {};
 const remoteScene = {};
-let currentGame;
+let currentGame = {};
+
+//STUB DATA
+// currentGame.matchInfo = {clients: {uuidone: {}}}
+// currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
+
 let pitch = 0;
 let yaw = 0;
 let host = false;
@@ -148,6 +153,9 @@ module.exports = {
     game.renderer.render(game.scene, game.camera);
     requestAnimationFrame(animate.bind(null, game));
   },
+  loadMatchInfo: function loadMatchInfo(matchInfo) {
+    currentGame.matchInfo = matchInfo;
+  },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     if (Math.abs(clientPosition.position.y) > config.playerVerticalBound) {
       audio.smashBrawl.shootRound(3, 1, 0.08, 0, 1);
@@ -155,8 +163,18 @@ module.exports = {
     if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
-      } else {
-        const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
+      } else if (!clearLookup[clientPosition.uuid]){
+        const uuid = clientPosition.uuid;
+        const client = currentGame.matchInfo.clients[uuid];
+        let color;
+        let skinPath;
+
+        if (client) {
+          color = currentGame.matchInfo.clients[uuid].color;
+          skinPath = currentGame.matchInfo.clients[uuid].skinPath;
+        }
+
+        const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);
         currentGame.scene.add(mesh);
         remoteClients[clientPosition.uuid] = mesh;
       }
@@ -179,7 +197,7 @@ module.exports = {
       meshLookup.length++;
     }
     clear.forEach(function(uuid) {
-      const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]];
+      const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]] || remoteClients[uuid];
       currentGame.scene.remove(mesh);
       meshLookup.length--;
       clearLookup[uuid] = true;
@@ -188,6 +206,8 @@ module.exports = {
       } else if (meshLookup[serverShapeMap[uuid]]) {
         delete meshLookup[serverShapeMap[uuid]];
         delete serverShapeMap[uuid];
+      } else if (remoteClients[uuid]) {
+        delete remoteClients[uuid];
       }
     });
     let localMesh;
@@ -225,4 +245,7 @@ module.exports = {
       module.exports.loadClientUpdate(flat.rePlayer(client));
     });
   },
+  getCamera: function getCamera() {
+    return currentGame.camera;
+  }
 };
