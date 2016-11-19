@@ -1,5 +1,5 @@
 module.exports = {
-	User: null,
+  User: null,
   FacebookPicture: null,
   Skins: [],
   ChosenSkin: null,

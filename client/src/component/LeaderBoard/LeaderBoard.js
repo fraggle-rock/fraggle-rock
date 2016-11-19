@@ -8,13 +8,23 @@ class LeaderBoard extends React.Component {
 	  super(props);
 	  this.state = {
 	    user: null,
-      leaderBoards: [{'username': 'Will', 'score': 1000}, {'username': 'Ryaz', 'score': 1000}, {'username': 'Eric', 'score': 1000}, {'username': 'Nick', 'score': 1000}]
+      leaderBoards: []
 	  };
 	  this.backToHome = this.backToHome.bind(this);
   }
 
   backToHome() {
     browserHistory.push('/Home');
+  }
+
+  componentWillMount() {
+    $.ajax({
+      url: '/api/leaderBoard',
+      method: 'GET',
+      success: (data) => {
+        this.setState({leaderBoards: data.reverse()})
+      }
+    })
   }
 
   render() {
