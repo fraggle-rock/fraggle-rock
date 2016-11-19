@@ -3,6 +3,7 @@ const socket = io();
 const sceneUtility = require('./sceneUtility');
 const flat = require('../../config/flat');
 const config = require('../../config/config');
+const userProfile = require('./component/userProfile')
 const lastEmittedClient = {theta: 0};
 let canEmit = true;
 
@@ -75,8 +76,9 @@ module.exports = {
     camera.position = game.camera.position;
     camera.direction = game.camera.getWorldDirection();
 
-    camera.color = 'blue';
-    camera.skinPath = 'textures/skins/8ball.png';
+    // declare your color and skin
+    camera.color = userProfile.color;
+    camera.skinPath = userProfile.ChosenSkin;
 
     const fullScene = {camera: camera, scene: game.scene.toJSON()};
     socket.emit('fullScene', fullScene);
@@ -87,8 +89,9 @@ module.exports = {
     player.position = game.camera.position;
     player.direction = game.camera.getWorldDirection();
 
-    player.color = 'red';
-    player.skinPath = 'textures/skins/SoccerBall.png';
+    // sending my color and skin to other players
+    player.color = userProfile.color;
+    player.skinPath = userProfile.ChosenSkin;
 
     socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
   },
