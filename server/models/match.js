@@ -26,7 +26,8 @@ module.exports = function Match(deleteMatch) {
   this.shutdown = shutdown.bind(this);
   this.loadPoll = loadPoll.bind(this);
   this.deleteMatch = deleteMatch;
-  this.physicsTick = config.gameSpeed * 1 / 60 / 2;
+  this.physicsTick = config.gameSpeed * config.tickRate / 2;
+  this.tickRate = config.tickRate;
   this.killFloor = killFloor.bind(this);  
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
@@ -199,7 +200,7 @@ const startPhysics = function startPhysics() {
     context.world.step(context.physicsTick);  
     physicsEmit();
   } 
-  context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
+  context.physicsClock = setInterval(physicsLoop, context.tickRate * 1000);
 };
 
 const shootBall = function shootBall(camera) {
