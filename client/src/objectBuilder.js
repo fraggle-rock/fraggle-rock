@@ -32,31 +32,44 @@ const rockTopMaterial = new THREE.MeshLambertMaterial({map: rockTexture(4, 4)});
 
 const grass = function() {
   let materials = [
-         grassSideMaterial,
-         grassSideMaterial,
-         grassBottomMaterial,
-         grassTopMaterial,
-         grassSideMaterial,
-         grassSideMaterial
+    grassSideMaterial,
+    grassSideMaterial,
+    grassBottomMaterial,
+    grassTopMaterial,
+    grassSideMaterial,
+    grassSideMaterial
   ];
   return materials;
 }
 const rock = function() {
   let materials = [
-         grassSideMaterial,
-         grassSideMaterial,
-         grassBottomMaterial,
-         rockTopMaterial,
-         grassSideMaterial,
-         grassSideMaterial
+    grassSideMaterial,
+    grassSideMaterial,
+    grassBottomMaterial,
+    rockTopMaterial,
+    grassSideMaterial,
+    grassSideMaterial
   ];
   return materials;
+}
+
+const playerMaterial = function(color, skinPath) {
+  let colors = ['red', 'blue', 'magenta', 'green', 'teal'];
+  let index = Math.floor(Math.random() * colors.length);
+  // color = color || colors[index];
+  color = color || 'magenta'
+  let playerMaterial;
+  if (skinPath) {
+    playerMaterial = new THREE.MeshLambertMaterial({ color: color, map: new THREE.TextureLoader().load(skinPath) });
+  } else {
+    playerMaterial = new THREE.MeshLambertMaterial({ color: color });
+  }
+  return playerMaterial;
 }
 
 
 const redBallMaterial = new THREE.MeshLambertMaterial(
   {map: new THREE.TextureLoader().load( 'textures/redball2.jpg' )} );
-const playerMaterial = new THREE.MeshLambertMaterial({ color: 'green' });
 const metalCrateMaterial = MeshLambertMaterial('textures/metalcratesm.jpg');
 const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
 const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
@@ -168,9 +181,9 @@ module.exports = {
     mesh.userData.mass = volumeOf(size) * config.ancientCrateDensity;
     return mesh;
   },
-  playerModel: function(position, quaternion) {
+  playerModel: function(position, quaternion, color, skin) {
     const geometry = new THREE.SphereGeometry(config.playerModelRadius, 32, 32);
-    const mesh = new THREE.Mesh(geometry, playerMaterial);
+    const mesh = new THREE.Mesh(geometry, playerMaterial(color, skin));
     initPosition(mesh, position, quaternion);
     addShadow(mesh);
     mesh.userData.name = 'playerModel';

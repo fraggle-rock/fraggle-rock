@@ -6,7 +6,12 @@ const audio = require('./audio');
 
 const remoteClients = {};
 const remoteScene = {};
-let currentGame;
+let currentGame = {};
+
+//STUB DATA
+// currentGame.matchInfo = {clients: {uuidone: {}}}
+// currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
+
 let pitch = 0;
 let yaw = 0;
 let host = false;
@@ -159,7 +164,17 @@ module.exports = {
       if (remoteClients[clientPosition.uuid]) {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
       } else if (!clearLookup[clientPosition.uuid]){
-        const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
+        const uuid = clientPosition.uuid;
+        const client = currentGame.matchInfo.clients[uuid];
+        let color;
+        let skinPath;
+
+        if (client) {
+          color = currentGame.matchInfo.clients[uuid].color;
+          skinPath = currentGame.matchInfo.clients[uuid].skinPath;
+        }
+
+        const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);
         currentGame.scene.add(mesh);
         remoteClients[clientPosition.uuid] = mesh;
       }
