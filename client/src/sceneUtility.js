@@ -9,7 +9,7 @@ const remoteScene = {};
 let currentGame = {};
 
 //STUB DATA
-// currentGame.matchInfo = {clients: {uuidone: {}}}
+currentGame.matchInfo = {clients: {}};
 // currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
 
 let pitch = 0;
@@ -172,11 +172,14 @@ module.exports = {
         if (client) {
           color = currentGame.matchInfo.clients[uuid].color;
           skinPath = currentGame.matchInfo.clients[uuid].skinPath;
+        } else {
+          console.log('client doesnt exist')
         }
 
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);
         currentGame.scene.add(mesh);
         remoteClients[clientPosition.uuid] = mesh;
+        document.getElementById('player' + client.playerNumber + 'Box').style.display = '';
       }
     } else {
       currentGame.camera.position.copy(clientPosition.position);
