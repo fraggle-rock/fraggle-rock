@@ -9,8 +9,8 @@ const remoteScene = {};
 let currentGame = {};
 
 //STUB DATA
-currentGame.matchInfo = {clients: {uuidone: {}}}
-currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
+// currentGame.matchInfo = {clients: {uuidone: {}}}
+// currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
 
 let pitch = 0;
 let yaw = 0;
@@ -165,9 +165,11 @@ module.exports = {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
       } else if (!clearLookup[clientPosition.uuid]){
         const uuid = clientPosition.uuid;
-        const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
+        // const color = currentGame.matchInfo.clients[uuid].color;
+        // const skinPath = currentGame.matchInfo.clients[uuid].skinPath;
+        const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);
         currentGame.scene.add(mesh);
-        // console.log('currentGame', currentGame.matchInfo);
+        console.log('currentGame', currentGame);
         remoteClients[clientPosition.uuid] = mesh;
       }
     } else {
