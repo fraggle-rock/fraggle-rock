@@ -67,9 +67,8 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
   }  
 };
 
-const startPhysics = function startPhysics(io) {
+const startPhysics = function startPhysics() {
   const context = this;
-  this.io = io;
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
@@ -144,9 +143,9 @@ const startPhysics = function startPhysics(io) {
     }
     if (players.length > 0) {
       if (context.sendFull || clear.length > 0) {
-        io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
+        context.io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
-        io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+        context.io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
       } 
     } else {
       context.deleteMatch(context.guid);
@@ -241,10 +240,12 @@ const loadNewClient = function loadNewClient(player) {
   this.clientToCannon[player.object.uuid] = ballBody;
   this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skin: player.skin, name: player.name, lives: 3};
   this.world.add(ballBody);
+  this.sendPoll();
 };
 
-const loadFullScene = function loadFullScene(scene, player) {
+const loadFullScene = function loadFullScene(scene, player, io) {
   // Setup our world
+  this.io = io;
   const context = this;
   let world = new CANNON.World();
   world.quatNormalizeSkip = 0;

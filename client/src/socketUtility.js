@@ -13,13 +13,10 @@ const addUpdateListeners = function addUpdateListeners(socket) {
   socket.on('fullPhysicsUpdate', function(meshesObject) {
     sceneUtility.loadPhysicsUpdate(meshesObject);
   });
-  socket.on('gameInfo', function(gameInfo) {
-    sceneUtility.loadGameInfo(gameInfo);
-  });
-  socket.on('poll', function() {
+  socket.on('poll', function(matchInfo) {
     socket.emit('poll', sceneUtility.getCamera().uuid.slice(0, config.uuidLength));
+    sceneUtility.loadMatchInfo(JSON.parse(matchInfo));
   });
-
 }
 
 const roundToDec = function round(num, decimals) {
@@ -77,6 +74,7 @@ module.exports = {
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
     camera.direction = game.camera.getWorldDirection();
+    camera.skin = 'red';
     const fullScene = {camera: camera, scene: game.scene.toJSON()};
     socket.emit('fullScene', fullScene);
   },
@@ -85,6 +83,7 @@ module.exports = {
     const player = game.camera.toJSON();
     player.position = game.camera.position;
     player.direction = game.camera.getWorldDirection();
+    player.skin = 'red';
     socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
