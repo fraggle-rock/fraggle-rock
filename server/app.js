@@ -58,6 +58,9 @@ io.on('connection', (socket) => {
     socket.on('clientUpdate', function (camera) { // listener for client position updates
       match.loadClientUpdate(camera); // update server's copy of client position
     });
+    socket.on('poll', function(clientUuid) {
+      match.loadPoll(clientUuid);
+    })
   });
 
   socket.on('addMeToMatch', function (newMatchRequest) {

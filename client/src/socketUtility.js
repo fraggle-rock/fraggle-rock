@@ -2,16 +2,24 @@ const THREE = require('three');
 const socket = io();
 const sceneUtility = require('./sceneUtility');
 const flat = require('../../config/flat');
+const config = require('../../config/config');
 const lastEmittedClient = {theta: 0};
 let canEmit = true;
 
-const addPhysicsUpdateListener = function addPhysicsUpdateListener(socket) {
+const addUpdateListeners = function addUpdateListeners(socket) {
   socket.on('physicsUpdate', function(meshesObject) {
     sceneUtility.savePhysicsUpdate(meshesObject);
   });
   socket.on('fullPhysicsUpdate', function(meshesObject) {
     sceneUtility.loadPhysicsUpdate(meshesObject);
   });
+  socket.on('gameInfo', function(gameInfo) {
+    sceneUtility.loadGameInfo(gameInfo);
+  });
+  socket.on('poll', function() {
+    socket.emit('poll', sceneUtility.getCamera().uuid.slice(0, config.uuidLength));
+  });
+
 }
 
 const roundToDec = function round(num, decimals) {
@@ -65,7 +73,7 @@ const hasChangedInput = function hasChangedInput(playerInput) {
 
 module.exports = {
   requestNewMatch: function requestNewMatch(game) {
-    addPhysicsUpdateListener(socket);
+    addUpdateListeners(socket);
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
     camera.direction = game.camera.getWorldDirection();
@@ -73,7 +81,7 @@ module.exports = {
     socket.emit('fullScene', fullScene);
   },
   joinMatch: function joinMatch(matchNumber, game) {
-    addPhysicsUpdateListener(socket);
+    addUpdateListeners(socket);
     const player = game.camera.toJSON();
     player.position = game.camera.position;
     player.direction = game.camera.getWorldDirection();

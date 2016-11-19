@@ -155,7 +155,7 @@ module.exports = {
     if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
-      } else {
+      } else if (!clearLookup[clientPosition.uuid]){
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
         currentGame.scene.add(mesh);
         remoteClients[clientPosition.uuid] = mesh;
@@ -179,7 +179,7 @@ module.exports = {
       meshLookup.length++;
     }
     clear.forEach(function(uuid) {
-      const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]];
+      const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]] || remoteClients[uuid];
       currentGame.scene.remove(mesh);
       meshLookup.length--;
       clearLookup[uuid] = true;
@@ -188,6 +188,8 @@ module.exports = {
       } else if (meshLookup[serverShapeMap[uuid]]) {
         delete meshLookup[serverShapeMap[uuid]];
         delete serverShapeMap[uuid];
+      } else if (remoteClients[uuid]) {
+        delete remoteClients[uuid];
       }
     });
     let localMesh;
@@ -225,4 +227,7 @@ module.exports = {
       module.exports.loadClientUpdate(flat.rePlayer(client));
     });
   },
+  getCamera: function getCamera() {
+    return currentGame.camera;
+  }
 };

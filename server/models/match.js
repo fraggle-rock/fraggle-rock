@@ -24,29 +24,42 @@ module.exports = function Match(deleteMatch) {
   this.startPhysics = startPhysics.bind(this);
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
+  this.loadPoll = loadPoll.bind(this);
   this.deleteMatch = deleteMatch;
   this.physicsTick = config.gameSpeed * 1 / 60 / 2;
   this.killFloor = killFloor.bind(this);  
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
+  this.io;
+  this.clientPoll = setInterval(function() {
+    this.io.to(this.guid).emit('poll', true);
+  }.bind(this), 5000);
+};
+
+const loadPoll = function loadPoll(clientUuid) {
+  if (this.clients[clientUuid]) {
+    this.clients[clientUuid].lastUpdate = performance.now();
+  }
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
-  clearTimeout(this.timeout);
   clientPosition = JSON.parse(clientPosition);
   clientPosition = flat.rePlayerInput(clientPosition);
   const localClient = this.clients[clientPosition.uuid];
-  localClient.up = clientPosition.up;
-  localClient.left = clientPosition.left;
-  localClient.right = clientPosition.right;
-  localClient.down = clientPosition.down;
-  localClient.direction = clientPosition.direction;
-  localClient.jump = clientPosition.jump;
-  this.timeout = setTimeout(this.kill, config.serverTimeout);
+  if (localClient) {
+    localClient.up = clientPosition.up;
+    localClient.left = clientPosition.left;
+    localClient.right = clientPosition.right;
+    localClient.down = clientPosition.down;
+    localClient.direction = clientPosition.direction;
+    localClient.jump = clientPosition.jump;
+    localClient.lastUpdate = performance.now();
+  }  
 };
 
 const startPhysics = function startPhysics(io) {
   const context = this;
+  this.io = io;
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
@@ -55,8 +68,18 @@ const startPhysics = function startPhysics(io) {
     const expiredBoxes = [];
     const expiredBoxIndices = [];
     const expiredBallIndices = [];
+    const now = performance.now();
     for (var key in context.clients) {
-      players.push(flat.player(context.clients[key]));
+      const client = context.clients[key];
+      if (now - client.lastUpdate > config.playerTimeout) {
+        const clientBody = context.clientToCannon[client.uuid];
+        context.world.remove(clientBody);
+        clear.push(client.uuid);
+        delete context.clients[key];
+        delete context.clientToCannon[client.uuid];
+      } else {
+        players.push(flat.player(context.clients[key])); 
+      }
     }
     while (context.balls.length > config.maxBalls) {
       const ball = context.balls.shift();
@@ -109,17 +132,12 @@ const startPhysics = function startPhysics(io) {
     if (clear.length > 0) {
       update.push(clear); 
     }
-    const sockets = io.to(context.guid).sockets;
-    let playerCount = 0;
-    for(var key in sockets) {
-      playerCount++;
-    }
-    if (playerCount > 0) {
+    if (players.length > 0) {
       if (context.sendFull || clear.length > 0) {
         io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
         io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
-      }
+      } 
     } else {
       context.deleteMatch(context.guid);
     }
@@ -174,7 +192,6 @@ const startPhysics = function startPhysics(io) {
 };
 
 const shootBall = function shootBall(camera) {
-  clearTimeout(this.timeout);
   camera = flat.reShootBall(JSON.parse(camera));
   let x = camera.position.x;
   let y = camera.position.y;
@@ -194,7 +211,6 @@ const shootBall = function shootBall(camera) {
   y += shootDirection.y * 2.5;
   z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
-  this.timeout = setTimeout(this.kill, config.serverTimeout);
 };
 
 const loadNewClient = function loadNewClient(player) {
@@ -209,7 +225,7 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.position.z = z;
   ballBody.addShape(ballShape);
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now()};
   this.world.add(ballBody);
 };
 
@@ -320,7 +336,7 @@ const killFloor = function killFloor() {
 
 const shutdown = function shutdown() {
   this.open = false;
-  clearTimeout(this.timeout);
+  clearInterval(this.clientPoll);
   clearInterval(this.physicsClock);
   clearInterval(this.killFloorInterval);
 };
