@@ -1,6 +1,8 @@
 import React from 'react';
 import MapSelector from './MapSelector.js'
 import { browserHistory } from 'react-router';
+import userProfile from '../userProfile.js';
+import SkinSelector from './SkinSelector.js';
 const clientScene = require('../../clientScene.js');
 
 class CreateMatch extends React.Component {
@@ -57,6 +59,7 @@ class CreateMatch extends React.Component {
   ChooseMap() {
     document.getElementById('MapSelector').style.display = 'block';
     document.getElementById('DawnMountainCreateBackground').style.display = 'none';
+    document.getElementById('StartMatch').style.display = 'none';
   }
 
   backToHome() {
@@ -65,13 +68,12 @@ class CreateMatch extends React.Component {
 
   render() {
     return (
-      <div>
-        <img id='HomeBackground' src='https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png' />
+      <div id='HomeBackground'>
         <div id='CreateMatch'>
+          <div id='CreateMatchBackground'>
           <h1 id='CreateMatchTitle'>Create Match</h1>
-          <div id='CreateMatchBackground'/>
             <div>
-              <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+              <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
             </div>
           <div id='ChooseMap'>
             <a id='ChooseMapTitle' onClick={this.ChooseMap}>Choose Map</a>
@@ -83,7 +85,10 @@ class CreateMatch extends React.Component {
             <img id='DawnMountainCreate' src='../../../textures/dawnmountainThumb.jpg' />
             <div>Dawn Mountain</div>
           </div>
-          <button id='StartMatch' className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
+          <div id='StartMatch'>
+            <button id='Start'className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
+          </div>
+        </div>
         </div>
       </div>
     );

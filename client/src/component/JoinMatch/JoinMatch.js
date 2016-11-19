@@ -19,7 +19,6 @@ class JoinMatch extends React.Component {
       method: 'GET',
       success: (data) => {
         this.setState({liveMatches: data})
-        console.log(this.state.liveMatches)
       }
     })
   }
@@ -32,23 +31,23 @@ class JoinMatch extends React.Component {
   render() {
     return (
       <div id='JoinMatchTitle'>
-        <img id='HomeBackground' src='https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png' />
-        <h1>Join A Match</h1>
-        <div id='CreateMatchBackground' />
-        <button onClick={this.backToHome} className='btn btn-primary'>HOME</button>
-        <div id='JoinMatchData'>
-          <span id='JoinLevelTitle'>
-            <span>Level</span>
-            {this.state.liveMatches.map((games) => <JoinLevelData games={games} />)}
-          </span>
-          <span id='JoinUserTitle'>
-            <span id='JoinUserId'>User</span>
-            {this.state.liveMatches.map((games) => <JoinUserData games={games} />)}
-          </span>
-          <span id='JoinJoinTitle'>
-            <span>Join</span>
-            {this.state.liveMatches.map((games) => <JoinButtonData games={games} />)}
-          </span>
+        <div id='CreateMatchBackground' >
+          <h1>Join A Match</h1>
+          <button onClick={this.backToHome} className='btn btn-primary'>HOME</button>
+          <div id='JoinMatchData'>
+            <div id='JoinLevelTitle'>
+              <div>Level</div>
+              {this.state.liveMatches.map((games) => <JoinLevelData games={games} />)}
+            </div>
+            <div id='JoinUserTitle'>
+              <div id='JoinUserId'>User</div>
+              {this.state.liveMatches.map((games) => <JoinUserData games={games} />)}
+            </div>
+            <div id='JoinJoinTitle'>
+              <div>Join</div>
+              {this.state.liveMatches.map((games) => <JoinButtonData games={games} />)}
+            </div>
+          </div>
         </div>
       </div>
     );

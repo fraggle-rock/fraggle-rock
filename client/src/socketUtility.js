@@ -2,15 +2,21 @@ const THREE = require('three');
 const socket = io();
 const sceneUtility = require('./sceneUtility');
 const flat = require('../../config/flat');
+const config = require('../../config/config');
+const userProfile = require('./component/userProfile')
 const lastEmittedClient = {theta: 0};
 let canEmit = true;
 
-const addPhysicsUpdateListener = function addPhysicsUpdateListener(socket) {
+const addUpdateListeners = function addUpdateListeners(socket) {
   socket.on('physicsUpdate', function(meshesObject) {
     sceneUtility.savePhysicsUpdate(meshesObject);
   });
   socket.on('fullPhysicsUpdate', function(meshesObject) {
     sceneUtility.loadPhysicsUpdate(meshesObject);
+  });
+  socket.on('poll', function(matchInfo) {
+    socket.emit('poll', sceneUtility.getCamera().uuid.slice(0, config.uuidLength));
+    sceneUtility.loadMatchInfo(JSON.parse(matchInfo));
   });
 }
 
@@ -65,18 +71,28 @@ const hasChangedInput = function hasChangedInput(playerInput) {
 
 module.exports = {
   requestNewMatch: function requestNewMatch(game) {
-    addPhysicsUpdateListener(socket);
+    addUpdateListeners(socket);
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
     camera.direction = game.camera.getWorldDirection();
+
+    // declare your color and skin
+    camera.color = userProfile.color;
+    camera.skinPath = userProfile.ChosenSkin;
+
     const fullScene = {camera: camera, scene: game.scene.toJSON()};
     socket.emit('fullScene', fullScene);
   },
   joinMatch: function joinMatch(matchNumber, game) {
-    addPhysicsUpdateListener(socket);
+    addUpdateListeners(socket);
     const player = game.camera.toJSON();
     player.position = game.camera.position;
     player.direction = game.camera.getWorldDirection();
+
+    // sending my color and skin to other players
+    player.color = userProfile.color;
+    player.skinPath = userProfile.ChosenSkin;
+
     socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
