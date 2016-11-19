@@ -77,13 +77,12 @@ body {
   z-index: 4;
   top: 62px;
   left: 12px;
-  /*margin: 15px 0 0 2px;*/
 }
 
 .playerLives img {
   width: 16px;
   height: auto;
-  margin: 3px 0 0;
+  margin: 4px 0 0;
 }
 
 
@@ -105,16 +104,16 @@ body {
 }
 
 .crosshairContainer {
-  width: 36px;
+  width: 37px;
   height: 15px;
-  margin: 25% auto 0;
+  margin: 23% auto 0;
 }
 
 #crosshair {
   display: inline-block;
   width: 15px;
   height: 15px;
-  margin: 0;
+  margin-left: 1px;
 }
 .jumpBox {
   width: 5px;
@@ -129,8 +128,13 @@ body {
   display: block;
   /*background-color: white;*/
   color: white;
-  margin: 0;
+  margin: 2.5px 0;
   font-size: 1.9px;
+  width: 0px;
+  height: 0px;
+  border-bottom: 5px solid white;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
 }
 .ammoBox {
   display: inline-block;
@@ -353,7 +357,7 @@ body {
   background: -o-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* opera 11.10+ */
   background: -ms-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* ie10+ */
   background: linear-gradient(37deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* w3c */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020D3D', endColorstr='#1670BA',GradientType=0 ); 
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020D3D', endColorstr='#1670BA',GradientType=0 );
   border-radius: 20px;
   opacity: 0.90;
 }

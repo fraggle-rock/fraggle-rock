@@ -2,6 +2,7 @@ const THREE = require('three');
 const objectBuilder = require('./objectBuilder');
 const config = require('../../config/config.js');
 const flat = require('../../config/flat.js');
+const audio = require('./audio');
 
 const remoteClients = {};
 const remoteScene = {};
@@ -16,6 +17,7 @@ let jumpRegen = false;
 let latestServerUpdate;
 const serverShapeMap = {};
 const meshLookup = {length: 0};
+const clearLookup = {};
 
 //DEBUGGING
 let ticks = 0;
@@ -45,7 +47,7 @@ module.exports = {
     playerInput.down = false;
     playerInput.right = false;
     playerInput.jump = false;
-    playerInput.uuid = camera.uuid;
+    playerInput.uuid = camera.uuid.slice(0, config.uuidLength);
     const onKeyDown = function onKeyDown(event) {
       if (event.keyCode === 87 || event.keyCode === 38) {
         playerInput.up = true;
@@ -62,6 +64,7 @@ module.exports = {
       if (event.keyCode === 32) {
         event.preventDefault();
         if (jumpCount > 0 && playerInput.jump === false) {
+          audio.smashBrawl.shootRound(0, 1, 0.08, 0, 0);
           document.getElementById('jump' + jumpCount).style.opacity = '0';
           jumpCount--;
           playerInput.jump = true;
@@ -110,6 +113,7 @@ module.exports = {
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
       if (shotCount > 0) {
+        audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
         document.getElementById('ammo' + shotCount).style.opacity = '0';
         shotCount--;
         socketUtility.emitShootBall({
@@ -145,7 +149,10 @@ module.exports = {
     requestAnimationFrame(animate.bind(null, game));
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
-    if (currentGame.camera.uuid !== clientPosition.uuid) {
+    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound) {
+      audio.smashBrawl.shootRound(3, 1, 0.08, 0, 1);
+    }
+    if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
       } else {
@@ -162,10 +169,10 @@ module.exports = {
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
     meshObject = JSON.parse(meshObject);
-    const boxMeshes = meshObject.boxMeshes;
-    const ballMeshes = meshObject.ballMeshes;
-    const serverClients = meshObject.players;
-    const clear = meshObject.clear || [];
+    const boxMeshes = meshObject[0];
+    const ballMeshes = meshObject[1];
+    const serverClients = meshObject[2];
+    const clear = meshObject[3] || [];
     const sceneChildren = currentGame.scene.children;
     while(sceneChildren.length > meshLookup.length) {
       meshLookup[sceneChildren[meshLookup.length].uuid.slice(0, config.uuidLength)] = sceneChildren[meshLookup.length];
@@ -175,6 +182,13 @@ module.exports = {
       const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]];
       currentGame.scene.remove(mesh);
       meshLookup.length--;
+      clearLookup[uuid] = true;
+      if (meshLookup[uuid]) {
+        delete meshLookup[uuid];
+      } else if (meshLookup[serverShapeMap[uuid]]) {
+        delete meshLookup[serverShapeMap[uuid]];
+        delete serverShapeMap[uuid];
+      }
     });
     let localMesh;
     boxMeshes.forEach((serverMesh) => {
@@ -183,7 +197,7 @@ module.exports = {
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         localMesh.quaternion.copy(serverMesh.quaternion);
-      } else {
+      } else if (!clearLookup[serverMesh.uuid]) {
         const serverGeometry = serverMesh.geometry;
         const serverPosition = serverMesh.position;
         const serverQuaternion = serverMesh.quaternion;
@@ -195,19 +209,20 @@ module.exports = {
       localMesh = undefined;
     });
     ballMeshes.forEach((serverMesh) => {
+      serverMesh = flat.reBall(serverMesh);
       localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         localMesh.quaternion.copy(serverMesh.quaternion);
-      } else {
+      } else if (!clearLookup[serverMesh.uuid]) {
         let ballMesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
         serverShapeMap[serverMesh.uuid] = ballMesh.uuid.slice(0, config.uuidLength);
         currentGame.scene.add(ballMesh);
       }
       localMesh = undefined;
     });
-    for (var key in serverClients) {
-      module.exports.loadClientUpdate(serverClients[key]);
-    }
+    serverClients.forEach(function(client) {
+      module.exports.loadClientUpdate(flat.rePlayer(client));
+    });
   },
 };
