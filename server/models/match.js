@@ -191,7 +191,7 @@ const startPhysics = function startPhysics(io) {
           client.jump = false;
       }
       if (clientBody.velocity.x < 40 && clientBody.velocity.z < 40 && !isMoving) {
-        clientBody.velocity.set(clientBody.velocity.x / 4, clientBody.velocity.y, clientBody.velocity.z / 4);
+        clientBody.velocity.set(clientBody.velocity.x / 1.05, clientBody.velocity.y, clientBody.velocity.z / 1.05);
       }
 
     }
