@@ -9,7 +9,7 @@ const remoteScene = {};
 let currentGame = {};
 
 //STUB DATA
-// currentGame.matchInfo = {clients: {uuidone: {}}}
+currentGame.matchInfo = {clients: {}};
 // currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
 
 let pitch = 0;
@@ -155,11 +155,34 @@ module.exports = {
   },
   loadMatchInfo: function loadMatchInfo(matchInfo) {
     currentGame.matchInfo = matchInfo;
+
+    let victory = false;
+    let playersAlive = [];
+    let players = Object.keys(matchInfo.clients).length;
+
+    Object.keys(matchInfo.clients).forEach( (uuid) => {
+      let client = matchInfo.clients[uuid];
+      document.getElementById('player' + client.playerNumber + 'Box').style.display = '';
+      document.getElementById('player' + client.playerNumber + 'life1').style.display = client.lives > 0 ? '' : 'none';
+      document.getElementById('player' + client.playerNumber + 'life2').style.display = client.lives > 1 ? '' : 'none';
+      document.getElementById('player' + client.playerNumber + 'life3').style.display = client.lives > 2 ? '' : 'none';
+
+      if (client.lives > 0) {
+        playersAlive.push(client.playerNumber);
+      }
+    });
+
+    if (players > 1 && playersAlive.length === 1) {
+      document.getElementById('HUD').style.display = 'none';
+      document.getElementById('victoryBox').style.display = '';
+      document.getElementById('victor').innerHTML = 'Player ' + playersAlive[0] + ' Wins!';
+    }
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
-    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound) {
+    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound || Math.abs(clientPosition.position.x) > config.playerHorizontalBound || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
       audio.smashBrawl.shootRound(3, 1, 0.08, 0, 1);
     }
+
     if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
         remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
@@ -170,8 +193,10 @@ module.exports = {
         let skinPath;
 
         if (client) {
-          color = currentGame.matchInfo.clients[uuid].color;
-          skinPath = currentGame.matchInfo.clients[uuid].skinPath;
+          color = client.color;
+          skinPath = client.skinPath;
+        } else {
+          console.log('client doesnt exist')
         }
 
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);
