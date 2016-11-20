@@ -58,7 +58,8 @@ function SmashBrawl(currContext) {
     '../assets/questionCrate.wav',
     '../assets/metalCrate.wav',
     '../assets/ancientCrate.mp3',
-    '../assets/woodCrate.wav'], onLoaded);
+    '../assets/woodCrate.wav',
+    '../assets/playerHit.wav'], onLoaded);
   function onLoaded(buffers) {
     ctx.buffers = buffers;
   }
