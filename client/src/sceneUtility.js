@@ -155,13 +155,28 @@ module.exports = {
   },
   loadMatchInfo: function loadMatchInfo(matchInfo) {
     currentGame.matchInfo = matchInfo;
+
+    let victory = false;
+    let playersAlive = [];
+    let players = Object.keys(matchInfo.clients).length;
+
     Object.keys(matchInfo.clients).forEach( (uuid) => {
       let client = matchInfo.clients[uuid];
       document.getElementById('player' + client.playerNumber + 'Box').style.display = '';
       document.getElementById('player' + client.playerNumber + 'life1').style.display = client.lives > 0 ? '' : 'none';
       document.getElementById('player' + client.playerNumber + 'life2').style.display = client.lives > 1 ? '' : 'none';
       document.getElementById('player' + client.playerNumber + 'life3').style.display = client.lives > 2 ? '' : 'none';
-    })
+
+      if (client.lives > 0) {
+        playersAlive.push(client.playerNumber);
+      }
+    });
+
+    if (players > 1 && playersAlive.length === 1) {
+      document.getElementById('HUD').style.display = 'none';
+      document.getElementById('victoryBox').style.display = '';
+      document.getElementById('victor').innerHTML = 'Player ' + playersAlive[0] + ' Wins!';
+    }
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     if (Math.abs(clientPosition.position.y) > config.playerVerticalBound || Math.abs(clientPosition.position.x) > config.playerHorizontalBound || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
