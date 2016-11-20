@@ -32,5 +32,6 @@ module.exports = {
   maxPlayerDecel: 20,
   killFloorInterval: 1000,
   killFloorUpVelocity: 50,
-  maxBalls: 15
+  maxBalls: 15,
+  colors: ['red', 'blue', 'green', 'magenta', 'teal']
 };

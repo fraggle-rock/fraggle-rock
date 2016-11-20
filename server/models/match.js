@@ -47,7 +47,7 @@ const sendPoll = function sendPoll() {
   const matchInfo = {clients: {}};
   for (var key in this.clients) {
     const client = this.clients[key];
-    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color})
+    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color, playerNumber: client.playerNumber})
   }
   this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
@@ -163,6 +163,7 @@ const startPhysics = function startPhysics() {
         client.lives--;
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
+        context.sendPoll();
         continue;
       }
       if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
@@ -248,8 +249,9 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.addShape(ballShape);
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
+  const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: player.color, lives: 3};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
   this.world.add(ballBody);
   this.sendPoll();
 };

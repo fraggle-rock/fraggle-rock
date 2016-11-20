@@ -28,7 +28,7 @@ div > div > div > div > div {
 }*/
 
 body {
-  background: url('https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png') no-repeat center center fixed; 
+  background: url('https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -51,7 +51,20 @@ body {
   z-index: 5;
 }
 
+#victoryBox {
+  margin: 15% auto 0;
+  text-align: center;
+  color: white;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 40px;
+}
+
+#victor {
+  font-size: 25px;
+}
+
 .playerBoxContainer {
+  text-align: center;
   width: 380px;
   height: 90px;
   position: absolute;
@@ -294,7 +307,64 @@ body {
 #ShoppingCart {
   margin-top: 150px;
 }
+#username {
+  float: right;
+  width: 160px;
+  font-size: 20px;
+}
 
+#username2 {
+  float: right;
+  width: 90px;
+  font-size: 20px;
+}
+
+#ProfileImgHome {
+  height: 53px;
+  width: 53px;
+  border-radius: 10px;
+  border-width: 2px;
+  border-style: outset;
+}
+
+#ProfileImgHome2 {
+  height: 50px;
+  width: 50px;
+}
+
+#Profile2 {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+}
+
+#Profile {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  margin-right: 15px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+#ImgHomeDiv {
+  float: left;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+#SignOut {
+  margin-top: 4px;
+  float: right;
+}
+
+#SelectSkin {
+  margin-top: 4px;
+  float: right;
+  margin-right: 10px;
+}
 /*LeaderBoard CSS*/
 /*
 -----------------------------------------------------------------------------------*/
@@ -309,7 +379,7 @@ body {
 }
 
 #LeaderBoardScoreTitle {
-  font-size: 20px; 
+  font-size: 20px;
 }
 
 #DataLeader {
@@ -469,10 +539,6 @@ body {
   margin-top: 10px;
 }
 
-#SkinButton {
-  margin-bottom: 15px;
-  margin-top: 5px;
-}
 
 #Skins {
   margin: 20px auto;
