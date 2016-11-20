@@ -163,6 +163,7 @@ const startPhysics = function startPhysics() {
         client.lives--;
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
+        context.sendPoll();
         continue;
       }
       if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
