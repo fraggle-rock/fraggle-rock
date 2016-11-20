@@ -158,7 +158,7 @@ module.exports = {
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     if (Math.abs(clientPosition.position.y) > config.playerVerticalBound) {
-      audio.smashBrawl.shootRound(3, 1, 0.08, 0, 1);
+      audio.smashBrawl.shootRound(2, 1, 0.08, 0, 1);
     }
     if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {

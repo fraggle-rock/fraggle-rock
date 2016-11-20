@@ -158,51 +158,6 @@ const startPhysics = function startPhysics() {
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
       let movePerTick = config.playerMovePerTick;
-      const damping = config.playerDamping;
-      clientBody.addEventListener("collide",function(e){
-        if(e.body.userData && e.body.userData.shapeType === 3) {
-          console.log('Collision ', e);
-          // debugger;
-        }
-      });
-      if (Math.abs(clientBody.position.y) > config.playerVerticalBound ||
-      Math.abs(clientBody.position.x) > config.playerHorizontalBound ||
-      Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
-        clientBody.position.set(0, 10, 0);
-        clientBody.velocity.set(0, 0, 0);
-        continue;
-      }
-      //  player x-z damping
-      let sign = clientBody.velocity.x >= 0 ? 1 : -1;
-      const xDamping = Math.min(config.maxPlayerDecel, sign * damping *
-        (clientBody.velocity.x * clientBody.velocity.x));
-      clientBody.velocity.x -= xDamping;
-      sign = clientBody.velocity.z >= 0 ? 1 : -1;
-      const zDamping = Math.min(config.maxPlayerDecel, sign * damping *
-        (clientBody.velocity.z * clientBody.velocity.z));
-      clientBody.velocity.z -= zDamping;
-      if (client.up && client.left || client.up && client.right
-        || client.down && client.left || client.down && client.right) {
-        movePerTick = movePerTick * .707;
-      }
-      if (client.up) {
-        clientBody.velocity.set(currVelocity.x + movePerTick *
-          client.direction.x, currVelocity.y, currVelocity.z +
-          movePerTick * client.direction.z);
-      }
-      if (client.down) {
-        clientBody.velocity.set(currVelocity.x - movePerTick *
-          client.direction.x, currVelocity.y,
-          currVelocity.z - movePerTick * client.direction.z);
-      }
-      if (client.right) {
-        clientBody.velocity.set(currVelocity.x - movePerTick *
-          client.direction.z, currVelocity.y, currVelocity.z + movePerTick *
-          client.direction.x);
-      }
-      if (client.left) {
-        clientBody.velocity.set(currVelocity.x + movePerTick *
-          client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
       let isMoving = false;
       if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
         client.lives--;
@@ -260,6 +215,16 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
+  const context =this;
+
+  ballBody.addEventListener("collide",function(e){
+
+    if(e.body.userData && e.body.userData.shapeType >= 3) {
+      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
+    } else {
+      console.log('Collision ', JSON.stringify(e.body));
+    }
+  });
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
