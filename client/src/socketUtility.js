@@ -5,6 +5,7 @@ const flat = require('../../config/flat');
 const config = require('../../config/config');
 const userProfile = require('./component/userProfile')
 const lastEmittedClient = {theta: 0};
+const audio = require('./audio');
 let canEmit = true;
 
 const addUpdateListeners = function addUpdateListeners(socket) {
@@ -17,6 +18,11 @@ const addUpdateListeners = function addUpdateListeners(socket) {
   socket.on('poll', function(matchInfo) {
     socket.emit('poll', sceneUtility.getCamera().uuid.slice(0, config.uuidLength));
     sceneUtility.loadMatchInfo(JSON.parse(matchInfo));
+  });
+  socket.on('playSound', function(play) {
+    const jsonObj = JSON.parse(play);
+    console.log('Recieved ', play);
+    audio.smashBrawl.shootRound(jsonObj.play, 1, 0.08, 0, 0);
   });
 }
 

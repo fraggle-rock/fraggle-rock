@@ -17,7 +17,7 @@ module.exports = {
   jumpRegen: 3000,
   mouseSensitivity: 0.0015,
   ballRadius: 0.5,
-  ballMass: 300,
+  ballMass: 50,
   ballVelocity: 500,
   gameSpeed: .65,
   playerTimeout: 10 * 1000,

@@ -122,7 +122,7 @@ const startPhysics = function startPhysics() {
       }
     });
     if (expiredBallIndices.length > 0) {
-      console.log('Deleted out of bounds ball!');
+      // console.log('Deleted out of bounds ball!');
       let offset = 0;
       expiredBallIndices.forEach(function(index) {
         context.balls.splice(index - offset, 1);
@@ -131,13 +131,13 @@ const startPhysics = function startPhysics() {
     }
     // Replace boxes randomly above the field if they fall off
     if (expiredBoxes.length > 0) {
-      console.log('Deleted out of bounds box!');
+      // console.log('Deleted out of bounds box!');
       expiredBoxes.forEach(function(box) {
         box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
         box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
-    const update = [boxes, balls, players];;
+    const update = [boxes, balls, players];
     if (clear.length > 0) {
       update.push(clear);
     }
@@ -216,6 +216,17 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
+  const context =this;
+
+  ballBody.addEventListener("collide",function(e){
+
+    if(e.body.userData && e.body.userData.shapeType >= 3) {
+      console.log('Sound Emitted ', e.body.userData.shapeType);
+      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
+    } else if(e.body.mass === config.playerModelMass && e.target.mass === config.ballMass) {
+      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
+    }
+  });
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
