@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
     });
     socket.on('poll', function(clientUuid) {
       match.loadPoll(clientUuid);
-    })
+    });
   });
 
   socket.on('addMeToMatch', function (newMatchRequest) {
@@ -78,6 +78,9 @@ io.on('connection', (socket) => {
       });
       socket.on('clientUpdate', function (clientPosition) { // listener for client position updates
         match.loadClientUpdate(clientPosition); // update server's copy of client position
+      });
+      socket.on('poll', function(clientUuid) {
+        match.loadPoll(clientUuid);
       });
     });
   });

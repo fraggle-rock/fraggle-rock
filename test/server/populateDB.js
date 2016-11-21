@@ -10,7 +10,8 @@ const users = [
   { username: 'riyaz',
     email: 'riyaz@hackreactor.com',
     token: 'riyazToken',
-    facebookid: 'riyazFacebookid' },
+    facebookid: 'riyazFacebookid'
+  },
   { username: 'will',
     email: 'will@hackreactor.com',
     token: 'willToken',

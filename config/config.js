@@ -17,7 +17,7 @@ module.exports = {
   jumpRegen: 3000,
   mouseSensitivity: 0.0015,
   ballRadius: 0.5,
-  ballMass: 300,
+  ballMass: 50,
   ballVelocity: 500,
   gameSpeed: .65,
   tickRate: 1 / 60,
@@ -33,5 +33,6 @@ module.exports = {
   maxPlayerDecel: 20,
   killFloorInterval: 1000,
   killFloorUpVelocity: 50,
-  maxBalls: 15
+  maxBalls: 15,
+  colors: ['red', 'blue', 'green', 'magenta', 'teal']
 };

@@ -54,8 +54,12 @@ function SmashBrawl(currContext) {
   const ctx = this;
   const loader = new BufferLoader(currContext, ['../assets/jump.wav',
     '../assets/shoot.wav',
-    '../assets/collide.wav',
-    '../assets/die.wav'], onLoaded);
+    '../assets/die.wav',
+    '../assets/questionCrate.wav',
+    '../assets/metalCrate.wav',
+    '../assets/ancientCrate.mp3',
+    '../assets/woodCrate.wav',
+    '../assets/playerHit.wav'], onLoaded);
   function onLoaded(buffers) {
     ctx.buffers = buffers;
   }
