@@ -108,9 +108,9 @@ const buildLevelOne = function buildLevelOne() {
 
   buildFloor(8, 5, 0, -5, 0, 4, 6, 4);
   buildFloor(6, 3, 70, -15, 20, 4, 6, 4);
-  buildFloor(6, 3, -70, 15, -20, 4, 6, 4);
+  buildFloor(6, 3, -70, -15, -20, 4, 6, 4);
   buildFloor(6, 3, 20, -15, 70, 4, 6, 4);
-  buildFloor(6, 3, -20, 15, -70, 4, 6, 4);
+  buildFloor(6, 3, -20, -15, -70, 4, 6, 4);
 
 
   //RANDOM SHAPE GENERATOR
@@ -118,12 +118,12 @@ const buildLevelOne = function buildLevelOne() {
     return Math.floor(Math.random()*(high - low + 1)) + low;
   }
 
-  for (var i = 0; i < 12; i++) {
+  for (var i = 0; i < 5; i++) {
     const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
     const size = random(4, 6);
-    const x = random(-40, 40);
+    const x = random(-20, 20);
     const y = random(15, 25);
-    const z = random(-40, 40);
+    const z = random(-20, 20);
     const type = random(0, types.length - 1);
     mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
     scene.add(mesh);
