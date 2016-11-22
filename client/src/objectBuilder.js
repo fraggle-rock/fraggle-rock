@@ -69,7 +69,7 @@ const playerMaterial = function(color, skinPath) {
 
 
 const redBallMaterial = new THREE.MeshLambertMaterial(
-  {map: new THREE.TextureLoader().load( 'textures/smiletest.jpg' )} );
+  {map: new THREE.TextureLoader().load( 'textures/redball2.jpg' )} );
 const metalCrateMaterial = MeshLambertMaterial('textures/metalcratesm.jpg');
 const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
 const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
