@@ -118,15 +118,9 @@ const startPhysics = function startPhysics() {
     });
     context.boxes.forEach(function(box, i) {
       if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-        if (box.userData.shapeType === flat.shapeEncoder['grassFloor']) {
-          //do not replace fallen floor tiles
           context.world.remove(box);
           context.boxes.splice(i, 1);
           clear.push(box.uuid);
-        } else {
-          expiredBoxes.push(box);
-          expiredBoxIndices.push(i);
-        }
       } else {
         if (box.mass || context.sendFull) {
           boxes.push(flat.box(box));
@@ -139,15 +133,6 @@ const startPhysics = function startPhysics() {
       expiredBallIndices.forEach(function(index) {
         context.balls.splice(index - offset, 1);
         offset--;
-      });
-    }
-    // Replace boxes randomly above the field if they fall off
-    if (expiredBoxes.length > 0) {
-      // console.log('Deleted out of bounds box!');
-      expiredBoxes.forEach(function(box) {
-        // THIS REPLACES BOXES ON TOP WHEN THEY FALL OFF
-        // box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
-        // box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
     const update = [boxes, balls, players];
@@ -241,7 +226,8 @@ const shootBall = function shootBall(camera) {
   ballBody.addEventListener("collide",function(e){
     if(e.body.userData && e.body.userData.shapeType >= 3) {
       context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
-    } else if( (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass) && (e.target.uuid !== e.body.uuid)) {
+    } else if( (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
+    && (e.target.uuid !== e.body.uuid)) {
       context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
     }
   });
@@ -286,8 +272,8 @@ const loadFullScene = function loadFullScene(scene, player, io) {
   world.defaultContactMaterial.contactEquationStiffness = 1e9;
   world.defaultContactMaterial.contactEquationRelaxation = 4;
 
-  solver.iterations = 20;
-  solver.tolerance = 0.1;
+  solver.iterations = 1;
+  solver.tolerance = 0.5;
   world.solver = new CANNON.SplitSolver(solver);
 
   world.gravity.set(0, config.gravity, 0);
