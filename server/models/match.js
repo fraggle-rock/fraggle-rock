@@ -118,15 +118,9 @@ const startPhysics = function startPhysics() {
     });
     context.boxes.forEach(function(box, i) {
       if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-        if (box.userData.shapeType === flat.shapeEncoder['grassFloor']) {
-          //do not replace fallen floor tiles
           context.world.remove(box);
           context.boxes.splice(i, 1);
           clear.push(box.uuid);
-        } else {
-          expiredBoxes.push(box);
-          expiredBoxIndices.push(i);
-        }
       } else {
         if (box.mass || context.sendFull) {
           boxes.push(flat.box(box));
@@ -139,15 +133,6 @@ const startPhysics = function startPhysics() {
       expiredBallIndices.forEach(function(index) {
         context.balls.splice(index - offset, 1);
         offset--;
-      });
-    }
-    // Replace boxes randomly above the field if they fall off
-    if (expiredBoxes.length > 0) {
-      // console.log('Deleted out of bounds box!');
-      expiredBoxes.forEach(function(box) {
-        // THIS REPLACES BOXES ON TOP WHEN THEY FALL OFF
-        // box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
-        // box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
     const update = [boxes, balls, players];
@@ -236,7 +221,7 @@ const shootBall = function shootBall(camera) {
       console.log('Sound Emitted ', e.body.userData.shapeType);
       context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
     } else if(e.body.mass === config.playerModelMass && e.target.mass === config.ballMass) {
-      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
+      // context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
     }
   });
 
