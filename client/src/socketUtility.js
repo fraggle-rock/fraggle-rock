@@ -49,8 +49,9 @@ const roundQuaternion = function roundQuaternion (quaternion, decimals) {
 };
 const hasChangedInput = function hasChangedInput(playerInput) {
   let hasChanged = false;
+  const isMoving = lastEmittedClient.up || lastEmittedClient.down || lastEmittedClient.left || lastEmittedClient.right;
   const newTheta = Math.atan2(playerInput.direction.z, playerInput.direction.x);
-  if (Math.abs(newTheta - lastEmittedClient.theta) > .01) {
+  if (isMoving && Math.abs(newTheta - lastEmittedClient.theta) > .05) {
     hasChanged = true;
   } else if (playerInput.up !== lastEmittedClient.up) {
     hasChanged = true;
