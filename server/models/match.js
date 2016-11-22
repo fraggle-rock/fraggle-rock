@@ -216,17 +216,8 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
+  ballBody.uuid = camera.uuid;
   const context =this;
-
-  ballBody.addEventListener("collide",function(e){
-
-    if(e.body.userData && e.body.userData.shapeType >= 3) {
-      console.log('Sound Emitted ', e.body.userData.shapeType);
-      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
-    } else if(e.body.mass === config.playerModelMass && e.target.mass === config.ballMass) {
-      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
-    }
-  });
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
@@ -234,6 +225,16 @@ const shootBall = function shootBall(camera) {
   y += shootDirection.y * 2.5;
   z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
+
+  ballBody.addEventListener("collide",function(e){
+    if(e.body.userData && e.body.userData.shapeType >= 3) {
+      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
+    } else if( (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass) && (e.target.uuid !== e.body.uuid)) {
+      console.log('Velocity ', e.body.velocity, e.target.velocity, e.body.userData, e.target.userData);
+      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
+    }
+  });
+
 };
 
 const loadNewClient = function loadNewClient(player) {
@@ -249,6 +250,8 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.addShape(ballShape);
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
+  ballBody.userData = ({type: 'PlayerModel'});
+  ballBody.uuid = player.object.uuid;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
   this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};

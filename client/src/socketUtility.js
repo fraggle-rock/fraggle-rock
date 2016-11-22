@@ -21,7 +21,6 @@ const addUpdateListeners = function addUpdateListeners(socket) {
   });
   socket.on('playSound', function(play) {
     const jsonObj = JSON.parse(play);
-    console.log('Recieved ', play);
     audio.smashBrawl.shootRound(jsonObj.play, 1, 0.08, 0, 0);
   });
 }

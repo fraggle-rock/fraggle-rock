@@ -124,6 +124,7 @@ module.exports = {
         socketUtility.emitShootBall({
           position: currentGame.camera.position,
           direction: currentGame.camera.getWorldDirection(),
+          uuid: currentGame.camera.uuid.slice(0, config.uuidLength),
         });
       }
       const regen = function regen() {

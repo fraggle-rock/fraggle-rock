@@ -48,6 +48,7 @@ module.exports = {
       rDirection.x,
       rDirection.y,
       rDirection.z,
+      shot.uuid,
     ];
   },
   reShootBall: function reShootBall (flatShot) {
@@ -61,7 +62,8 @@ module.exports = {
         x: flatShot[3],
         y: flatShot[4],
         z: flatShot[5]
-      }
+      },
+      uuid: flatShot[6],
     }
   },
   playerInput: function playerInput (playerInput) {
@@ -133,7 +135,7 @@ module.exports = {
       rQuaternion.x,
       rQuaternion.y,
       rQuaternion.z
-    ]; 
+    ];
   },
   reBall: function reBall (flatBall) {
     return {
@@ -181,7 +183,7 @@ module.exports = {
       uuid: flatBox[0],
       position: {x: flatBox[1], y: flatBox[2], z: flatBox[3]},
       quaternion: {w: flatBox[4], x: flatBox[5], y: flatBox[6], z: flatBox[7]},
-      geometry: {width: flatBox[8], height: flatBox[9], depth: flatBox[10]}, 
+      geometry: {width: flatBox[8], height: flatBox[9], depth: flatBox[10]},
       type: flatBox[11],
     };
   },
