@@ -8,7 +8,25 @@ class Store extends React.Component {
 	  super(props);
 	  this.state = {
 	    user: null,
-      skins: [{skinPic: '../../../textures/skins/batmanSkin.png', skin: '/textures/skins/Batman.jpg', name: 'Batman'}, {skinPic: '../../../textures/skins/8BallSkin.png', skin: '/textures/skins/8ball.png', name: '8 Ball'}, {skinPic: '../../../textures/skins/CaptainAmericaSkin.png', skin: '/textures/skins/CaptainAmerica.jpg', name: 'Captain America'}, {skinPic: '../../../textures/skins/SmileyFaceSkin.png', skin: '/textures/skins/SmileyFace.jpg', name: 'Smiley Face'}, {skinPic: '../../../textures/skins/SoccerBallSkin.png', skin: '/textures/skins/SoccerBall.png', name: 'Socer Ball'}, {skinPic: '../../../textures/skins/superManSkin.png', skin: '/textures/skins/superman.jpg', name: 'Superman'}, {skinPic: '../../../textures/skins/StacheSkin.png', skin: '/textures/skins/Stache.jpeg', name: 'Stache'}]
+      skins: [
+      {skinPic: '../../../textures/skins/SmileyFaceSkin.jpg', skin: '/textures/skins/SmileyFace.jpg', name: 'Big Smile'},
+      {skinPic: '../../../textures/skins/coolGuy.jpg', skin: '/textures/skins/coolGuy.jpg', name: 'Cool Guy'},
+      {skinPic: '../../../textures/skins/smile.jpg', skin: '/textures/skins/smile.jpg', name: 'Smiley'},
+      {skinPic: '../../../textures/skins/silly.jpg', skin: '/textures/skins/silly.jpg', name: 'Silly'},
+      {skinPic: '../../../textures/skins/wink.jpg', skin: '/textures/skins/wink.jpg', name: 'Wink'},
+      {skinPic: '../../../textures/skins/sidewaysSmile.jpg', skin: '/textures/skins/sidewaysSmile.jpg', name: 'Sideways Smile'},
+      {skinPic: '../../../textures/skins/twirlyStache.jpg', skin: '/textures/skins/twirlyStache.jpg', name: 'Twirly Stache'},
+      {skinPic: '../../../textures/skins/googlyStache.jpg', skin: '/textures/skins/googlyStache.jpg', name: 'Googly Stache'},
+      {skinPic: '../../../textures/skins/gangstaStache.jpg', skin: '/textures/skins/gangstaStache.jpg', name: 'Gangsta Stache'},
+      {skinPic: '../../../textures/skins/heisenberg.jpg', skin: '/textures/skins/heisenberg.jpg', name: 'Heisenberg'},
+      {skinPic: '../../../textures/skins/heisenbergHardcorePreview.jpg', skin: '/textures/skins/heisenbergHardcore.jpg', name: 'Hardcore Heisenberg'},
+      {skinPic: '../../../textures/skins/glassesStache.jpg', skin: '/textures/skins/glassesStache.jpg', name: 'Glasses N Stache'},
+      {skinPic: '../../../textures/skins/SoccerBallSkin.jpg', skin: '/textures/skins/soccer2.jpg', name: 'Socer Ball'},
+      {skinPic: '../../../textures/skins/superManSkin.jpg', skin: '/textures/skins/superman.jpg', name: 'Superman'},
+      {skinPic: '../../../textures/skins/batmanSkin.jpg', skin: '/textures/skins/Batman.jpg', name: 'Batman'},
+      {skinPic: '../../../textures/skins/8BallSkin.jpg', skin: '/textures/skins/8ball.jpg', name: '8 Ball'},
+      {skinPic: '../../../textures/skins/CaptainAmericaSkin.jpg', skin: '/textures/skins/CaptainAmerica.jpg', name: 'Captain America'}
+      ]
 	  };
 	  this.backToHome = this.backToHome.bind(this);
   }
