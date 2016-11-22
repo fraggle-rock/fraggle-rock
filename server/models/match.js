@@ -29,7 +29,7 @@ module.exports = function Match(deleteMatch) {
   this.deleteMatch = deleteMatch;
   this.physicsTick = config.gameSpeed * config.tickRate / 2;
   this.tickRate = config.tickRate;
-  this.killFloor = killFloor.bind(this);  
+  this.killFloor = killFloor.bind(this);
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
   this.io;
@@ -211,7 +211,7 @@ const startPhysics = function startPhysics() {
     context.world.step(context.physicsTick);
     context.world.step(context.physicsTick);
     physicsEmit();
-  }; 
+  };
   context.physicsClock = setInterval(physicsLoop, context.tickRate * 1000);
 };
 
@@ -228,7 +228,6 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
-  ballBody.uuid = camera.uuid;
   const context =this;
 
   const shootDirection = camera.direction;
@@ -242,7 +241,6 @@ const shootBall = function shootBall(camera) {
     if(e.body.userData && e.body.userData.shapeType >= 3) {
       context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
     } else if( (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass) && (e.target.uuid !== e.body.uuid)) {
-      console.log('Velocity ', e.body.velocity, e.target.velocity, e.body.userData, e.target.userData);
       context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
     }
   });
