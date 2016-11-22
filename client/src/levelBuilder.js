@@ -118,34 +118,34 @@ const buildLevelOne = function buildLevelOne() {
     return Math.floor(Math.random()*(high - low + 1)) + low;
   }
 
-  for (var i = 0; i < 2; i++) {
+  for (var i = 0; i < 4; i++) {
     const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
-    const size = random(3, 5);
+    const size = random(4, 8);
     const x = random(-20, 20);
-    const y = random(15, 35);
+    const y = i * 10;
     const z = random(-20, 20);
     const type = random(0, types.length - 1);
     mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
     scene.add(mesh);
   }
 
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 2; i++) {
     const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
-    const size = random(4, 6);
-    const x = random(-48, -52);
-    const y = random(0, 45);
-    const z = random(48, 52);
+    const size = random(4, 8);
+    const x = random(-46, -54);
+    const y = i * 10;
+    const z = random(46, 54);
     const type = random(0, types.length - 1);
     mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
     scene.add(mesh);
   }
 
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 2; i++) {
     const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
-    const size = random(4, 6);
-    const x = random(48, 52);
-    const y = random(0, 45);
-    const z = random(-48, -52);
+    const size = random(4, 8);
+    const x = random(46, 54);
+    const y = i * 10;
+    const z = random(-46, -54);
     const type = random(0, types.length - 1);
     mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
     scene.add(mesh);
