@@ -33,24 +33,27 @@ class LogIn extends React.Component {
         method: 'Get',
         success: (data) => {
           if(data.length == 0) {
-            var dataSent = {                
-                username: e.name,
-                token: e.accessToken,
-                email: 'fakeEmail@gmail.com',
-                facebookid: e.id
-              }
-            $.ajax({
-              url: '/api/addUser',
-              method: 'Post',
-              data: JSON.stringify(dataSent),
-              contentType: "application/json",
-              error: (error) => {
-                console.log(error)
-              },
-              success: (data) => {
-                browserHistory.push('Home')
-              }
-            }) 
+            var username = prompt('Welcome to Smash Ball Brawl. Please Enter a UserName');
+            if(username !== null) {
+              var dataSent = {                
+                  username: username,
+                  token: e.accessToken,
+                  email: 'fakeEmail@gmail.com',
+                  facebookid: e.id
+                }
+              $.ajax({
+                url: '/api/addUser',
+                method: 'Post',
+                data: JSON.stringify(dataSent),
+                contentType: "application/json",
+                error: (error) => {
+                  console.log(error)
+                },
+                success: (data) => {
+                  browserHistory.push('Home')
+                }
+              }) 
+            }
           } else {
             browserHistory.push('Home')
           }

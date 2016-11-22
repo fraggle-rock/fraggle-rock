@@ -32,7 +32,7 @@ class Profile extends React.Component {
       return (
         <div id='ProfileHome'>
           <div id='ImgHomeDiv'>
-            <input type="image" src={userProfile.FacebookPicture} onClick={this.profile} name="saveForm" class="btTxt submit" id="ProfileImgHome" />
+            <input type="image" src={userProfile.FacebookPicture} onClick={this.profile} name="saveForm" className="btTxt submit" id="ProfileImgHome" />
           </div>
           <div id='username'>
             {userProfile.User}
