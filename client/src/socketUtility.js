@@ -98,8 +98,8 @@ module.exports = {
     player.direction = game.camera.getWorldDirection();
     player.quaternion = game.camera.quaternion;
 
-    // sending my color and skin to other players
-    player.color = userProfile.color;
+    // sending my name and skin to other players
+    player.name = userProfile.User;
     player.skinPath = userProfile.ChosenSkin;
 
     socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
