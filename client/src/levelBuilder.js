@@ -11,14 +11,14 @@ const buildLevelOne = function buildLevelOne() {
 
   //Side Panels
   mesh = objectBuilder.sidePanel(
-    {width: 50, height: 1, depth: 3},
-    {x: 0, y: .5, z: -48},
+    {width: 50, height: 1, depth: 6},
+    {x: 0, y: -25, z: -48},
     {x: 0, y: 0, z: 0, w: 0 });
   scene.add(mesh);
 
   mesh = objectBuilder.sidePanel(
-    {width: 50, height: 1, depth: 3},
-    {x: 0, y: .5, z: 48},
+    {width: 50, height: 1, depth: 6},
+    {x: 0, y: -25, z: 48},
     {x: 0, y: 0, z: 0, w: 0 }
   );
   scene.add(mesh);
@@ -106,11 +106,11 @@ const buildLevelOne = function buildLevelOne() {
     }
   }
 
-  buildFloor(8, 5, 0, -5, 0, 4, 6, 4);
-  buildFloor(6, 3, 70, -15, 20, 4, 6, 4);
-  buildFloor(6, 3, -70, -15, -20, 4, 6, 4);
-  buildFloor(6, 3, 20, -15, 70, 4, 6, 4);
-  buildFloor(6, 3, -20, -15, -70, 4, 6, 4);
+  buildFloor(10, 5, 0, -5, 0, 4, 6, 4);
+  buildFloor(4, 3, 50, 10, 50, 4, 6, 4);
+  buildFloor(4, 3, -50, 10, -50, 4, 6, 4);
+  buildFloor(6, 3, 50, -10, -50, 4, 6, 4);
+  buildFloor(6, 3, -50, -10, 50, 4, 6, 4);
 
 
   //RANDOM SHAPE GENERATOR
@@ -118,12 +118,34 @@ const buildLevelOne = function buildLevelOne() {
     return Math.floor(Math.random()*(high - low + 1)) + low;
   }
 
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 2; i++) {
+    const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
+    const size = random(3, 5);
+    const x = random(-20, 20);
+    const y = random(15, 35);
+    const z = random(-20, 20);
+    const type = random(0, types.length - 1);
+    mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
+    scene.add(mesh);
+  }
+
+  for (var i = 0; i < 4; i++) {
     const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
     const size = random(4, 6);
-    const x = random(-20, 20);
-    const y = random(15, 25);
-    const z = random(-20, 20);
+    const x = random(-48, -52);
+    const y = random(0, 45);
+    const z = random(48, 52);
+    const type = random(0, types.length - 1);
+    mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
+    scene.add(mesh);
+  }
+
+  for (var i = 0; i < 4; i++) {
+    const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
+    const size = random(4, 6);
+    const x = random(48, 52);
+    const y = random(0, 45);
+    const z = random(-48, -52);
     const type = random(0, types.length - 1);
     mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
     scene.add(mesh);

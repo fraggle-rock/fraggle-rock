@@ -133,8 +133,8 @@ const startPhysics = function startPhysics() {
     if (expiredBoxes.length > 0) {
       // console.log('Deleted out of bounds box!');
       expiredBoxes.forEach(function(box) {
-        box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
-        box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
+        // box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
+        // box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
     const update = [boxes, balls, players];
