@@ -163,10 +163,10 @@ module.exports = {
 
     Object.keys(matchInfo.clients).forEach( (uuid) => {
       let client = matchInfo.clients[uuid];
-      document.getElementById('player' + client.playerNumber + 'Box').style.display = '';
-      document.getElementById('player' + client.playerNumber + 'life1').style.display = client.lives > 0 ? '' : 'none';
-      document.getElementById('player' + client.playerNumber + 'life2').style.display = client.lives > 1 ? '' : 'none';
-      document.getElementById('player' + client.playerNumber + 'life3').style.display = client.lives > 2 ? '' : 'none';
+      document.getElementById('player' + client.playerNumber + 'Box').style.opacity = '1';
+      document.getElementById('player' + client.playerNumber + 'life1').style.opacity = client.lives > 0 ? '1' : '0';
+      document.getElementById('player' + client.playerNumber + 'life2').style.opacity = client.lives > 1 ? '1' : '0';
+      document.getElementById('player' + client.playerNumber + 'life3').style.opacity = client.lives > 2 ? '1' : '0';
 
       if (client.lives > 0) {
         playersAlive.push(client.playerNumber);

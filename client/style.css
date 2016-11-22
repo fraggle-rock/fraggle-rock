@@ -94,7 +94,7 @@ canvas {
   display: inline-block;
   position: relative;
   text-align: left;
-  transition-duration: 1s;
+  transition: all 1s;
 }
 
 .playerBox > img {
@@ -118,6 +118,7 @@ canvas {
   width: 16px;
   height: auto;
   margin: 4px 0 0;
+  transition: all 1s;
 }
 
 
@@ -171,6 +172,7 @@ canvas {
   border-bottom: 5px solid white;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
+  transition: all .25s;
 }
 .ammoBox {
   display: inline-block;
@@ -187,6 +189,7 @@ canvas {
   width: 5px;
   height: 5px;
   margin: 2px 0;
+  transition: all .25s;
 }
 
 #menuContainer {

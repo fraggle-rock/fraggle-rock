@@ -14,16 +14,16 @@ const JoinButtonData = props => {
     hud.style.display = 'none';
     victoryBox.style.display = 'none';
 
-    document.getElementById('player1Box').style.display = '';
+    document.getElementById('player1Box').style.opacity = '1';
     document.getElementById('player1Name').innerHTML = 'Player 1';
 
-    document.getElementById('player2Box').style.display = players > 1 ? '' : 'none';
+    document.getElementById('player2Box').style.opacity = players > 1 ? '1' : '0';
     document.getElementById('player2Name').innerHTML = 'Player 2';
 
-    document.getElementById('player3Box').style.display = players > 2 ? '' : 'none';
+    document.getElementById('player3Box').style.opacity = players > 2 ? '1' : '0';
     document.getElementById('player3Name').innerHTML = 'Player 3';
 
-    document.getElementById('player4Box').style.display = players > 3 ? '' : 'none';
+    document.getElementById('player4Box').style.opacity = players > 3 ? '1' : '0';
     document.getElementById('player4Name').innerHTML = 'Player 4';
 
 	  document.addEventListener('keydown', function(e) {
