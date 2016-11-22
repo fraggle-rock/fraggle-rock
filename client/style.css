@@ -94,6 +94,7 @@ canvas {
   display: inline-block;
   position: relative;
   text-align: left;
+  transition-duration: 1s;
 }
 
 .playerBox > img {
