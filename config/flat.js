@@ -38,6 +38,27 @@ const shapeDecoder = (function() {
 })()
 
 module.exports = {
+  clientQuaternion: function clientQuaternion(clientQuaternion) {
+    const rQuaternion = roundQuaternion(clientQuaternion.quaternion);
+    return [
+      clientQuaternion.uuid,
+      rQuaternion.w,
+      rQuaternion.x,
+      rQuaternion.y,
+      rQuaternion.z
+    ];
+  },
+  reClientQuaternion: function reClientQuaternion(flatClientQuaternion) {
+    return {
+      uuid: flatClientQuaternion[0],
+      quaternion: {
+        w: flatClientQuaternion[1],
+        x: flatClientQuaternion[2],
+        y: flatClientQuaternion[3],
+        z: flatClientQuaternion[4]
+      }
+    };
+  },
   shootBall: function shootBall (shot) {
     const rPosition = roundPosition(shot.position);
     const rDirection = roundPosition(shot.direction);
@@ -97,15 +118,16 @@ module.exports = {
   },
   player: function player (player) {
     const rPosition = roundPosition(player.position);
-    const rDirection = roundPosition(player.direction);
+    const rQuaternion = roundQuaternion(player.quaternion);
     return [
       player.uuid,
       rPosition.x,
       rPosition.y,
       rPosition.z,
-      rDirection.x,
-      rDirection.y,
-      rDirection.z,
+      rQuaternion.w,
+      rQuaternion.x,
+      rQuaternion.y,
+      rQuaternion.z
     ];
   },
   rePlayer: function player (flatPlayer) {
@@ -116,10 +138,11 @@ module.exports = {
           y: flatPlayer[2],
           z: flatPlayer[3]
         },
-        direction: {
-          x: flatPlayer[4],
-          y: flatPlayer[5],
-          z: flatPlayer[6]
+        quaternion: {
+          w: flatPlayer[4],
+          x: flatPlayer[5],
+          y: flatPlayer[6],
+          z: flatPlayer[7]
         },
       }
   },

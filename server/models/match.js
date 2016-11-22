@@ -19,6 +19,7 @@ module.exports = function Match(deleteMatch) {
   this.balls = [];
   this.world;
   this.loadClientUpdate = loadClientUpdate.bind(this);
+  this.loadClientQuaternion = loadClientQuaternion.bind(this);
   this.loadNewClient = loadNewClient.bind(this);
   this.loadFullScene = loadFullScene.bind(this);
   this.startPhysics = startPhysics.bind(this);
@@ -26,8 +27,9 @@ module.exports = function Match(deleteMatch) {
   this.shutdown = shutdown.bind(this);
   this.loadPoll = loadPoll.bind(this);
   this.deleteMatch = deleteMatch;
-  this.physicsTick = config.gameSpeed * 1 / 60 / 2;
-  this.killFloor = killFloor.bind(this);
+  this.physicsTick = config.gameSpeed * config.tickRate / 2;
+  this.tickRate = config.tickRate;
+  this.killFloor = killFloor.bind(this);  
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
   this.io;
@@ -63,6 +65,16 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
     localClient.down = clientPosition.down;
     localClient.direction = clientPosition.direction;
     localClient.jump = clientPosition.jump;
+    localClient.lastUpdate = performance.now();
+  }
+};
+
+const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
+  clientQuaternion = JSON.parse(clientQuaternion);
+  clientQuaternion = flat.reClientQuaternion(clientQuaternion);
+  const localClient = this.clients[clientQuaternion.uuid];
+  if (localClient) {
+    localClient.quaternion = clientQuaternion.quaternion;
     localClient.lastUpdate = performance.now();
   }
 };
@@ -133,8 +145,9 @@ const startPhysics = function startPhysics() {
     if (expiredBoxes.length > 0) {
       // console.log('Deleted out of bounds box!');
       expiredBoxes.forEach(function(box) {
-        box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
-        box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
+        // THIS REPLACES BOXES ON TOP WHEN THEY FALL OFF
+        // box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
+        // box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
     const update = [boxes, balls, players];
@@ -193,14 +206,13 @@ const startPhysics = function startPhysics() {
       if (clientBody.velocity.x < 40 && clientBody.velocity.z < 40 && !isMoving) {
         clientBody.velocity.set(clientBody.velocity.x / 1.05, clientBody.velocity.y, clientBody.velocity.z / 1.05);
       }
-
     }
 
     context.world.step(context.physicsTick);
     context.world.step(context.physicsTick);
     physicsEmit();
-  }
-  context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
+  }; 
+  context.physicsClock = setInterval(physicsLoop, context.tickRate * 1000);
 };
 
 const shootBall = function shootBall(camera) {
@@ -254,7 +266,7 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.uuid = player.object.uuid;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, quaternion: player.quaternion, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
   this.world.add(ballBody);
   this.sendPoll();
 };
