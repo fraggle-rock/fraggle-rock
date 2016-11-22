@@ -9,7 +9,7 @@ const remoteScene = {};
 let currentGame = {};
 
 //STUB DATA
-// currentGame.matchInfo = {clients: {uuidone: {}}}
+currentGame.matchInfo = {clients: {}};
 // currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
 
 let pitch = 0;
@@ -30,7 +30,7 @@ let lastTick;
 let averageTickRate = 0;
 
 module.exports = {
-  addLookControls: function addLookControls(camera) {
+  addLookControls: function addLookControls(camera, socketUtility) {
     const onMouseMove = function onMouseMove(event) {
       const movementX = event.movementX;
       const movementY = event.movementY;
@@ -42,6 +42,7 @@ module.exports = {
       pitchQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
       const quat = yawQuat.multiply(pitchQuat);
       camera.quaternion.copy(quat);
+      socketUtility.emitClientQuaternion(camera);
     };
    document.addEventListener('mousemove', onMouseMove, false);
   },
@@ -155,14 +156,40 @@ module.exports = {
   },
   loadMatchInfo: function loadMatchInfo(matchInfo) {
     currentGame.matchInfo = matchInfo;
+
+    let victory = false;
+    let playersAlive = [];
+    let players = Object.keys(matchInfo.clients).length;
+
+    Object.keys(matchInfo.clients).forEach( (uuid) => {
+      let client = matchInfo.clients[uuid];
+      document.getElementById('player' + client.playerNumber + 'Box').style.display = '';
+      document.getElementById('player' + client.playerNumber + 'life1').style.display = client.lives > 0 ? '' : 'none';
+      document.getElementById('player' + client.playerNumber + 'life2').style.display = client.lives > 1 ? '' : 'none';
+      document.getElementById('player' + client.playerNumber + 'life3').style.display = client.lives > 2 ? '' : 'none';
+
+      if (client.lives > 0) {
+        playersAlive.push(client.playerNumber);
+      }
+    });
+
+    if (players > 1 && playersAlive.length === 1) {
+      document.getElementById('HUD').style.display = 'none';
+      document.getElementById('victoryBox').style.display = '';
+      document.getElementById('victor').innerHTML = 'Player ' + playersAlive[0] + ' Wins!';
+    }
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
-    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound) {
-      audio.smashBrawl.shootRound(3, 1, 0.08, 0, 1);
+    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound || Math.abs(clientPosition.position.x) > config.playerHorizontalBound || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
+      audio.smashBrawl.shootRound(2, 1, 0.08, 0, 1);
     }
+
     if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
-        remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
+        const localPlayer = remoteClients[clientPosition.uuid];
+        localPlayer.position.copy(clientPosition.position);
+        localPlayer.quaternion.copy(clientPosition.quaternion).multiply(config.skinAdjustQ);
+
       } else if (!clearLookup[clientPosition.uuid]){
         const uuid = clientPosition.uuid;
         const client = currentGame.matchInfo.clients[uuid];
@@ -170,8 +197,10 @@ module.exports = {
         let skinPath;
 
         if (client) {
-          color = currentGame.matchInfo.clients[uuid].color;
-          skinPath = currentGame.matchInfo.clients[uuid].skinPath;
+          color = client.color;
+          skinPath = client.skinPath;
+        } else {
+          console.log('client doesnt exist')
         }
 
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);

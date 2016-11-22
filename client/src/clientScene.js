@@ -30,7 +30,7 @@ const join = function join() {
 
 const startGame = function startGame() {
   const game = init(); //creates camera, renderer and scene data
-  sceneUtility.addLookControls(game.camera);
+  sceneUtility.addLookControls(game.camera, socketUtility);
   const playerInput = sceneUtility.addMoveControls(game.camera, socketUtility);
   sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game); //Renders screen to page and requests re-render at next animation frame
@@ -40,7 +40,7 @@ const startGame = function startGame() {
 const joinGame = function joinGame(matchNumber) {
   // load game of this matchNumber
   const game = join(matchNumber);
-  sceneUtility.addLookControls(game.camera);
+  sceneUtility.addLookControls(game.camera, socketUtility);
   const playerInput = sceneUtility.addMoveControls(game.camera, socketUtility);
   sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game);

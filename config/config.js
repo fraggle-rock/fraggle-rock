@@ -1,3 +1,4 @@
+const THREE = require('three');
 // This file contains Game related configuration gobally acccesible to other files
 
 module.exports = {
@@ -17,10 +18,11 @@ module.exports = {
   jumpRegen: 3000,
   mouseSensitivity: 0.0015,
   ballRadius: 0.5,
-  ballMass: 300,
+  ballMass: 50,
   ballVelocity: 500,
   gameSpeed: .65,
-  playerTimeout: 10 * 1000,
+  tickRate: 1 / 60,
+  playerTimeout: 15 * 1000,
   playerMovePerTick: 3,
   playerVerticalBound: 100,
   playerHorizontalBound: 200,
@@ -32,5 +34,7 @@ module.exports = {
   maxPlayerDecel: 20,
   killFloorInterval: 1000,
   killFloorUpVelocity: 50,
-  maxBalls: 15
+  maxBalls: 15,
+  colors: ['red', 'blue', 'green', 'magenta', 'teal'],
+  skinAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI)).multiply((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2)),
 };

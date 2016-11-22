@@ -19,6 +19,7 @@ module.exports = function Match(deleteMatch) {
   this.balls = [];
   this.world;
   this.loadClientUpdate = loadClientUpdate.bind(this);
+  this.loadClientQuaternion = loadClientQuaternion.bind(this);
   this.loadNewClient = loadNewClient.bind(this);
   this.loadFullScene = loadFullScene.bind(this);
   this.startPhysics = startPhysics.bind(this);
@@ -26,7 +27,8 @@ module.exports = function Match(deleteMatch) {
   this.shutdown = shutdown.bind(this);
   this.loadPoll = loadPoll.bind(this);
   this.deleteMatch = deleteMatch;
-  this.physicsTick = config.gameSpeed * 1 / 60 / 2;
+  this.physicsTick = config.gameSpeed * config.tickRate / 2;
+  this.tickRate = config.tickRate;
   this.killFloor = killFloor.bind(this);  
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
@@ -47,7 +49,7 @@ const sendPoll = function sendPoll() {
   const matchInfo = {clients: {}};
   for (var key in this.clients) {
     const client = this.clients[key];
-    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color})
+    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color, playerNumber: client.playerNumber})
   }
   this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
@@ -64,7 +66,17 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
     localClient.direction = clientPosition.direction;
     localClient.jump = clientPosition.jump;
     localClient.lastUpdate = performance.now();
-  }  
+  }
+};
+
+const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
+  clientQuaternion = JSON.parse(clientQuaternion);
+  clientQuaternion = flat.reClientQuaternion(clientQuaternion);
+  const localClient = this.clients[clientQuaternion.uuid];
+  if (localClient) {
+    localClient.quaternion = clientQuaternion.quaternion;
+    localClient.lastUpdate = performance.now();
+  }
 };
 
 const startPhysics = function startPhysics() {
@@ -87,7 +99,7 @@ const startPhysics = function startPhysics() {
         delete context.clients[key];
         delete context.clientToCannon[client.uuid];
       } else {
-        players.push(flat.player(context.clients[key])); 
+        players.push(flat.player(context.clients[key]));
       }
     }
     while (context.balls.length > config.maxBalls) {
@@ -122,7 +134,7 @@ const startPhysics = function startPhysics() {
       }
     });
     if (expiredBallIndices.length > 0) {
-      console.log('Deleted out of bounds ball!');
+      // console.log('Deleted out of bounds ball!');
       let offset = 0;
       expiredBallIndices.forEach(function(index) {
         context.balls.splice(index - offset, 1);
@@ -131,22 +143,23 @@ const startPhysics = function startPhysics() {
     }
     // Replace boxes randomly above the field if they fall off
     if (expiredBoxes.length > 0) {
-      console.log('Deleted out of bounds box!');
+      // console.log('Deleted out of bounds box!');
       expiredBoxes.forEach(function(box) {
-        box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
-        box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
+        // THIS REPLACES BOXES ON TOP WHEN THEY FALL OFF
+        // box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
+        // box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
-    const update = [boxes, balls, players];;
+    const update = [boxes, balls, players];
     if (clear.length > 0) {
-      update.push(clear); 
+      update.push(clear);
     }
     if (players.length > 0) {
       if (context.sendFull || clear.length > 0) {
         context.io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
         context.io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
-      } 
+      }
     } else {
       context.deleteMatch(context.guid);
     }
@@ -163,6 +176,7 @@ const startPhysics = function startPhysics() {
         client.lives--;
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
+        context.sendPoll();
         continue;
       }
       if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
@@ -192,14 +206,13 @@ const startPhysics = function startPhysics() {
       if (clientBody.velocity.x < 40 && clientBody.velocity.z < 40 && !isMoving) {
         clientBody.velocity.set(clientBody.velocity.x / 1.05, clientBody.velocity.y, clientBody.velocity.z / 1.05);
       }
-
     }
-    
+
     context.world.step(context.physicsTick);
-    context.world.step(context.physicsTick);  
+    context.world.step(context.physicsTick);
     physicsEmit();
-  } 
-  context.physicsClock = setInterval(physicsLoop, 1 / 60 * 1000);
+  }; 
+  context.physicsClock = setInterval(physicsLoop, context.tickRate * 1000);
 };
 
 const shootBall = function shootBall(camera) {
@@ -215,6 +228,17 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
+  const context =this;
+
+  ballBody.addEventListener("collide",function(e){
+
+    if(e.body.userData && e.body.userData.shapeType >= 3) {
+      console.log('Sound Emitted ', e.body.userData.shapeType);
+      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
+    } else if(e.body.mass === config.playerModelMass && e.target.mass === config.ballMass) {
+      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
+    }
+  });
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
@@ -237,8 +261,9 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.addShape(ballShape);
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
+  const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: player.color, lives: 3};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, quaternion: player.quaternion, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
   this.world.add(ballBody);
   this.sendPoll();
 };

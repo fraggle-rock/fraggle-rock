@@ -52,10 +52,13 @@ const smashBrawl = new SmashBrawl(context);
 
 function SmashBrawl(currContext) {
   const ctx = this;
-  const loader = new BufferLoader(currContext, ['../assets/jump.wav',
-    '../assets/shoot.wav',
-    '../assets/collide.wav',
-    '../assets/die.wav'], onLoaded);
+  const loader = new BufferLoader(currContext, ['../assets/jump2.wav',
+    '../assets/shoot2.mp3',
+    '../assets/die2.wav',
+    '../assets/questionCrate.wav',
+    '../assets/metalCrate.mp3',
+    '../assets/ancientCrate.wav',
+    '../assets/woodCrate.wav'], onLoaded);
   function onLoaded(buffers) {
     ctx.buffers = buffers;
   }
