@@ -34,7 +34,7 @@ module.exports = {
   maxPlayerDecel: 20,
   killFloorInterval: 1000,
   killFloorUpVelocity: 50,
-  maxBalls: 15,
+  maxBalls: 20,
   colors: ['red', 'blue', 'green', 'magenta', 'teal'],
   skinAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI)).multiply((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2)),
 };
