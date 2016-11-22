@@ -281,8 +281,8 @@ const loadFullScene = function loadFullScene(scene, player, io) {
   world.defaultContactMaterial.contactEquationStiffness = 1e9;
   world.defaultContactMaterial.contactEquationRelaxation = 4;
 
-  solver.iterations = 20;
-  solver.tolerance = 0.1;
+  solver.iterations = 1;
+  solver.tolerance = 0.5;
   world.solver = new CANNON.SplitSolver(solver);
 
   world.gravity.set(0, config.gravity, 0);
