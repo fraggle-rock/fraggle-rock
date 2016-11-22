@@ -14,7 +14,7 @@ class LogIn extends React.Component {
   }
   componentClicked(e) {
   }
-  
+
   playAsGuest() {
     userProfile.User = 'Guest';
     userProfile.FacebookPicture = '../../textures/GuestPicture.png';
@@ -33,7 +33,7 @@ class LogIn extends React.Component {
         method: 'Get',
         success: (data) => {
           if(data.length == 0) {
-            var dataSent = {                
+            var dataSent = {
                 username: e.name,
                 token: e.accessToken,
                 email: 'fakeEmail@gmail.com',
@@ -43,43 +43,45 @@ class LogIn extends React.Component {
               url: '/api/addUser',
               method: 'Post',
               data: JSON.stringify(dataSent),
-              contentType: "application/json",
+              contentType: 'application/json',
               error: (error) => {
                 console.log(error)
               },
               success: (data) => {
                 browserHistory.push('Home')
               }
-            }) 
+            })
           } else {
             browserHistory.push('Home')
           }
         }
       })
-    } 
+    }
   }
 
   render() {
       return (
-        <div>
-        <div id='LogIn'>
-          <div id='Facebook'>
-            <FacebookLogin
-                appId="1709766049351226"
-                autoLoad={true}
-                fields="name,email,picture"
-                onClick={this.componentClicked}
-                callback={this.responseFacebook}
-            />
-            <div id='Guest'>
-            <button onClick={this.playAsGuest} id='GuestLogIn' className='btn btn-warning'>Play As Guest</button>
+        <div className='logInContainer'>
+          <img src='../../../textures/logotext.png' />
+          <div id='LogIn'>
+            <div id='Facebook'>
+              <FacebookLogin
+                  appId="1709766049351226"
+                  autoLoad={true}
+                  fields="name,email,picture"
+                  onClick={this.componentClicked}
+                  callback={this.responseFacebook}
+              />
+              <div id='Guest'>
+                <button onClick={this.playAsGuest} id='GuestLogIn' className='btn btn-warning'>Play As Guest</button>
+              </div>
             </div>
           </div>
-          <img id='LogInPageLogo' src="../../../textures/LogInPageLogo.jpg" />
+          <div className='version'>v0.7</div>
+          <div className='createdBy'>Created by Nick Lathen, Will Stockman, Eric Eakin, and Riyaz Ahmed, 2016</div>
         </div>
-        </div>
-      );  
-  	
+      );
+
   }
 }
 
