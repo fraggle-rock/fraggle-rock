@@ -4,6 +4,14 @@ const config = require('../../config/config.js');
 const flat = require('../../config/flat.js');
 const audio = require('./audio');
 
+const redBallStack = (function() {
+  const result = [];
+  const mesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32});
+  for (var i = 0; i < 15; i++) {
+    result.push(mesh.clone());
+  }
+  return result;
+})();
 const remoteClients = {};
 const remoteScene = {};
 let currentGame = {};
@@ -224,17 +232,24 @@ module.exports = {
     if (meshObject[3]) {
       meshObject[3].forEach(function(uuid) {
         const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]] || remoteClients[uuid];
-        currentGame.scene.remove(mesh);
-        meshLookup.length--;
-        clearLookup[uuid] = true;
-        if (meshLookup[uuid]) {
-          delete meshLookup[uuid];
-        } else if (meshLookup[serverShapeMap[uuid]]) {
-          delete meshLookup[serverShapeMap[uuid]];
-          delete serverShapeMap[uuid];
-        } else if (remoteClients[uuid]) {
-          delete remoteClients[uuid];
-        }
+        if (mesh) {
+          currentGame.scene.remove(mesh);
+          if (mesh.userData.name === 'ballMesh') {
+            const i = redBallStack.indexOf(mesh);
+            redBallStack.splice(i, 1);
+            redBallStack.push(mesh);
+          }
+          meshLookup.length--;
+          clearLookup[uuid] = true;
+          if (meshLookup[uuid]) {
+            delete meshLookup[uuid];
+          } else if (meshLookup[serverShapeMap[uuid]]) {
+            delete meshLookup[serverShapeMap[uuid]];
+            delete serverShapeMap[uuid];
+          } else if (remoteClients[uuid]) {
+            delete remoteClients[uuid];
+          }
+        }  
       });
     }
     let localMesh;
@@ -261,12 +276,14 @@ module.exports = {
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         localMesh.quaternion.copy(serverMesh.quaternion);
-      } else if (!clearLookup[serverMesh.uuid]) {
-        let ballMesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
+      } else if(!clearLookup[serverMesh.uuid]) {
+        const ballMesh = redBallStack.pop();
+        redBallStack.unshift(ballMesh);
         serverShapeMap[serverMesh.uuid] = ballMesh.uuid.slice(0, config.uuidLength);
+        ballMesh.position.copy(serverMesh.position);
+        ballMesh.quaternion.copy(serverMesh.quaternion);
         currentGame.scene.add(ballMesh);
       }
-      localMesh = undefined;
     });
     meshObject[2].forEach(function(client) {
       module.exports.loadClientUpdate(flat.rePlayer(client));
