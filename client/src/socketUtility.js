@@ -22,7 +22,6 @@ const addUpdateListeners = function addUpdateListeners(socket) {
   });
   socket.on('playSound', function(play) {
     const jsonObj = JSON.parse(play);
-    console.log('Recieved ', play);
     audio.smashBrawl.shootRound(jsonObj.play, 1, 0.08, 0, 0);
   });
 }
@@ -106,19 +105,11 @@ module.exports = {
     socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
-    if (playerInput) {
-      playerInput.direction = camera.getWorldDirection();
-      if (hasChangedInput(playerInput)) {
-        socket.emit('clientUpdate', JSON.stringify(flat.playerInput(playerInput)));
-        playerInput.jump = false;
-        lastEmittedClient.jump = false;
-      }
-    } else {
-      lastEmittedClient.direction = camera.getWorldDirection();
-      if (hasChangedInput(lastEmittedClient)) {
-        socket.emit('clientUpdate', JSON.stringify(flat.playerInput(lastEmittedClient)));
-        lastEmittedClient.jump = false;
-      }
+    playerInput.direction = camera.getWorldDirection();
+    if (hasChangedInput(playerInput)) {
+      socket.emit('clientUpdate', JSON.stringify(flat.playerInput(playerInput)));
+      playerInput.jump = false;
+      lastEmittedClient.jump = false;
     }
   },
   emitClientQuaternion: function emitClientQuaternion(camera) {
