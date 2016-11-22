@@ -55,9 +55,6 @@ function SmashBrawl(currContext) {
   function onLoaded(buffers) {
     ctx.buffers = buffers;
   }
-  function onLoaded(buffers) {
-    ctx.buffers = buffers;
-  }
   const loader = new BufferLoader(currContext, ['../assets/jump2.wav',
     '../assets/shoot2.mp3',
     '../assets/die2.wav',
