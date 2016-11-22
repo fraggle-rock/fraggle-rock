@@ -26,21 +26,23 @@ class Home extends React.Component {
     //send request for leaderBoards
     browserHistory.push('/LeaderBoard')
   }
-  
+
   render() {
     return (
       <div id='HomePage'>
         <div id='HomeScene'>
-        <img src='../../../textures/logo.png' />
-        <div id="testButtons">
-          <button id="joinMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
-          <button id="joinExisting" onClick={this.JoinExisting} className='btn btn-primary'>Join Match</button>
-        </div>
+          <img src='../../../textures/logotext.png' />
+          <div id="testButtons">
+            <button id="joinMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
+            <button id="joinExisting" onClick={this.JoinExisting} className='btn btn-primary'>Join Match</button>
+          </div>
           <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View LeaderBoards</button>
         </div>
         <div id='Profile'>
           <Profile />
         </div>
+        <div className='version'>v0.7</div>
+        <div className='createdBy'>Created by Nick Lathen, Will Stockman, Eric Eakin, and Riyaz Ahmed, 2016</div>
       </div>
     );
 

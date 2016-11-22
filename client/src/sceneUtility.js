@@ -8,9 +8,8 @@ const remoteClients = {};
 const remoteScene = {};
 let currentGame = {};
 
-//STUB DATA
+//make sure object exists
 currentGame.matchInfo = {clients: {}};
-// currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
 
 let pitch = 0;
 let yaw = 0;
@@ -164,10 +163,11 @@ module.exports = {
 
     Object.keys(matchInfo.clients).forEach( (uuid) => {
       let client = matchInfo.clients[uuid];
-      document.getElementById('player' + client.playerNumber + 'Box').style.display = '';
-      document.getElementById('player' + client.playerNumber + 'life1').style.display = client.lives > 0 ? '' : 'none';
-      document.getElementById('player' + client.playerNumber + 'life2').style.display = client.lives > 1 ? '' : 'none';
-      document.getElementById('player' + client.playerNumber + 'life3').style.display = client.lives > 2 ? '' : 'none';
+      // document.getElementById('player' + client.playerNumber + 'Box').style.opacity = '1';
+      document.getElementById('player' + client.playerNumber + 'Box').style.marginTop = '90px';
+      document.getElementById('player' + client.playerNumber + 'life1').style.opacity = client.lives > 0 ? '1' : '0';
+      document.getElementById('player' + client.playerNumber + 'life2').style.opacity = client.lives > 1 ? '1' : '0';
+      document.getElementById('player' + client.playerNumber + 'life3').style.opacity = client.lives > 2 ? '1' : '0';
 
       if (client.lives > 0) {
         playersAlive.push(client.playerNumber);
@@ -177,31 +177,52 @@ module.exports = {
     if (players > 1 && playersAlive.length === 1) {
       document.getElementById('HUD').style.display = 'none';
       document.getElementById('victoryBox').style.display = '';
+      document.getElementById('victoryBox').style.opacity = '1';
+      document.getElementById('victoryBox').style.marginTop = '15%';
       document.getElementById('victor').innerHTML = 'Player ' + playersAlive[0] + ' Wins!';
+      //END GAME HERE
     }
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
+    // Player out of bounds -> death
     if (Math.abs(clientPosition.position.y) > config.playerVerticalBound || Math.abs(clientPosition.position.x) > config.playerHorizontalBound || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
+      //death sound
       audio.smashBrawl.shootRound(2, 1, 0.08, 0, 1);
+
+      if (currentGame.camera.uuid.slice(0, config.uuidLength) === clientPosition.uuid) {
+        jumpCount = 3;
+        shotCount = 3;
+
+        for (var i = 1; i <= 3; i++) {
+          document.getElementById('jump' + i).style.opacity = '1';
+          document.getElementById('ammo' + i).style.opacity = '1';
+        }
+      }
     }
 
     if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
+        //Update existing client
         const localPlayer = remoteClients[clientPosition.uuid];
         localPlayer.position.copy(clientPosition.position);
         localPlayer.quaternion.copy(clientPosition.quaternion).multiply(config.skinAdjustQ);
 
       } else if (!clearLookup[clientPosition.uuid]){
+        //Create new client
         const uuid = clientPosition.uuid;
         const client = currentGame.matchInfo.clients[uuid];
         let color;
         let skinPath;
+        let name;
 
         if (client) {
           color = client.color;
           skinPath = client.skinPath;
+          name = client.name;
+          // name = 'John'
+          document.getElementById('player' + client.playerNumber + 'Name').innerHTML = name;
         } else {
-          console.log('client doesnt exist')
+          console.log('client doesnt exist');
         }
 
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);
@@ -209,6 +230,7 @@ module.exports = {
         remoteClients[clientPosition.uuid] = mesh;
       }
     } else {
+      //Move camera to client
       currentGame.camera.position.copy(clientPosition.position);
     }
   },
