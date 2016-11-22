@@ -30,7 +30,7 @@ let lastTick;
 let averageTickRate = 0;
 
 module.exports = {
-  addLookControls: function addLookControls(camera) {
+  addLookControls: function addLookControls(camera, socketUtility) {
     const onMouseMove = function onMouseMove(event) {
       const movementX = event.movementX;
       const movementY = event.movementY;
@@ -42,6 +42,7 @@ module.exports = {
       pitchQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
       const quat = yawQuat.multiply(pitchQuat);
       camera.quaternion.copy(quat);
+      socketUtility.emitClientQuaternion(camera);
     };
    document.addEventListener('mousemove', onMouseMove, false);
   },
@@ -185,7 +186,10 @@ module.exports = {
 
     if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
-        remoteClients[clientPosition.uuid].position.copy(clientPosition.position);
+        const localPlayer = remoteClients[clientPosition.uuid];
+        localPlayer.position.copy(clientPosition.position);
+        localPlayer.quaternion.copy(clientPosition.quaternion).multiply(config.skinAdjustQ);
+
       } else if (!clearLookup[clientPosition.uuid]){
         const uuid = clientPosition.uuid;
         const client = currentGame.matchInfo.clients[uuid];
