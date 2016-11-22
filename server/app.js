@@ -58,6 +58,9 @@ io.on('connection', (socket) => {
     socket.on('clientUpdate', function (camera) { // listener for client position updates
       match.loadClientUpdate(camera); // update server's copy of client position
     });
+    socket.on('clientQ', function (clientQuaternion) {
+      match.loadClientQuaternion(clientQuaternion);
+    });
     socket.on('poll', function(clientUuid) {
       match.loadPoll(clientUuid);
     });
@@ -78,6 +81,9 @@ io.on('connection', (socket) => {
       });
       socket.on('clientUpdate', function (clientPosition) { // listener for client position updates
         match.loadClientUpdate(clientPosition); // update server's copy of client position
+      });
+      socket.on('clientQ', function (clientQuaternion) {
+        match.loadClientQuaternion(clientQuaternion);
       });
       socket.on('poll', function(clientUuid) {
         match.loadPoll(clientUuid);

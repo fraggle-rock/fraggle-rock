@@ -19,6 +19,7 @@ module.exports = function Match(deleteMatch) {
   this.balls = [];
   this.world;
   this.loadClientUpdate = loadClientUpdate.bind(this);
+  this.loadClientQuaternion = loadClientQuaternion.bind(this);
   this.loadNewClient = loadNewClient.bind(this);
   this.loadFullScene = loadFullScene.bind(this);
   this.startPhysics = startPhysics.bind(this);
@@ -64,6 +65,16 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
     localClient.down = clientPosition.down;
     localClient.direction = clientPosition.direction;
     localClient.jump = clientPosition.jump;
+    localClient.lastUpdate = performance.now();
+  }
+};
+
+const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
+  clientQuaternion = JSON.parse(clientQuaternion);
+  clientQuaternion = flat.reClientQuaternion(clientQuaternion);
+  const localClient = this.clients[clientQuaternion.uuid];
+  if (localClient) {
+    localClient.quaternion = clientQuaternion.quaternion;
     localClient.lastUpdate = performance.now();
   }
 };
@@ -251,7 +262,7 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.angularDamping = config.playerDamping;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, quaternion: player.quaternion, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
   this.world.add(ballBody);
   this.sendPoll();
 };

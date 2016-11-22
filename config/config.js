@@ -1,3 +1,4 @@
+const THREE = require('three');
 // This file contains Game related configuration gobally acccesible to other files
 
 module.exports = {
@@ -34,5 +35,6 @@ module.exports = {
   killFloorInterval: 1000,
   killFloorUpVelocity: 50,
   maxBalls: 15,
-  colors: ['red', 'blue', 'green', 'magenta', 'teal']
+  colors: ['red', 'blue', 'green', 'magenta', 'teal'],
+  skinAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI)).multiply((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2)),
 };

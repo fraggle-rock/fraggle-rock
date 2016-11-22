@@ -4,9 +4,10 @@ const sceneUtility = require('./sceneUtility');
 const flat = require('../../config/flat');
 const config = require('../../config/config');
 const userProfile = require('./component/userProfile')
-const lastEmittedClient = {theta: 0, alpha: 0};
+const lastEmittedClient = {theta: 0};
 const audio = require('./audio');
-let canEmit = true;
+let canEmitQ = true;
+let emitQ;
 
 const addUpdateListeners = function addUpdateListeners(socket) {
   socket.on('physicsUpdate', function(meshesObject) {
@@ -49,9 +50,7 @@ const roundQuaternion = function roundQuaternion (quaternion, decimals) {
 const hasChangedInput = function hasChangedInput(playerInput) {
   let hasChanged = false;
   const newTheta = Math.atan2(playerInput.direction.z, playerInput.direction.x);
-  const newAlpha = Math.atan2(playerInput.direction.y, playerInput.direction.x);
-  if (Math.abs(newTheta - lastEmittedClient.theta) > .01 || Math.abs(newAlpha - lastEmittedClient.alpha) > .01) {
-    debugger;
+  if (Math.abs(newTheta - lastEmittedClient.theta) > .01) {
     hasChanged = true;
   } else if (playerInput.up !== lastEmittedClient.up) {
     hasChanged = true;
@@ -72,7 +71,6 @@ const hasChangedInput = function hasChangedInput(playerInput) {
     lastEmittedClient.jump = playerInput.jump;
     lastEmittedClient.direction = playerInput.direction;
     lastEmittedClient.theta = newTheta;
-    lastEmittedClient.alpha = newAlpha;
   }
   return hasChanged;
 }
@@ -83,6 +81,7 @@ module.exports = {
     addUpdateListeners(socket);
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
+    camera.quaternion = game.camera.quaternion;
     camera.direction = game.camera.getWorldDirection();
 
     // declare your color and skin
@@ -97,6 +96,7 @@ module.exports = {
     const player = game.camera.toJSON();
     player.position = game.camera.position;
     player.direction = game.camera.getWorldDirection();
+    player.quaternion = game.camera.quaternion;
 
     // sending my color and skin to other players
     player.color = userProfile.color;
@@ -118,6 +118,18 @@ module.exports = {
         socket.emit('clientUpdate', JSON.stringify(flat.playerInput(lastEmittedClient)));
         lastEmittedClient.jump = false;
       }
+    }
+  },
+  emitClientQuaternion: function emitClientQuaternion(camera) {
+    emitQ = camera ? JSON.stringify(flat.clientQuaternion({uuid: camera.uuid.slice(0, config.uuidLength), quaternion: camera.quaternion})) : emitQ;
+    if (canEmitQ && emitQ) {
+      socket.emit('clientQ', emitQ);
+      canEmitQ = false;
+      emitQ = undefined;
+      setTimeout(function() {
+        canEmitQ = true;
+        module.exports.emitClientQuaternion();
+      }, 1 / 30 * 1000);
     }
   },
   emitShootBall: function emitShootBall(camera) {

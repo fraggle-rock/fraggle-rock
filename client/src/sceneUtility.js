@@ -42,7 +42,7 @@ module.exports = {
       pitchQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
       const quat = yawQuat.multiply(pitchQuat);
       camera.quaternion.copy(quat);
-      socketUtility.emitClientPosition(camera);
+      socketUtility.emitClientQuaternion(camera);
     };
    document.addEventListener('mousemove', onMouseMove, false);
   },
@@ -188,10 +188,8 @@ module.exports = {
       if (remoteClients[clientPosition.uuid]) {
         const localPlayer = remoteClients[clientPosition.uuid];
         localPlayer.position.copy(clientPosition.position);
-        const x = clientPosition.direction.x;
-        const y = clientPosition.direction.y;
-        const z = clientPosition.direction.z;
-        localPlayer.rotation.set(0, Math.atan2(x, z) - Math.PI / 2, Math.atan2(z, y), 'YZX');
+        localPlayer.quaternion.copy(clientPosition.quaternion).multiply(config.skinAdjustQ);
+
       } else if (!clearLookup[clientPosition.uuid]){
         const uuid = clientPosition.uuid;
         const client = currentGame.matchInfo.clients[uuid];
