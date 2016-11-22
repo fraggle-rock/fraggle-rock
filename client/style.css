@@ -30,6 +30,22 @@ canvas {
   border: 1px solid teal;
 }*/
 
+@font-face {
+  font-family: 'Press Start 2P';
+  src:
+    local('Press Start 2P'),
+    url('./assets/PressStart2P.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'Play';
+  src:
+    local('Play'),
+    url('./assets/Play.ttf')
+    format('truetype');
+}
+
 
 body {
   background: url('./textures/menubg.jpg') no-repeat center center fixed;
