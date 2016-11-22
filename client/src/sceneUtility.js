@@ -216,31 +216,29 @@ module.exports = {
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
     meshObject = JSON.parse(meshObject);
-    const boxMeshes = meshObject[0];
-    const ballMeshes = meshObject[1];
-    const serverClients = meshObject[2];
-    const clear = meshObject[3] || [];
     const sceneChildren = currentGame.scene.children;
     while(sceneChildren.length > meshLookup.length) {
       meshLookup[sceneChildren[meshLookup.length].uuid.slice(0, config.uuidLength)] = sceneChildren[meshLookup.length];
       meshLookup.length++;
     }
-    clear.forEach(function(uuid) {
-      const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]] || remoteClients[uuid];
-      currentGame.scene.remove(mesh);
-      meshLookup.length--;
-      clearLookup[uuid] = true;
-      if (meshLookup[uuid]) {
-        delete meshLookup[uuid];
-      } else if (meshLookup[serverShapeMap[uuid]]) {
-        delete meshLookup[serverShapeMap[uuid]];
-        delete serverShapeMap[uuid];
-      } else if (remoteClients[uuid]) {
-        delete remoteClients[uuid];
-      }
-    });
+    if (meshObject[3]) {
+      meshObject[3].forEach(function(uuid) {
+        const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]] || remoteClients[uuid];
+        currentGame.scene.remove(mesh);
+        meshLookup.length--;
+        clearLookup[uuid] = true;
+        if (meshLookup[uuid]) {
+          delete meshLookup[uuid];
+        } else if (meshLookup[serverShapeMap[uuid]]) {
+          delete meshLookup[serverShapeMap[uuid]];
+          delete serverShapeMap[uuid];
+        } else if (remoteClients[uuid]) {
+          delete remoteClients[uuid];
+        }
+      });
+    }
     let localMesh;
-    boxMeshes.forEach((serverMesh) => {
+    meshObject[0].forEach((serverMesh) => {
       serverMesh = flat.reBox(serverMesh);
       localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
@@ -257,7 +255,7 @@ module.exports = {
       }
       localMesh = undefined;
     });
-    ballMeshes.forEach((serverMesh) => {
+    meshObject[1].forEach((serverMesh) => {
       serverMesh = flat.reBall(serverMesh);
       localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
@@ -270,7 +268,7 @@ module.exports = {
       }
       localMesh = undefined;
     });
-    serverClients.forEach(function(client) {
+    meshObject[2].forEach(function(client) {
       module.exports.loadClientUpdate(flat.rePlayer(client));
     });
   },
