@@ -29,7 +29,7 @@ module.exports = function Match(deleteMatch) {
   this.deleteMatch = deleteMatch;
   this.physicsTick = config.gameSpeed * config.tickRate / 2;
   this.tickRate = config.tickRate;
-  this.killFloor = killFloor.bind(this);  
+  this.killFloor = killFloor.bind(this);
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
   this.io;
@@ -158,6 +158,7 @@ const startPhysics = function startPhysics() {
       let movePerTick = config.playerMovePerTick;
       let isMoving = false;
       if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
+        //PLAYER DEATH & RESPAWN
         client.lives--;
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
@@ -196,7 +197,7 @@ const startPhysics = function startPhysics() {
     context.world.step(context.physicsTick);
     context.world.step(context.physicsTick);
     physicsEmit();
-  }; 
+  };
   context.physicsClock = setInterval(physicsLoop, context.tickRate * 1000);
 };
 
@@ -248,6 +249,9 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.angularDamping = config.playerDamping;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
+  player.name = player.name || 'Guest';
+
+  // player data for other users
   this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, quaternion: player.quaternion, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
   this.world.add(ballBody);
   this.sendPoll();
@@ -328,7 +332,6 @@ const loadFullScene = function loadFullScene(scene, player, io) {
 
 // Remove floor tiles periodically
 const killFloor = function killFloor() {
-  let killFloorTick = config.killFloorInterval;
   let floorTiles = [];
   let spacer = 76;
 
@@ -355,7 +358,7 @@ const killFloor = function killFloor() {
         tile.velocity.y = config.killFloorUpVelocity;
         floorTiles.splice(randIndex, 1)
       }
-    }, killFloorTick);
+    }, config.killFloorInterval);
   }, 5000);
 }
 

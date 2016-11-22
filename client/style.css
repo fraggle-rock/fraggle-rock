@@ -33,7 +33,7 @@ canvas {
 
 
 body {
-  background: url('./textures/menubg.png') no-repeat center center fixed;
+  background: url('./textures/menubg.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -69,11 +69,12 @@ canvas {
 }
 
 #victoryBox {
-  margin: 15% auto 0;
+  margin: 10% auto 0;
   text-align: center;
   color: white;
   font-family: 'Press Start 2P', cursive;
   font-size: 40px;
+  transition: opacity 2s, margin-top 2s;
 }
 
 #victor {
@@ -83,18 +84,18 @@ canvas {
 .playerBoxContainer {
   text-align: center;
   width: 380px;
-  height: 90px;
+  height: 180px;
   position: absolute;
   bottom: 10px;
   right: 10px;
 }
 
 .playerBox {
-  margin: 0 5px;
+  margin: 0px 5px;
   display: inline-block;
   position: relative;
   text-align: left;
-  transition-duration: 1s;
+  transition: margin-top 2s, opacity 1s;
 }
 
 .playerBox > img {
@@ -118,6 +119,7 @@ canvas {
   width: 16px;
   height: auto;
   margin: 4px 0 0;
+  transition: all 1s;
 }
 
 
@@ -171,6 +173,7 @@ canvas {
   border-bottom: 5px solid white;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
+  transition: all .25s;
 }
 .ammoBox {
   display: inline-block;
@@ -187,6 +190,7 @@ canvas {
   width: 5px;
   height: 5px;
   margin: 2px 0;
+  transition: all .25s;
 }
 
 #menuContainer {
@@ -281,22 +285,23 @@ canvas {
 /*LogIn Page CSS*/
 /*
 -----------------------------------------------------------------------------------*/
+.logInContainer {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  margin-top:4%;
+}
+
+.logInContainer > img {
+  margin: auto;
+}
 
 #Guest {
   margin-top: 20px;
 }
 
-#LogInPageLogo {
-  position: absolute;
-  z-index:-1;
-  left:0px;
-  top:0px;
-  width: 100%;
-  height: 100%;
-}
-
 #LogIn {
-  margin-top: 35%;
+  margin-top: 4%;
   text-align: center;
 }
 

@@ -55,13 +55,17 @@ function SmashBrawl(currContext) {
   function onLoaded(buffers) {
     ctx.buffers = buffers;
   }
+  function onLoaded(buffers) {
+    ctx.buffers = buffers;
+  }
   const loader = new BufferLoader(currContext, ['../assets/jump2.wav',
     '../assets/shoot2.mp3',
     '../assets/die2.wav',
     '../assets/questionCrate.wav',
     '../assets/metalCrate.mp3',
     '../assets/ancientCrate.wav',
-    '../assets/woodCrate.wav'], onLoaded);
+    '../assets/woodCrate.wav',
+    '../assets/playerHit2.wav'], onLoaded);
   loader.load();
 }
 
