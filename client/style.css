@@ -33,7 +33,7 @@ canvas {
 
 
 body {
-  background: url('https://files.slack.com/files-tmb/T17PD5LF2-F33L30LB0-d679fde7e5/screen_shot_2016-11-15_at_12.28.35_pm_720.png') no-repeat center center fixed;
+  background: url('./textures/menubg.png') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -41,7 +41,6 @@ body {
 }
 
 canvas {
-  display: inline;
   margin: auto;
   display: flex;
   align-items: center;
@@ -52,6 +51,8 @@ canvas {
   width: 100%;
   height: 100%;
   margin: 0;
+  top: 0;
+  left: 0;
   -webkit-user-select: none; /* Chrome/Safari unSelectable Text*/
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
