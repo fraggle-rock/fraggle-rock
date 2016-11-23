@@ -2,6 +2,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import LeaderBoardDataScore from './LeaderBoardDataScore.js';
 import LeaderBoardDataUser from './LeaderBoardDataUser.js';
+import Profile from '../Home/Profile.js';
 
 class LeaderBoard extends React.Component {
   constructor(props) {
@@ -37,13 +38,16 @@ class LeaderBoard extends React.Component {
           <div id='DataLeader'>
             <div id='LeaderBoardUser'>
               <div id="LeaderBoardUserNameTitle">USERNAME</div>
-              {this.state.leaderBoards.map(leader => <LeaderBoardDataUser leader={leader} />)}
+              {this.state.leaderBoards.map(leader => <LeaderBoardDataUser key={leader.username.toString()} leader={leader} />)}
             </div>
             <div id='LeaderBoardScore'>
               <div id="LeaderBoardScoreTitle">SCORE</div>
-              {this.state.leaderBoards.map(leader => <LeaderBoardDataScore leader={leader} />)}
+              {this.state.leaderBoards.map(leader => <LeaderBoardDataScore key={leader.score.toString()} leader={leader} />)}
             </div>
           </div>
+        </div>
+        <div id='Profile'>
+          <Profile />
         </div>
         </div>
       </div>

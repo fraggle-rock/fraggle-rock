@@ -36,5 +36,6 @@ module.exports = {
   killFloorUpVelocity: 50,
   maxBalls: 20,
   colors: ['red', 'blue', 'green', 'magenta', 'teal'],
+  hatAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2)),
   skinAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI)).multiply((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2)),
 };

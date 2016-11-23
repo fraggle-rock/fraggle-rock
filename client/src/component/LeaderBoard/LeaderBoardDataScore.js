@@ -4,7 +4,7 @@ var LeaderBoardDataScore = props => {
   return (
     <div id='LeaderBoardDataScore'>
       <div>
-        <div>{props.leader.score}</div>
+        <div key={props.leader.score.toString()}>{props.leader.score}</div>
       </div>
     </div>
   )   

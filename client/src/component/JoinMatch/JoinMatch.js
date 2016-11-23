@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 import JoinButtonData from './JoinButtonData.js';
 import JoinLevelData from './JoinLevelData.js';
 import JoinUserData from './JoinUserData.js';
+import Profile from '../Home/Profile.js';
 
 class JoinMatch extends React.Component {
   constructor(props) {
@@ -48,6 +49,9 @@ class JoinMatch extends React.Component {
               {this.state.liveMatches.map((games) => <JoinButtonData games={games} />)}
             </div>
           </div>
+        </div>
+        <div id='Profile'>
+          <Profile />
         </div>
       </div>
     );
