@@ -4,6 +4,6 @@ module.exports = {
   Skins: [],
   ChosenSkin: null,
   color: 'teal',
-  hat: 'ha2.obj',
-  experience: 1000
+  hat: null,
+  experience: 2000
 }

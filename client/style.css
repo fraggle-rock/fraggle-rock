@@ -328,12 +328,9 @@ canvas {
   margin-top: 5px;
 }
 
-#ShoppingCart {
-  margin-top: 150px;
-}
 #username {
   float: right;
-  width: 160px;
+  width: 190px;
   font-size: 20px;
 }
 
@@ -385,11 +382,18 @@ canvas {
   float: right;
 }
 
+#storeButtonHome {
+  margin-top: 4px;
+  float: right;
+  margin-right: 5px;
+}
+
 #SelectSkin {
   margin-top: 4px;
   float: right;
-  margin-right: 10px;
+  margin-right: 5px;
 }
+
 /*LeaderBoard CSS*/
 /*
 -----------------------------------------------------------------------------------*/

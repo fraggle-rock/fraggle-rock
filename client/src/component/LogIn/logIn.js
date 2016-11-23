@@ -51,12 +51,14 @@ class LogIn extends React.Component {
                   console.log(error)
                 },
                 success: (data) => {
+                  userProfile.experience = 200;
                   browserHistory.push('Home')
                 }
               }) 
             }
           } else {
-            userProfile.User = data.username
+            userProfile.User = data.username;
+            // userProfile.experience = data.experience;
             browserHistory.push('Home')
           }
         }
