@@ -6,12 +6,11 @@ var StoreData = props => {
 	var addSkin = function() {
     if(userProfile.experience >= props.skins.price) {
       if(props.skins.type === 'hat') {
-        userProfile.hat = props.skins.skin
+        userProfile.Skins.push(props.skins)
         userProfile.experience = userProfile.experience - props.skins.price;
         browserHistory.push('Store')
       } else {
         userProfile.Skins.push(props.skins)
-        userProfile.ChosenSkin = props.skins.skin; 
         userProfile.experience = userProfile.experience - props.skins.price; 
         browserHistory.push('Store')   
       }

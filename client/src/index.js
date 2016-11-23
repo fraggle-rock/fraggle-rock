@@ -7,7 +7,8 @@ import Home from './component/Home/Home.js';
 import CreateMatch from './component/CreateMatch/CreateMatch.js';
 import JoinMatch from './component/JoinMatch/JoinMatch.js';
 import LeaderBoard from './component/LeaderBoard/LeaderBoard.js';
-import Store from './component/Store/Store.js'
+import Store from './component/Store/Store.js';
+import SelectSkin from './component/SelectSkin/SelectSkin.js';
 
 ReactDOM.render((
   <div>
@@ -19,6 +20,7 @@ ReactDOM.render((
         <Route path='JoinMatch' component={JoinMatch} />
         <Route path='LeaderBoard' component={LeaderBoard} />
         <Route path='Store' component={Store} />
+        <Route path='SelectSkin' component={SelectSkin} />
       </Route>
     </Router>
   </div>
