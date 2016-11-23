@@ -1,5 +1,6 @@
 const THREE = require('three');
 const config = require('../../config/config.js');
+const objectLoader = require('./objLoader.js')
 
 const LoadTexture = function LoadTexture(texturePath) {
   return new THREE.TextureLoader().load(texturePath);
@@ -181,7 +182,7 @@ module.exports = {
     mesh.userData.mass = volumeOf(size) * config.ancientCrateDensity;
     return mesh;
   },
-  playerModel: function(position, quaternion, color, skin) {
+  playerModel: function(position, quaternion, color, skin, hat) {
     const geometry = new THREE.SphereGeometry(config.playerModelRadius, 32, 32);
     const mesh = new THREE.Mesh(geometry, playerMaterial(color, skin));
     initPosition(mesh, position, quaternion);
@@ -241,6 +242,18 @@ module.exports = {
       addShadow(mesh);
       mesh.userData.mass = 0;
       cb(mesh);
+    });
+  },
+  hat: function(cb, position, quaternion) {
+    var objLoader = new THREE.OBJLoader();
+    objLoader.setPath('src/');
+    objLoader.load('ha2.obj', function (object) {
+        initPosition(object.children[0], position, quaternion)
+        object.children[0].material.side = 2;
+        object.scale.y = 0.02;
+        object.scale.x = 0.02;
+        object.scale.z = 0.02;
+        cb(object)
     });
   }
 }

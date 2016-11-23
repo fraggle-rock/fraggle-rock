@@ -3,6 +3,7 @@ import MapSelector from './MapSelector.js'
 import { browserHistory } from 'react-router';
 import userProfile from '../userProfile.js';
 import SkinSelector from './SkinSelector.js';
+import Profile from '../Home/Profile.js';
 const clientScene = require('../../clientScene.js');
 const sceneUtility = require('../../sceneUtility.js');
 
@@ -103,6 +104,9 @@ class CreateMatch extends React.Component {
           <div id='StartMatch'>
             <button id='Start'className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
           </div>
+        </div>
+        <div id='Profile'>
+          <Profile />
         </div>
         </div>
       </div>

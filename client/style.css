@@ -364,6 +364,7 @@ canvas {
 #Profile {
   position: absolute;
   top: 0px;
+  color: black;
   right: 10px;
   margin-right: 15px;
   margin-top: 10px;

@@ -1,9 +1,11 @@
 import React from 'react';
+import { browserHistory } from 'react-router';
 import userProfile from '../userProfile.js';
 
 var StoreData = props => {
 	var addSkin = function() {
     userProfile.ChosenSkin = props.skins.skin;
+    browserHistory.push('Home')
   }
 
   return (

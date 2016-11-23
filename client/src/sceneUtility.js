@@ -3,6 +3,8 @@ const objectBuilder = require('./objectBuilder');
 const config = require('../../config/config.js');
 const flat = require('../../config/flat.js');
 const audio = require('./audio');
+const userProfile = require('./component/userProfile.js')
+
 
 const redBallStack = (function() {
   const result = [];
@@ -12,6 +14,7 @@ const redBallStack = (function() {
   }
   return result;
 })();
+
 const remoteClients = {};
 const remoteScene = {};
 let currentGame = {};
@@ -214,7 +217,6 @@ module.exports = {
         const localPlayer = remoteClients[clientPosition.uuid];
         localPlayer.position.copy(clientPosition.position);
         localPlayer.quaternion.copy(clientPosition.quaternion).multiply(config.skinAdjustQ);
-
       } else if (!clearLookup[clientPosition.uuid]){
         //Create new client
         const uuid = clientPosition.uuid;
@@ -234,6 +236,16 @@ module.exports = {
         }
 
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);
+        const hatCallBack = function(hat) {
+          mesh.add(hat);
+          hat.position.y = -1;
+          hat.position.x = 0;
+          hat.position.z = 0;
+          hat.quaternion.multiply(config.hatAdjustQ)
+          hat.castShadow = true;
+          hat.receiveShadow = true;
+        }
+        const hat = objectBuilder.hat(hatCallBack)
         currentGame.scene.add(mesh);
         remoteClients[clientPosition.uuid] = mesh;
       }

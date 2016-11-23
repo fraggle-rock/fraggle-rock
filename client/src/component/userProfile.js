@@ -3,5 +3,6 @@ module.exports = {
   FacebookPicture: null,
   Skins: [],
   ChosenSkin: null,
-  color: 'teal'
+  color: 'teal',
+  hat: 'ha2.obj'
 }
