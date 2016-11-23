@@ -216,22 +216,22 @@ const shootBall = function shootBall(camera) {
   ballBody.angularDamping = .1;
   const context =this;
 
-  ballBody.addEventListener("collide",function(e){
-
-    if(e.body.userData && e.body.userData.shapeType >= 3) {
-      console.log('Sound Emitted ', e.body.userData.shapeType);
-      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
-    } else if(e.body.mass === config.playerModelMass && e.target.mass === config.ballMass) {
-      // context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
-    }
-  });
-
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
   x += shootDirection.x * 2.5;
   y += shootDirection.y * 2.5;
   z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
+
+  ballBody.addEventListener("collide",function(e){
+    if(e.body.userData && e.body.userData.shapeType >= 3) {
+      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
+    } else if( (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
+    && (e.target.uuid !== e.body.uuid)) {
+      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
+    }
+  });
+
 };
 
 const loadNewClient = function loadNewClient(player) {
@@ -247,6 +247,8 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.addShape(ballShape);
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
+  ballBody.userData = ({type: 'PlayerModel'});
+  ballBody.uuid = player.object.uuid;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
   player.name = player.name || 'Guest';
