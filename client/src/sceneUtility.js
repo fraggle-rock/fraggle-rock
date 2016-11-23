@@ -240,9 +240,9 @@ module.exports = {
           hat.position.y = -1;
           hat.position.x = 0;
           hat.position.z = 0;
-          hat.quaternion.multiply(config.skinAdjustQ);
+          hat.quaternion.multiply(config.hatAdjustQ)
         }
-        const hat = objectBuilder.hat(hatCallBack, clientPosition.position, clientPosition.quaternion)
+        const hat = objectBuilder.hat(hatCallBack)
         currentGame.scene.add(mesh);
         remoteClients[clientPosition.uuid] = mesh;
       }
