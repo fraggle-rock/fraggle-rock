@@ -69,7 +69,7 @@ class LogIn extends React.Component {
   render() {
       return (
         <div className='logInContainer'>
-          <img src='../../../textures/logotext.png' />
+          <img src='../../../textures/logotext.png' id='NonSelect'/>
           <div id='LogIn'>
             <div id='Facebook'>
               <FacebookLogin

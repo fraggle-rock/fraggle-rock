@@ -315,6 +315,9 @@ canvas {
   margin-top:4%;
 }
 
+#NonSelect {
+  pointer-events: none;
+}
 
 #testButtons {
   text-align: center;
@@ -334,6 +337,10 @@ canvas {
   font-size: 20px;
 }
 
+#SettingsButton {
+  float: right;
+}
+
 #username2 {
   float: right;
   width: 90px;
@@ -346,6 +353,7 @@ canvas {
   border-radius: 10px;
   border-width: 2px;
   border-style: outset;
+  pointer-events: none;
 }
 
 #ProfileImgHome2 {
@@ -490,6 +498,7 @@ canvas {
   width: 150px;
   margin-bottom: 2px;
   border-radius: 20px;
+  pointer-events: none;
 }
 
 #DawnMountainCreate {
@@ -497,6 +506,7 @@ canvas {
   border-radius: 20px;
   margin: 0 auto;
   padding-top: 10px;
+  pointer-events: none;
 }
 
 #DawnMountainCreateBackground {
@@ -566,6 +576,7 @@ canvas {
   height: 140px;
   width: 140px;
   margin-top: 10px;
+  pointer-events: none;
 }
 
 
@@ -576,6 +587,10 @@ canvas {
   overflow-x:hidden;
   width: 300px;
   background-color: white;
+}
+
+#Skin {
+  text-align: left;
 }
 
 #SkinName {
@@ -599,4 +614,17 @@ canvas {
   margin-bottom: 10px;
 }
 
+/*Settings*/
+/*-----------------------------------------------------------------------*/
 
+#SettingsButtons {
+  margin-top: 20px;
+}
+
+#HighSettings, #MedSettings, #LowSettings {
+  display: inline-block;
+}
+
+#HighSettings, #MedSettings {
+  margin-right: 10px;
+}
