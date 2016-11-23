@@ -4,13 +4,23 @@ const config = require('../../config/config.js');
 const flat = require('../../config/flat.js');
 const audio = require('./audio');
 const userProfile = require('./component/userProfile.js')
+
+
+const redBallStack = (function() {
+  const result = [];
+  const mesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32});
+  for (var i = 0; i < 15; i++) {
+    result.push(mesh.clone());
+  }
+  return result;
+})();
+
 const remoteClients = {};
 const remoteScene = {};
 let currentGame = {};
 
-//STUB DATA
+//make sure object exists
 currentGame.matchInfo = {clients: {}};
-// currentGame.matchInfo.clients.uuidone = {mesh: null, color: 'red', skinPath: 'textures/skins/Batman.jpg'}
 
 let pitch = 0;
 let yaw = 0;
@@ -21,7 +31,7 @@ let jumpCount = config.maxJumps;
 let jumpRegen = false;
 let latestServerUpdate;
 const serverShapeMap = {};
-const meshLookup = {length: 0};
+const meshLookup = {init: false};
 const clearLookup = {};
 
 //DEBUGGING
@@ -163,10 +173,11 @@ module.exports = {
 
     Object.keys(matchInfo.clients).forEach( (uuid) => {
       let client = matchInfo.clients[uuid];
-      document.getElementById('player' + client.playerNumber + 'Box').style.display = '';
-      document.getElementById('player' + client.playerNumber + 'life1').style.display = client.lives > 0 ? '' : 'none';
-      document.getElementById('player' + client.playerNumber + 'life2').style.display = client.lives > 1 ? '' : 'none';
-      document.getElementById('player' + client.playerNumber + 'life3').style.display = client.lives > 2 ? '' : 'none';
+      // document.getElementById('player' + client.playerNumber + 'Box').style.opacity = '1';
+      document.getElementById('player' + client.playerNumber + 'Box').style.marginTop = '90px';
+      document.getElementById('player' + client.playerNumber + 'life1').style.opacity = client.lives > 0 ? '1' : '0';
+      document.getElementById('player' + client.playerNumber + 'life2').style.opacity = client.lives > 1 ? '1' : '0';
+      document.getElementById('player' + client.playerNumber + 'life3').style.opacity = client.lives > 2 ? '1' : '0';
 
       if (client.lives > 0) {
         playersAlive.push(client.playerNumber);
@@ -176,30 +187,51 @@ module.exports = {
     if (players > 1 && playersAlive.length === 1) {
       document.getElementById('HUD').style.display = 'none';
       document.getElementById('victoryBox').style.display = '';
+      document.getElementById('victoryBox').style.opacity = '1';
+      document.getElementById('victoryBox').style.marginTop = '15%';
       document.getElementById('victor').innerHTML = 'Player ' + playersAlive[0] + ' Wins!';
+      //END GAME HERE
     }
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
+    // Player out of bounds -> death
     if (Math.abs(clientPosition.position.y) > config.playerVerticalBound || Math.abs(clientPosition.position.x) > config.playerHorizontalBound || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
+      //death sound
       audio.smashBrawl.shootRound(2, 1, 0.08, 0, 1);
+
+      if (currentGame.camera.uuid.slice(0, config.uuidLength) === clientPosition.uuid) {
+        jumpCount = 3;
+        shotCount = 3;
+
+        for (var i = 1; i <= 3; i++) {
+          document.getElementById('jump' + i).style.opacity = '1';
+          document.getElementById('ammo' + i).style.opacity = '1';
+        }
+      }
     }
 
     if (currentGame.camera.uuid.slice(0, config.uuidLength) !== clientPosition.uuid) {
       if (remoteClients[clientPosition.uuid]) {
+        //Update existing client
         const localPlayer = remoteClients[clientPosition.uuid];
         localPlayer.position.copy(clientPosition.position);
         localPlayer.quaternion.copy(clientPosition.quaternion).multiply(config.skinAdjustQ);
       } else if (!clearLookup[clientPosition.uuid]){
+        //Create new client
         const uuid = clientPosition.uuid;
         const client = currentGame.matchInfo.clients[uuid];
         let color;
         let skinPath;
+        let name;
 
         if (client) {
           color = client.color;
           skinPath = client.skinPath;
+          name = client.name;
+          // name = 'John'
+          document.getElementById('player' + client.playerNumber + 'Name').innerHTML = name;
         } else {
-          console.log('client doesnt exist')
+          console.log('client doesnt exist');
         }
 
         const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion, color, skinPath);
@@ -215,6 +247,7 @@ module.exports = {
         remoteClients[clientPosition.uuid] = mesh;
       }
     } else {
+      //Move camera to client
       currentGame.camera.position.copy(clientPosition.position);
     }
   },
@@ -223,31 +256,36 @@ module.exports = {
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
     meshObject = JSON.parse(meshObject);
-    const boxMeshes = meshObject[0];
-    const ballMeshes = meshObject[1];
-    const serverClients = meshObject[2];
-    const clear = meshObject[3] || [];
-    const sceneChildren = currentGame.scene.children;
-    while(sceneChildren.length > meshLookup.length) {
-      meshLookup[sceneChildren[meshLookup.length].uuid.slice(0, config.uuidLength)] = sceneChildren[meshLookup.length];
-      meshLookup.length++;
+    if (!meshLookup.init) {
+      currentGame.scene.children.forEach(function(mesh) {
+        meshLookup[mesh.uuid.slice(0, config.uuidLength)] = mesh;
+      });
     }
-    clear.forEach(function(uuid) {
-      const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]] || remoteClients[uuid];
-      currentGame.scene.remove(mesh);
-      meshLookup.length--;
-      clearLookup[uuid] = true;
-      if (meshLookup[uuid]) {
-        delete meshLookup[uuid];
-      } else if (meshLookup[serverShapeMap[uuid]]) {
-        delete meshLookup[serverShapeMap[uuid]];
-        delete serverShapeMap[uuid];
-      } else if (remoteClients[uuid]) {
-        delete remoteClients[uuid];
-      }
-    });
+    if (meshObject[3]) {
+      meshObject[3].forEach(function(uuid) {
+        const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]] || remoteClients[uuid];
+        if (mesh) {
+          currentGame.scene.remove(mesh);
+          if (mesh.userData.name === 'ballMesh') {
+            const i = redBallStack.indexOf(mesh);
+            redBallStack.splice(i, 1);
+            redBallStack.push(mesh);
+          }
+          meshLookup.length--;
+          clearLookup[uuid] = true;
+          if (meshLookup[uuid]) {
+            delete meshLookup[uuid];
+          } else if (meshLookup[serverShapeMap[uuid]]) {
+            delete meshLookup[serverShapeMap[uuid]];
+            delete serverShapeMap[uuid];
+          } else if (remoteClients[uuid]) {
+            delete remoteClients[uuid];
+          }
+        }  
+      });
+    }
     let localMesh;
-    boxMeshes.forEach((serverMesh) => {
+    meshObject[0].forEach((serverMesh) => {
       serverMesh = flat.reBox(serverMesh);
       localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
@@ -260,24 +298,28 @@ module.exports = {
         const serverType = serverMesh.type;
         const boxMesh = objectBuilder[serverType](serverGeometry, serverPosition, serverQuaternion)
         serverShapeMap[serverMesh.uuid] = boxMesh.uuid.slice(0, config.uuidLength);
+        meshLookup[boxMesh.uuid.slice(0, config.uuidLength)] = boxMesh;
         currentGame.scene.add(boxMesh);
       }
       localMesh = undefined;
     });
-    ballMeshes.forEach((serverMesh) => {
+    meshObject[1].forEach((serverMesh) => {
       serverMesh = flat.reBall(serverMesh);
       localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         localMesh.quaternion.copy(serverMesh.quaternion);
-      } else if (!clearLookup[serverMesh.uuid]) {
-        let ballMesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
+      } else if(!clearLookup[serverMesh.uuid]) {
+        const ballMesh = redBallStack.pop();
+        redBallStack.unshift(ballMesh);
         serverShapeMap[serverMesh.uuid] = ballMesh.uuid.slice(0, config.uuidLength);
+        meshLookup[ballMesh.uuid.slice(0, config.uuidLength)] = ballMesh;
+        ballMesh.position.copy(serverMesh.position);
+        ballMesh.quaternion.copy(serverMesh.quaternion);
         currentGame.scene.add(ballMesh);
       }
-      localMesh = undefined;
     });
-    serverClients.forEach(function(client) {
+    meshObject[2].forEach(function(client) {
       module.exports.loadClientUpdate(flat.rePlayer(client));
     });
   },

@@ -26,19 +26,16 @@ class CreateMatch extends React.Component {
     screenOverlay.style.display = '';
     hud.style.display = 'none';
     victoryBox.style.display = 'none';
+    victoryBox.style.opacity = '0';
 
-    document.getElementById('player1Box').style.display = '';
-    document.getElementById('player1Name').innerHTML = 'Player 1';
+    //add players to hud
+    for (var i = 1; i <= 4; i++) {
+      // document.getElementById('player' + i + 'Box').style.opacity = players >= i ? '1' : '0';
+      document.getElementById('player' + i + 'Box').style.marginTop = players >= i ? '90px' : '0px';
+      // document.getElementById('player' + i + 'Name').innerHTML = 'Player ' + i;
+    }
 
-    document.getElementById('player2Box').style.display = players > 1 ? '' : 'none';
-    document.getElementById('player2Name').innerHTML = 'Player 2';
-
-    document.getElementById('player3Box').style.display = players > 2 ? '' : 'none';
-    document.getElementById('player3Name').innerHTML = 'Player 3';
-
-    document.getElementById('player4Box').style.display = players > 3 ? '' : 'none';
-    document.getElementById('player4Name').innerHTML = 'Player 4';
-
+    //check ~ key for menu
     document.addEventListener('keydown', function(e) {
       if(e.keyCode === 192) {
       screenOverlay.style.display = '-webkit-box';

@@ -13,18 +13,25 @@ class HUD extends React.Component {
 
   }
 
+//THIS IS NOT USED YET
+
   render() {
     return (
       <div id="screenOverlay">
+        <div id="victoryBox">
+          <div>GAME OVER</div>
+          <div id="victor"></div>
+        </div>
+
         <div id="HUD">
 
           <div class="playerBoxContainer">
             <div class="player1 playerBox" id="player1Box">
               <img src="./textures/playerRedHealth.png" class="playerPic" />
               <div class="playerLives">
-                <img class="player1 life3" src="./textures/playerhealthheart.png" />
-                <img class="player1 life2" src="./textures/playerhealthheart.png" />
-                <img class="player1 life1" src="./textures/playerhealthheart.png" />
+                <img class="player1 life3" id="player1life3" src="./textures/playerhealthheart.png" />
+                <img class="player1 life2" id="player1life2" src="./textures/playerhealthheart.png" />
+                <img class="player1 life1" id="player1life1" src="./textures/playerhealthheart.png" />
               </div>
               <div class="player1 playerNameBox">
                 <div class="playerName" id="player1Name">Player 1</div>
@@ -34,9 +41,9 @@ class HUD extends React.Component {
             <div class="player2 playerBox" id="player2Box">
               <img src="./textures/playerBlueHealth.png" class="playerPic" />
               <div class="playerLives">
-                <img class="player2 life3" src="./textures/playerhealthheart.png" />
-                <img class="player2 life2" src="./textures/playerhealthheart.png" />
-                <img class="player2 life1" src="./textures/playerhealthheart.png" />
+                <img class="player2 life3" id="player2life3" src="./textures/playerhealthheart.png" />
+                <img class="player2 life2" id="player2life2" src="./textures/playerhealthheart.png" />
+                <img class="player2 life1" id="player2life1" src="./textures/playerhealthheart.png" />
               </div>
               <div class="player2 playerNameBox">
                 <div class="playerName" id="player2Name">Player 2</div>
@@ -46,9 +53,9 @@ class HUD extends React.Component {
             <div class="player3 playerBox" id="player3Box">
               <img src="./textures/playerGreenHealth.png" class="playerPic" />
               <div class="playerLives">
-                <img class="player3 life3" src="./textures/playerhealthheart.png" />
-                <img class="player3 life2" src="./textures/playerhealthheart.png" />
-                <img class="player3 life1" src="./textures/playerhealthheart.png" />
+                <img class="player3 life3" id="player3life3" src="./textures/playerhealthheart.png" />
+                <img class="player3 life2" id="player3life2" src="./textures/playerhealthheart.png" />
+                <img class="player3 life1" id="player3life1" src="./textures/playerhealthheart.png" />
               </div>
               <div class="player3 playerNameBox">
                 <div class="playerName" id="player3Name">Player 3</div>
@@ -58,9 +65,9 @@ class HUD extends React.Component {
             <div class="player4 playerBox" id="player4Box">
               <img src="./textures/playerPinkHealth.png" class="playerPic" />
               <div class="playerLives">
-                <img class="player4 life3" src="./textures/playerhealthheart.png" />
-                <img class="player4 life2" src="./textures/playerhealthheart.png" />
-                <img class="player4 life1" src="./textures/playerhealthheart.png" />
+                <img class="player4 life3" id="player4life3" src="./textures/playerhealthheart.png" />
+                <img class="player4 life2" id="player4life2" src="./textures/playerhealthheart.png" />
+                <img class="player4 life1" id="player4life1" src="./textures/playerhealthheart.png" />
               </div>
               <div class="player4 playerNameBox">
                 <div class="playerName" id="player4Name">Player 4</div>

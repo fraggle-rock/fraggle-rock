@@ -29,7 +29,7 @@ module.exports = function Match(deleteMatch) {
   this.deleteMatch = deleteMatch;
   this.physicsTick = config.gameSpeed * config.tickRate / 2;
   this.tickRate = config.tickRate;
-  this.killFloor = killFloor.bind(this);  
+  this.killFloor = killFloor.bind(this);
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
   this.io;
@@ -118,15 +118,9 @@ const startPhysics = function startPhysics() {
     });
     context.boxes.forEach(function(box, i) {
       if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-        if (box.userData.shapeType === flat.shapeEncoder['grassFloor']) {
-          //do not replace fallen floor tiles
           context.world.remove(box);
           context.boxes.splice(i, 1);
           clear.push(box.uuid);
-        } else {
-          expiredBoxes.push(box);
-          expiredBoxIndices.push(i);
-        }
       } else {
         if (box.mass || context.sendFull) {
           boxes.push(flat.box(box));
@@ -139,15 +133,6 @@ const startPhysics = function startPhysics() {
       expiredBallIndices.forEach(function(index) {
         context.balls.splice(index - offset, 1);
         offset--;
-      });
-    }
-    // Replace boxes randomly above the field if they fall off
-    if (expiredBoxes.length > 0) {
-      // console.log('Deleted out of bounds box!');
-      expiredBoxes.forEach(function(box) {
-        // THIS REPLACES BOXES ON TOP WHEN THEY FALL OFF
-        // box.position.set((Math.random() - Math.random()) * 60, 30 + Math.random() * 10, (Math.random() - Math.random()) * 60);
-        // box.velocity.set(Math.random() * 10, Math.random() * 10, Math.random() * 10);
       });
     }
     const update = [boxes, balls, players];
@@ -173,6 +158,7 @@ const startPhysics = function startPhysics() {
       let movePerTick = config.playerMovePerTick;
       let isMoving = false;
       if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
+        //PLAYER DEATH & RESPAWN
         client.lives--;
         clientBody.position.set(0,10,0);
         clientBody.velocity.set(0,0,0);
@@ -211,7 +197,7 @@ const startPhysics = function startPhysics() {
     context.world.step(context.physicsTick);
     context.world.step(context.physicsTick);
     physicsEmit();
-  }; 
+  };
   context.physicsClock = setInterval(physicsLoop, context.tickRate * 1000);
 };
 
@@ -236,7 +222,7 @@ const shootBall = function shootBall(camera) {
       console.log('Sound Emitted ', e.body.userData.shapeType);
       context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
     } else if(e.body.mass === config.playerModelMass && e.target.mass === config.ballMass) {
-      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
+      // context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
     }
   });
 
@@ -263,6 +249,9 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.angularDamping = config.playerDamping;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
+  player.name = player.name || 'Guest';
+
+  // player data for other users
   this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, quaternion: player.quaternion, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
   this.world.add(ballBody);
   this.sendPoll();
@@ -281,8 +270,8 @@ const loadFullScene = function loadFullScene(scene, player, io) {
   world.defaultContactMaterial.contactEquationStiffness = 1e9;
   world.defaultContactMaterial.contactEquationRelaxation = 4;
 
-  solver.iterations = 20;
-  solver.tolerance = 0.1;
+  solver.iterations = 1;
+  solver.tolerance = 0.5;
   world.solver = new CANNON.SplitSolver(solver);
 
   world.gravity.set(0, config.gravity, 0);
@@ -343,7 +332,6 @@ const loadFullScene = function loadFullScene(scene, player, io) {
 
 // Remove floor tiles periodically
 const killFloor = function killFloor() {
-  let killFloorTick = config.killFloorInterval;
   let floorTiles = [];
   let spacer = 76;
 
@@ -370,7 +358,7 @@ const killFloor = function killFloor() {
         tile.velocity.y = config.killFloorUpVelocity;
         floorTiles.splice(randIndex, 1)
       }
-    }, killFloorTick);
+    }, config.killFloorInterval);
   }, 5000);
 }
 
