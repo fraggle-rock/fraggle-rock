@@ -582,4 +582,17 @@ canvas {
   width: 140px;
 }
 
+#SkinCost {
+  color: black;
+}
+
+#storeButton {
+  margin-left: 10px;
+}
+
+#buyButton {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 
