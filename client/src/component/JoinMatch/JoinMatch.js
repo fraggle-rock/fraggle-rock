@@ -38,15 +38,15 @@ class JoinMatch extends React.Component {
           <div id='JoinMatchData'>
             <div id='JoinLevelTitle'>
               <div>Level</div>
-              {this.state.liveMatches.map((games) => <JoinLevelData games={games} />)}
+              {this.state.liveMatches.map((games) => <JoinLevelData key={games} games={games} />)}
             </div>
             <div id='JoinUserTitle'>
               <div id='JoinUserId'>User</div>
-              {this.state.liveMatches.map((games) => <JoinUserData games={games} />)}
+              {this.state.liveMatches.map((games) => <JoinUserData key={games} games={games} />)}
             </div>
             <div id='JoinJoinTitle'>
               <div>Join</div>
-              {this.state.liveMatches.map((games) => <JoinButtonData games={games} />)}
+              {this.state.liveMatches.map((games) => <JoinButtonData key={games} games={games} />)}
             </div>
           </div>
         </div>

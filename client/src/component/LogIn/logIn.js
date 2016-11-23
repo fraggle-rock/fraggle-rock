@@ -35,6 +35,7 @@ class LogIn extends React.Component {
           if(data.length == 0) {
             var username = prompt('Welcome to Smash Ball Brawl. Please Enter a UserName');
             if(username !== null) {
+              userProfile.User = username;
               var dataSent = {                
                   username: username,
                   token: e.accessToken,
@@ -55,6 +56,7 @@ class LogIn extends React.Component {
               }) 
             }
           } else {
+            userProfile.User = data.username
             browserHistory.push('Home')
           }
         }
