@@ -25,7 +25,8 @@ class Store extends React.Component {
       {skinPic: '../../../textures/skins/superManSkin.jpg', skin: '/textures/skins/superman.jpg', name: 'Superman', price: 400},
       {skinPic: '../../../textures/skins/batmanSkin.jpg', skin: '/textures/skins/Batman.jpg', name: 'Batman', price: 400},
       {skinPic: '../../../textures/skins/8BallSkin.jpg', skin: '/textures/skins/8ball.jpg', name: '8 Ball', price: 250},
-      {skinPic: '../../../textures/skins/CaptainAmericaSkin.jpg', skin: '/textures/skins/CaptainAmerica.jpg', name: 'Captain America', price: 400}
+      {skinPic: '../../../textures/skins/CaptainAmericaSkin.jpg', skin: '/textures/skins/CaptainAmerica.jpg', name: 'Captain America', price: 400},
+      {skinPic: '../../../textures/Skins/hat.jpg', skin: 'ha2.obj', name: 'The Hat', price: 1500, type: 'hat'}
       ],
       experience: 0,
       noFunds: false

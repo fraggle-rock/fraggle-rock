@@ -5,10 +5,16 @@ import userProfile from '../userProfile.js';
 var StoreData = props => {
 	var addSkin = function() {
     if(userProfile.experience >= props.skins.price) {
-      userProfile.Skins.push(props.skins)
-      userProfile.ChosenSkin = props.skins.skin; 
-      userProfile.experience = userProfile.experience - props.skins.price; 
-      browserHistory.push('Store')
+      if(props.skins.type === 'hat') {
+        userProfile.hat = props.skins.skin
+        userProfile.experience = userProfile.experience - props.skins.price;
+        browserHistory.push('Store')
+      } else {
+        userProfile.Skins.push(props.skins)
+        userProfile.ChosenSkin = props.skins.skin; 
+        userProfile.experience = userProfile.experience - props.skins.price; 
+        browserHistory.push('Store')   
+      }
     } else {
       props.state.noFunds = true;
       browserHistory.push('Store')
