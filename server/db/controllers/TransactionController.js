@@ -7,4 +7,14 @@ module.exports = {
       user_id: transaction.user_id })
       .save();
   },
+  getTransactionbyUserID(userID) {
+    return transactionModel.find({ where: {
+      user_id: userID } });
+  },
+  clear() {
+    return transactionModel.destroy({
+      where: {
+      },
+    });
+  },
 };
