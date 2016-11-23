@@ -5,5 +5,6 @@ module.exports = {
   ChosenSkin: null,
   color: 'teal',
   hat: null,
-  experience: 2000
+  experience: 2000,
+  graphics: 'High'
 }

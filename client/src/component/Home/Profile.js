@@ -20,11 +20,15 @@ class Profile extends React.Component {
   }
 
   store() {
-    browserHistory.push('/Store')
+    browserHistory.push('Store')
   }
 
-  profile() {
-    //add Profile Component Route here
+  SelectSkin() {
+    browserHistory.push('SelectSkin')
+  }
+
+  Settings() {
+    browserHistory.push('Settings')
   }
 
   render() {
@@ -32,10 +36,11 @@ class Profile extends React.Component {
       return (
         <div id='ProfileHome'>
           <div id='ImgHomeDiv'>
-            <input type="image" src={userProfile.FacebookPicture} onClick={this.profile} name="saveForm" className="btTxt submit" id="ProfileImgHome" />
+            <img type="image" src={userProfile.FacebookPicture} id="ProfileImgHome" />
           </div>
           <div id='username'>
             {userProfile.User}
+            <button id='SettingsButton' className='btn-xs btn-danger glyphicon glyphicon-cog' onClick={this.Settings}></button>
           </div>
           <div id='ProfileButtons'>
             <div id='SignOut'>
@@ -45,7 +50,7 @@ class Profile extends React.Component {
               <button className='btn-xs btn-success' onClick={this.store}><span className='glyphicon glyphicon-shopping-cart' /></button>
             </div>
             <div id='SelectSkin'>
-              <button className='btn-xs btn-warning' onClick={this.store}>Select a Skin</button>
+              <button className='btn-xs btn-warning' onClick={this.SelectSkin}>Select a Skin</button>
             </div>
           </div>
         </div>
