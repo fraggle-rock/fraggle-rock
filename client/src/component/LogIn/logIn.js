@@ -16,7 +16,7 @@ class LogIn extends React.Component {
   }
 
   playAsGuest() {
-    userProfile.User = 'Guest';
+    userProfile.User = 'GUEST';
     userProfile.FacebookPicture = '../../textures/GuestPicture.png';
     browserHistory.push('/Home')
   }

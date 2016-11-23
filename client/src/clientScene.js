@@ -1,10 +1,10 @@
-
 const sceneUtility = require('./sceneUtility');
 const socketUtility = require('./socketUtility');
 const LevelBuilder = require('./levelBuilder');
 const levelBuilder = new LevelBuilder();
 const rendererBuilder = require('./rendererBuilder');
 const cameraBuilder = require('./cameraBuilder');
+const userProfile = require('./component/userProfile.js');
 
 let serverUpdateTick;
 
@@ -16,7 +16,13 @@ const init = function init() {
   const camera = cameraBuilder.buildCamera();
   const renderer = rendererBuilder.buildRenderer();
   appendRenderer(renderer);
-  const scene = levelBuilder.buildLevelOne();
+  let scene;
+
+  if (userProfile.map === 1) {
+    scene = levelBuilder.buildLevelOne(); // build level
+  } else {
+    scene = levelBuilder.buildLevelTwo();
+  }
   return { camera, renderer, scene };
 };
 
@@ -24,7 +30,7 @@ const join = function join() {
   const camera = cameraBuilder.buildCamera();
   const renderer = rendererBuilder.buildRenderer();
   appendRenderer(renderer);
-  const scene = levelBuilder.buildBlankLevelOne();
+  const scene = levelBuilder.buildBlankLevel();
   return { camera, renderer, scene };
 }
 

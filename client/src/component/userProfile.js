@@ -4,5 +4,6 @@ module.exports = {
   Skins: [],
   ChosenSkin: null,
   color: 'teal',
-  hat: 'ha2.obj'
+  hat: 'ha2.obj',
+  map: null
 }

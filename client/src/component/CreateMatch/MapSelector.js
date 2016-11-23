@@ -1,5 +1,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
+import userProfile from '../userProfile.js';
+import levelBuilder from '../../levelBuilder.js';
 
 class MapSelector extends React.Component {
  constructor(props) {
@@ -9,10 +11,18 @@ class MapSelector extends React.Component {
   };
  }
 
-DawnMountain() {
+greenFields() {
   document.getElementById('MapSelector').style.display = 'none';
   document.getElementById('DawnMountainCreateBackground').style.display = 'block';
   document.getElementById('StartMatch').style.display = 'block';
+  userProfile.map = 1;
+}
+
+dawnMountain() {
+  document.getElementById('MapSelector').style.display = 'none';
+  document.getElementById('DawnMountainCreateBackground').style.display = 'block';
+  document.getElementById('StartMatch').style.display = 'block';
+  userProfile.map = 2;
 }
 
  render() {
@@ -24,7 +34,11 @@ DawnMountain() {
             <div>
               <img id='DawnMountain' src='../../../textures/dawnmountainThumb.jpg' />
               <div>
-                <button onClick={this.DawnMountain} className='btn btn-primary'>Dawn Mountain</button>
+                <button onClick={this.greenFields} className='btn btn-primary'>Green Fields</button>
+              </div>
+              <img id='DawnMountain' src='../../../textures/dawnmountainThumb.jpg' />
+              <div>
+                <button onClick={this.dawnMountain} className='btn btn-primary'>Dawn Mountain</button>
               </div>
             </div>
           </div>

@@ -25,15 +25,6 @@ class CreateMatch extends React.Component {
     const players = Object.keys(sceneUtility.currentGame.matchInfo.clients).length;
     screenOverlay.style.display = '';
     hud.style.display = 'none';
-    victoryBox.style.display = 'none';
-    victoryBox.style.opacity = '0';
-
-    //add players to hud
-    for (var i = 1; i <= 4; i++) {
-      // document.getElementById('player' + i + 'Box').style.opacity = players >= i ? '1' : '0';
-      document.getElementById('player' + i + 'Box').style.marginTop = players >= i ? '90px' : '0px';
-      // document.getElementById('player' + i + 'Name').innerHTML = 'Player ' + i;
-    }
 
     //check ~ key for menu
     document.addEventListener('keydown', function(e) {

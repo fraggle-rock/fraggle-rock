@@ -80,9 +80,9 @@ module.exports = {
     camera.quaternion = game.camera.quaternion;
     camera.direction = game.camera.getWorldDirection();
 
-    // declare your color and skin
-    camera.color = 'red';
+    // declare your name and skin
     camera.skinPath = userProfile.ChosenSkin;
+    camera.name = userProfile.User;
 
     const fullScene = {camera: camera, scene: game.scene.toJSON()};
     socket.emit('fullScene', fullScene);
