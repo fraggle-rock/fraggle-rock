@@ -20,10 +20,6 @@ const addUpdateListeners = function addUpdateListeners(socket) {
     socket.emit('poll', sceneUtility.getCamera().uuid.slice(0, config.uuidLength));
     sceneUtility.loadMatchInfo(JSON.parse(matchInfo));
   });
-  socket.on('playSound', function(play) {
-    const jsonObj = JSON.parse(play);
-    audio.smashBrawl.shootRound(jsonObj.play, 1, 0.08, 0, 0);
-  });
 }
 
 const roundToDec = function round(num, decimals) {

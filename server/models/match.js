@@ -238,7 +238,6 @@ const shootBall = function shootBall(camera) {
     } else if( e.target.uuid && (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
     && (e.target.uuid !== e.body.uuid)) {
       collisionSound = { play: 7 };
-      // context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
     }
   });
 
