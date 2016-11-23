@@ -25,25 +25,27 @@ dawnMountain() {
   userProfile.map = 2;
 }
 
- render() {
-   return (
-      <div id="Levels">
-        <div>
-          <div>
-            <h3 id='ChooseLevelTitle'>Choose Level Below</h3>
-            <div>
-              <img id='DawnMountain' src='../../../textures/dawnmountainThumb.jpg' />
+render() {
+  return (
+    <div id="Levels">
+      <div className='mapSelectContainer'>
+        <h3 id='ChooseLevelTitle'>Choose Level Below</h3>
+          <div className='mapThumbContainer'>
+            <div className='mapThumbBox'>
+              <img onClick={this.greenFields} className='mapThumb' src='../../../textures/grass-repeating4.jpg' />
               <div>
                 <button onClick={this.greenFields} className='btn btn-primary'>Green Fields</button>
               </div>
-              <img id='DawnMountain' src='../../../textures/dawnmountainThumb.jpg' />
+            </div>
+            <div className='mapThumbBox'>
+              <img onClick={this.dawnMountain} className='mapThumb' src='../../../textures/dawnmountainThumb.jpg' />
               <div>
                 <button onClick={this.dawnMountain} className='btn btn-primary'>Dawn Mountain</button>
               </div>
             </div>
-          </div>
         </div>
       </div>
+    </div>
    );
  }
 }

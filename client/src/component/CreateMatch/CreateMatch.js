@@ -67,6 +67,15 @@ class CreateMatch extends React.Component {
     document.getElementById('MapSelector').style.display = 'block';
     document.getElementById('DawnMountainCreateBackground').style.display = 'none';
     document.getElementById('StartMatch').style.display = 'none';
+
+
+    // let mapSelector = document.getElementById('MapSelector');
+    // let background = document.getElementById('DawnMountainCreateBackground');
+    // let start = document.getElementById('StartMatch');
+
+    // mapSelector.style.display = mapSelector.style.display !== 'none' ? 'none' : 'block';
+    // background.style.display = background.style.display !== 'none' ? 'none' : 'block';
+    // start.style.display = start.style.display !== 'none' ? 'none' : 'block';
   }
 
   backToHome() {

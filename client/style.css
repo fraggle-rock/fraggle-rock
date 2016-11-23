@@ -494,7 +494,18 @@ canvas {
 }
 
 #ChooseMap {
-  margin-bottom: 5px;
+  margin: 10px 0px;
+}
+
+#ChooseMapTitle {
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+}
+
+#ChooseMapTitle:hover {
+  color: skyblue;
 }
 
 #Levels {
@@ -504,7 +515,22 @@ canvas {
   padding: 1px 0 13px 0;
 }
 
-#DawnMountain {
+.mapSelectContainer {
+  width: 500px;
+  border: 1px solid black;
+  border-radius: 20px
+  background-color: white;
+}
+
+.mapThumbContainer {
+
+}
+
+.mapThumbBox {
+
+}
+
+.mapThumb {
   height: 150px;
   width: 150px;
   margin-bottom: 2px;
@@ -531,9 +557,6 @@ canvas {
   display: none;
 }
 
-#ChooseMapTitle {
-  font-size: 20px;
-}
 
 /*Join Match*/
 /*-----------------------------------------------------------------*/
