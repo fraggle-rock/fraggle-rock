@@ -242,6 +242,8 @@ module.exports = {
           hat.position.x = 0;
           hat.position.z = 0;
           hat.quaternion.multiply(config.hatAdjustQ)
+          hat.castShadow = true;
+          hat.receiveShadow = true;
         }
         const hat = objectBuilder.hat(hatCallBack)
         currentGame.scene.add(mesh);
