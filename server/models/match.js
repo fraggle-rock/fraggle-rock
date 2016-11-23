@@ -9,6 +9,7 @@ const getGuid = function getGuid() {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
   return [0, 0, 0, 0].map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
+let collisionSound;
 
 module.exports = function Match(deleteMatch) {
   this.guid = getGuid();
@@ -138,12 +139,19 @@ const startPhysics = function startPhysics() {
     const update = [boxes, balls, players];
     if (clear.length > 0) {
       update.push(clear);
+    } else {
+      update.push([]);
     }
+    if(collisionSound !== undefined) {
+      update.push(collisionSound);
+      collisionSound = undefined;
+    }
+
     if (players.length > 0) {
       if (context.sendFull || clear.length > 0) {
         context.io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
-        context.io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+         context.io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
       }
     } else {
       context.deleteMatch(context.guid);
@@ -214,6 +222,7 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
+  ballBody.uuid = camera.uuid;
   const context =this;
 
   const shootDirection = camera.direction;
@@ -225,8 +234,9 @@ const shootBall = function shootBall(camera) {
 
   ballBody.addEventListener("collide",function(e){
     if(e.body.userData && e.body.userData.shapeType >= 3) {
-      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
-    } else if( (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
+      collisionSound = { play: e.body.userData.shapeType };
+      // context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
+    } else if( e.target.uuid && (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
     && (e.target.uuid !== e.body.uuid)) {
       context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
     }
@@ -247,7 +257,6 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.addShape(ballShape);
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
-  ballBody.userData = ({type: 'PlayerModel'});
   ballBody.uuid = player.object.uuid;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;

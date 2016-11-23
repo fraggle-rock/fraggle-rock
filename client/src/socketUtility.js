@@ -11,6 +11,11 @@ let emitQ;
 
 const addUpdateListeners = function addUpdateListeners(socket) {
   socket.on('physicsUpdate', function(meshesObject) {
+
+    if(meshesObject[4] && meshesObject[4].play) {
+      console.log('meshobject ', meshesObject);
+      audio.smashBrawl.shootRound(meshesObject[4].play, 1, 0.08, 0, 0 );
+    }
     sceneUtility.savePhysicsUpdate(meshesObject);
   });
   socket.on('fullPhysicsUpdate', function(meshesObject) {

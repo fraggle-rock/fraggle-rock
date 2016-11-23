@@ -252,6 +252,10 @@ module.exports = {
         meshLookup[mesh.uuid.slice(0, config.uuidLength)] = mesh;
       });
     }
+    if(meshObject[4] && meshObject[4].play) {
+      console.log('meshobject ', meshObject);
+      audio.smashBrawl.shootRound(meshObject[4].play, 1, 0.08, 0, 0 );
+    }
     if (meshObject[3]) {
       meshObject[3].forEach(function(uuid) {
         const mesh = meshLookup[uuid] || meshLookup[serverShapeMap[uuid]] || remoteClients[uuid];
@@ -272,7 +276,7 @@ module.exports = {
           } else if (remoteClients[uuid]) {
             delete remoteClients[uuid];
           }
-        }  
+        }
       });
     }
     let localMesh;
