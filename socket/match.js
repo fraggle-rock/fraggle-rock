@@ -1,8 +1,8 @@
 'use strict';
 const CANNON = require('cannon');
 const THREE = require('three');
-const config = require('../../config/config.js');
-const flat = require('../../config/flat.js')
+const config = require('../config/config.js');
+const flat = require('../config/flat.js')
 let kill;
 
 const getGuid = function getGuid() {

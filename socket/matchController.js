@@ -1,6 +1,6 @@
 "use strict";
 const liveMatches = {};
-const Match = require('../models/match.js');
+const Match = require('./match.js');
 
 const deleteMatch = function deleteMatch(matchId) {
   let match;

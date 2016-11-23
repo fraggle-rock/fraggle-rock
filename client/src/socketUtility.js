@@ -1,6 +1,6 @@
 const THREE = require('three');
 const io = require('socket.io-client');
-const socket = io(window.location.origin);
+const socket = io(window.location.hostname + ':3333');
 const sceneUtility = require('./sceneUtility');
 const flat = require('../../config/flat');
 const config = require('../../config/config');
