@@ -235,10 +235,10 @@ const shootBall = function shootBall(camera) {
   ballBody.addEventListener("collide",function(e){
     if(e.body.userData && e.body.userData.shapeType >= 3) {
       collisionSound = { play: e.body.userData.shapeType };
-      // context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
     } else if( e.target.uuid && (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
     && (e.target.uuid !== e.body.uuid)) {
-      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
+      collisionSound = { play: 7 };
+      // context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
     }
   });
 
