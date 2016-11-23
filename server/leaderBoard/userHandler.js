@@ -8,7 +8,6 @@ router.route('/addUser')
   UserController.insertUser(req.body)
   .then((user) => {
   res.status(200).send('userCreated');
-    
   })
 });
 
@@ -23,7 +22,7 @@ router.route('/getUsers')
 router.route('/getUserByName/:name')
 .get((req, res) => {
   if (req.params.name) {
-    UserController.searchUser(req.params.name)
+    UserController.searchUserByUsername(req.params.name)
     .then((user) => {
       res.status(200).send(user);
     });

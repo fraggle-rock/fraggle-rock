@@ -13,7 +13,11 @@ module.exports = {
     return userModel.build({ username: user.username,
       email: user.email,
       token: user.token,
-      facebookid: user.facebookid })
+      facebookid: user.facebookid,
+      map: user.map,
+      graphicsSetting: user.graphicsSetting,
+      skins: user.skins
+    })
     .save();
   },
   getAllUsers() {

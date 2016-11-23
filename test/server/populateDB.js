@@ -12,20 +12,35 @@ const users = [
   { username: 'riyaz',
     email: 'riyaz@hackreactor.com',
     token: 'riyazToken',
-    facebookid: 'riyazFacebookid'
+    facebookid: 'riyazFacebookid',
+    map: '1',
+    graphicsSetting: 'high',
+    skins: ['1', '2'],
   },
   { username: 'will',
     email: 'will@hackreactor.com',
     token: 'willToken',
-    facebookid: 'willFacebookid' },
+    facebookid: 'willFacebookid',
+    map: '1',
+    graphicsSetting: 'high',
+    skins: ['1', '2'],
+  },
   { username: 'eric',
     email: 'eric@hackreactor.com',
     token: 'ericToken',
-    facebookid: 'ericFacebookid' },
+    facebookid: 'ericFacebookid',
+    map: '2',
+    graphicsSetting: 'high',
+    skins: ['1', '2'],
+  },
   { username: 'nick',
     email: 'nick@hackreactor.com',
     token: 'nickToken',
-    facebookid: 'nickFacebookid' },
+    facebookid: 'nickFacebookid',
+    map: '2',
+    graphicsSetting: 'high',
+    skins: ['1', '2'],
+  },
 ];
 
 const games = [
@@ -127,6 +142,19 @@ const populateData = function populateData() {
 populateData();
 const populateScores = function populateScores() {
   console.log('Populate Done ');
+  transactionModel.sync()
+  .then(() => {
+    transactionController.clear()
+    .then(() => {
+      transactions.forEach((transaction, index) => {
+        userController.searchUserByUsername(transaction.username)
+        .then((user) => {
+          transactionController.insertTransaction({ user_id: user.id,
+            transaction: transaction.points });
+        });
+      });
+    });
+  });
 };
 setTimeout(populateScores, 3000);
 

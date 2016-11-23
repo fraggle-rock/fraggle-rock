@@ -1,14 +1,15 @@
 const transactionModel = require('./../models/TransactionModel');
+const userModel = require('./../models/UserModel');
 
 module.exports = {
-  insertTransaction(transaction) {
+  insertTransaction(transactionObj) {
     return transactionModel.build({
-      transaction: transaction.points,
-      user_id: transaction.user_id })
+      transaction: transactionObj.transaction,
+      user_id: transactionObj.user_id })
       .save();
   },
   getTransactionbyUserID(userID) {
-    return transactionModel.find({ where: {
+    return transactionModel.findAll({ where: {
       user_id: userID } });
   },
   clear() {
