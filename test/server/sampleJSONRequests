@@ -34,3 +34,11 @@
  http://localhost:9999/api/getPointsByFacebookID/riyazFacebookid
 
 http://localhost:9999/api/getPointsByUsername/player1
+
+ http://localhost:9999/api/addTransactionByUsername
+
+{"username":"player2","points": 77}
+
+   http://localhost:9999/api/addTransactionByFacebookID
+
+   {"facebookid":"willFacebookid","points": 99}

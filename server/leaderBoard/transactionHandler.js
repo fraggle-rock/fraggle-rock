@@ -43,4 +43,35 @@ router.route('/getPointsByUsername/:username')
   }
 });
 
+router.route('/addTransactionByUsername')
+.post((req, res) => {
+  if (req.body.username && req.body.points) {
+    UserController.searchUserByUsername(req.body.username)
+    .then((user) => {
+      TransactionController.insertTransaction({ transaction: req.body.points, user_id: user.id })
+      .then((transaction) => {
+        res.send(200).status(transaction);
+      });
+    });
+  } else {
+    res.sendStatus(400);
+  }
+});
+
+router.route('/addTransactionByFacebookID')
+.post((req, res) => {
+  if (req.body.facebookid && req.body.points) {
+    UserController.searchUserByFacebookid(req.body.facebookid)
+    .then((user) => {
+      TransactionController.insertTransaction({ transaction: req.body.points, user_id: user.id })
+      .then((transaction) => {
+        res.send(200).status(transaction);
+      });
+    });
+  } else {
+    res.sendStatus(400);
+  }
+});
+
+
 module.exports = router;
