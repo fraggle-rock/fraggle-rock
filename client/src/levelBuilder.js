@@ -3,32 +3,24 @@ const objectBuilder = require('./objectBuilder');
 const config = require('../../config/config.js');
 const helpers = require('./levelBuilderHelpers');
 
+const spawnPoints = [
+  [[0, 0, 0], [50, 15, 50], [-50, 15, 50], [50, 15, -50], [-50, 15, -50]],
+  [[0, 0, 0], [50, 15, 50], [-50, -5, 50], [50, -5, -50], [-50, 15, -50]],
+  [[0, 0, 0], [0, 5, 25], [0, 5, -25], [50, 20, 0], [-50, 20, 0]]
+];
+
 const buildLevelOne = function buildLevelOne(options) {
   const scene = this.buildBlankLevel();
   let mesh;
 
-  //Side Panels
-  mesh = objectBuilder.sidePanel(
-    {width: 50, height: 1, depth: 6},
-    {x: 0, y: -25, z: -48},
-    {x: 0, y: 0, z: 0, w: 0 });
-  scene.add(mesh);
-
-  mesh = objectBuilder.sidePanel(
-    {width: 50, height: 1, depth: 6},
-    {x: 0, y: -25, z: 48},
-    {x: 0, y: 0, z: 0, w: 0 }
-  );
-  scene.add(mesh);
-
   // buildFloor(A, B, y, width, height, depth, scene)
   // builds square grass floor of A by A with a rock center of B by B, at y height.
   // Blocks will be width x height x depth;
-  helpers.buildFloor(20, 11, 0, -5, 0, 6, 6, 6, scene);
-  helpers.buildFloor(4, 3, 50, 10, 50, 4, 6, 4, scene);
-  helpers.buildFloor(4, 3, -50, 10, -50, 4, 6, 4, scene);
-  helpers.buildFloor(6, 3, 50, 10, -50, 4, 6, 4, scene);
-  helpers.buildFloor(6, 3, -50, 10, 50, 4, 6, 4, scene);
+  helpers.buildFloor(20, 20, 0, -5, 0, 6, 6, 6, scene);
+  helpers.buildFloor(4, 4, 50, 10, 50, 4, 6, 4, scene);
+  helpers.buildFloor(4, 4, -50, 10, -50, 4, 6, 4, scene);
+  helpers.buildFloor(6, 6, 50, 10, -50, 4, 6, 4, scene);
+  helpers.buildFloor(6, 6, -50, 10, 50, 4, 6, 4, scene);
 
   //randomCrateGen(n, a, b, fx, fy, fz, r, scene)
   //builds n crates of size a to b at fx, fy, fz with +/- r random variance in fx and fz
@@ -75,6 +67,46 @@ const buildLevelTwo = function buildLevelTwo(options) {
   return scene;
 }
 
+const buildLevelThree = function buildLevelThree(options) {
+  const scene = this.buildBlankLevel();
+  let mesh;
+
+  //Side Panels
+  mesh = objectBuilder.sidePanel(
+    {width: 50, height: 1, depth: 6},
+    {x: 0, y: 25, z: -48},
+    {x: 0, y: 0, z: 0, w: 0 });
+  scene.add(mesh);
+
+  mesh = objectBuilder.sidePanel(
+    {width: 50, height: 1, depth: 6},
+    {x: 0, y: 25, z: 48},
+    {x: 0, y: 0, z: 0, w: 0 }
+  );
+  scene.add(mesh);
+
+  // buildFloor(A, B, y, width, height, depth, scene)
+  // builds square grass floor of A by A with a rock center of B by B, at y height.
+  // Blocks will be width x height x depth;
+  helpers.buildFloor(4, 3, 0, -5, 0, 4, 6, 4, scene);
+  helpers.buildFloor(4, 3, 0, 0, 25, 4, 6, 4, scene);
+  helpers.buildFloor(4, 3, 0, 0, -25, 4, 6, 4, scene);
+  helpers.buildFloor(4, 3, 25, 0, 0, 4, 6, 4, scene);
+  helpers.buildFloor(4, 3, -25, 0, 0, 4, 6, 4, scene);
+  // helpers.buildFloor(4, 3, 0, 15, 50, 4, 6, 4, scene);
+  // helpers.buildFloor(4, 3, 0, 15, -50, 4, 6, 4, scene);
+  helpers.buildFloor(4, 3, 50, 15, 0, 4, 6, 4, scene);
+  helpers.buildFloor(4, 3, -50, 15, 0, 4, 6, 4, scene);
+
+  //randomCrateGen(n, a, b, fx, fy, fz, r, scene)
+  //builds n crates of size a to b at fx, fy, fz with +/- r random variance in fx and fz
+  helpers.randomCrateGen(3, 4, 8, 0, 0, 0, 20, scene);
+  helpers.randomCrateGen(2, 4, 8, -50, 0, 50, 4, scene);
+  helpers.randomCrateGen(2, 4, 8, 50, 0, -50, 4, scene);
+
+  return scene;
+}
+
 const buildBlankLevel = function buildBlankLevel() {
   const scene = new THREE.Scene();
   scene.add(new THREE.AmbientLight(0x111111));
@@ -88,9 +120,11 @@ const buildBlankLevel = function buildBlankLevel() {
 }
 
 module.exports = function LevelBuilder() {
-  this.buildLevelTwo = buildLevelTwo.bind(this);
   this.buildLevelOne = buildLevelOne.bind(this);
+  this.buildLevelTwo = buildLevelTwo.bind(this);
+  this.buildLevelThree = buildLevelThree.bind(this);
   this.buildBlankLevel = buildBlankLevel.bind(this);
+  this.spawnPoints = spawnPoints;
 }
 
   // EXAMPLE CODE

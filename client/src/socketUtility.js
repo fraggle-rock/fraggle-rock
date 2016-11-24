@@ -84,7 +84,7 @@ module.exports = {
     camera.skinPath = userProfile.ChosenSkin;
     camera.name = userProfile.User;
 
-    const fullScene = {camera: camera, scene: game.scene.toJSON()};
+    const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints};
     socket.emit('fullScene', fullScene);
   },
   joinMatch: function joinMatch(matchNumber, game) {

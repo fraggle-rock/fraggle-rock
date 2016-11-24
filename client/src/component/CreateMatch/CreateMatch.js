@@ -11,12 +11,17 @@ class CreateMatch extends React.Component {
   constructor(props) {
 	  super(props);
 	  this.state = {
-	    user: null
+	    user: null,
+      maps: userProfile.maps,
+      mapChoice: userProfile.map,
+      mapPreviewPath: userProfile.maps[userProfile.map].thumb
 	  };
 	  this.backToHome = this.backToHome.bind(this);
   }
 
   StartMatch() {
+    console.log('click')
+
     const screenOverlay = document.getElementById( 'screenOverlay' );
     const menuContainer = document.getElementById( 'menuContainer' );
     const hud = document.getElementById( 'HUD' );
@@ -59,23 +64,26 @@ class CreateMatch extends React.Component {
       }
     });
 
-    document.getElementById( 'CreateMatch' ).style.display = 'none';
+    document.getElementById( 'CreateMatchContainer' ).style.display = 'none';
     clientScene.startGame();
   }
 
   ChooseMap() {
-    document.getElementById('MapSelector').style.display = 'block';
-    document.getElementById('DawnMountainCreateBackground').style.display = 'none';
-    document.getElementById('StartMatch').style.display = 'none';
+    let map = document.getElementById('MapSelector');
+    let background = document.getElementById('selectedMap');
+    let start = document.getElementById('StartMatch');
 
+    map.style.display = start.style.display !== 'none' ? 'block' : 'none';
+    background.style.display = start.style.display !== 'none' ? 'none' : 'block';
+    start.style.display = start.style.display !== 'none' ? 'none' : 'block';
+  }
 
-    // let mapSelector = document.getElementById('MapSelector');
-    // let background = document.getElementById('DawnMountainCreateBackground');
-    // let start = document.getElementById('StartMatch');
-
-    // mapSelector.style.display = mapSelector.style.display !== 'none' ? 'none' : 'block';
-    // background.style.display = background.style.display !== 'none' ? 'none' : 'block';
-    // start.style.display = start.style.display !== 'none' ? 'none' : 'block';
+  mapChosen(mapNumber) {
+    document.getElementById('MapSelector').style.display = 'none';
+    document.getElementById('selectedMap').style.display = 'block';
+    document.getElementById('StartMatch').style.display = 'block';
+    userProfile.map = mapNumber;
+    this.setState({mapChoice: mapNumber});
   }
 
   backToHome() {
@@ -85,21 +93,20 @@ class CreateMatch extends React.Component {
   render() {
     return (
       <div id='HomeBackground'>
-        <div id='CreateMatch'>
+        <div id='CreateMatchContainer'>
           <div id='CreateMatchBackground'>
           <h1 id='CreateMatchTitle'>Create Match</h1>
             <div>
               <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
             </div>
-          <div id='ChooseMap'>
-            <a id='ChooseMapTitle' onClick={this.ChooseMap}>Choose Map</a>
-          </div>
+          <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
+
           <div id='MapSelector'>
-            <MapSelector />
+            <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />
           </div>
-          <div id='DawnMountainCreateBackground'>
-            <img id='DawnMountainCreate' src='../../../textures/dawnmountainThumb.jpg' />
-            <div>Dawn Mountain</div>
+          <div id='selectedMap' onClick={this.ChooseMap}>
+            <img id='selectMapPreview' src={this.state.maps[this.state.mapChoice].thumb} />
+            <div>{this.state.maps[this.state.mapChoice].name}</div>
           </div>
           <div id='StartMatch'>
             <button id='Start'className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>

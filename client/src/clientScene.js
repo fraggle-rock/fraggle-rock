@@ -17,13 +17,18 @@ const init = function init() {
   const renderer = rendererBuilder.buildRenderer();
   appendRenderer(renderer);
   let scene;
+  let spawnPoints = levelBuilder.spawnPoints[userProfile.map]
 
-  if (userProfile.map === 1) {
-    scene = levelBuilder.buildLevelOne(); // build level
-  } else {
+  // build level
+  if (userProfile.map === 0) {
+    scene = levelBuilder.buildLevelOne();
+  } else if (userProfile.map === 1) {
     scene = levelBuilder.buildLevelTwo();
+  } else {
+    scene = levelBuilder.buildLevelThree();
   }
-  return { camera, renderer, scene };
+
+  return { camera, renderer, scene, spawnPoints };
 };
 
 const join = function join() {
