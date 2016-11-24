@@ -1,0 +1,36 @@
+// users
+ http://localhost:9999/api/addUser
+ {"username":"player8","email":"riyaz@hackreactor.com","token":"riyazToken","facebookid":"player8Facebookid","map":"1","graphicsSetting":"low","skins":["1","2"],"hats":["1"]}
+
+ http://localhost:9999/api/updateHats -- post
+ {"id":11,"hats":["3","4"]}
+
+  http://localhost:9999/api/updateSkins
+  {"id":11,"skins":["3","4"]}
+
+ http://localhost:9999/api/updateGraphics
+ {"id":12,"graphicsSetting":"low"}
+
+  http://localhost:9999/api/getUserByName/player1
+
+  http://localhost:9999/api/getUsers
+
+  http://localhost:9999/api/getUserByFacebookID/riyazFacebookid
+
+
+//Games
+
+ http://localhost:9999/api/addGame
+
+ {"username":"player2","uuid":"123-456-789"}
+
+// scores
+ http://localhost:9999/api/addScore
+
+{"username":"player2","uuid":"123-456-789","score":"99"}
+
+// transactions
+
+ http://localhost:9999/api/getPointsByFacebookID/riyazFacebookid
+
+http://localhost:9999/api/getPointsByUsername/player1

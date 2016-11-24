@@ -9,37 +9,41 @@ const transactionController = require('./../../server/db/controllers/Transaction
 // const setupSchema = require('./setupSchema');
 
 const users = [
-  { username: 'riyaz',
+  { username: 'player1',
     email: 'riyaz@hackreactor.com',
     token: 'riyazToken',
     facebookid: 'riyazFacebookid',
     map: '1',
     graphicsSetting: 'high',
     skins: ['1', '2'],
+    hats: ['1'],
   },
-  { username: 'will',
+  { username: 'player2',
     email: 'will@hackreactor.com',
     token: 'willToken',
     facebookid: 'willFacebookid',
     map: '1',
     graphicsSetting: 'high',
     skins: ['1', '2'],
+    hats: ['1'],
   },
-  { username: 'eric',
+  { username: 'player3',
     email: 'eric@hackreactor.com',
     token: 'ericToken',
     facebookid: 'ericFacebookid',
     map: '2',
     graphicsSetting: 'high',
     skins: ['1', '2'],
+    hats: ['1'],
   },
-  { username: 'nick',
+  { username: 'player4',
     email: 'nick@hackreactor.com',
     token: 'nickToken',
     facebookid: 'nickFacebookid',
     map: '2',
     graphicsSetting: 'high',
     skins: ['1', '2'],
+    hats: ['1'],
   },
 ];
 
@@ -75,35 +79,35 @@ const scores = [
 
 const transactions = [
   {
-    username: 'riyaz',
+    username: 'player1',
     points: 100,
   },
   {
-    username: 'will',
+    username: 'player2',
     points: 100,
   },
   {
-    username: 'eric',
+    username: 'player3',
     points: 100,
   },
   {
-    username: 'nick',
+    username: 'player4',
     points: 100,
   },
   {
-    username: 'riyaz',
+    username: 'player1',
     points: -30,
   },
   {
-    username: 'will',
+    username: 'player2',
     points: -35,
   },
   {
-    username: 'eric',
+    username: 'player3',
     points: -40,
   },
   {
-    username: 'nick',
+    username: 'player4',
     points: -25,
   },
 ]

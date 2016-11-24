@@ -16,7 +16,8 @@ module.exports = {
       facebookid: user.facebookid,
       map: user.map,
       graphicsSetting: user.graphicsSetting,
-      skins: user.skins
+      skins: user.skins,
+      hats: user.hats
     })
     .save();
   },
@@ -42,6 +43,36 @@ module.exports = {
         $or: arrIds,
       },
     });
+  },
+  updateSkins(id, skins) {
+    return userModel.update(
+      {
+        skins,
+      },
+      {
+        fields: ['skins'],
+        where: { id },
+      });
+  },
+  updateHats(id, hats) {
+    return userModel.update(
+      {
+        hats,
+      },
+      {
+        fields: ['hats'],
+        where: { id },
+      });
+  },
+  updateGraphics(id, graphicsSetting) {
+    return userModel.update(
+      {
+        graphicsSetting,
+      },
+      {
+        fields: ['graphicsSetting'],
+        where: { id },
+      });
   },
   clear() {
     return userModel.destroy({

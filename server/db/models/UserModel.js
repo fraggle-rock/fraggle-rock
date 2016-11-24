@@ -16,6 +16,9 @@ const User = db.define('User', {
   skins: {
     type: Sequelize.ARRAY(Sequelize.STRING),
   },
+  hats: {
+    type: Sequelize.ARRAY(Sequelize.STRING),
+  },
   facebookid: {
     type: Sequelize.STRING,
   },
