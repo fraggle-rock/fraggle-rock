@@ -265,7 +265,6 @@ module.exports = {
       });
     }
     if(meshObject[4] && meshObject[4].play) {
-      console.log('meshobject ', meshObject);
       audio.smashBrawl.shootRound(meshObject[4].play, 1, 0.08, 0, 0 );
     }
     if (meshObject[3]) {
