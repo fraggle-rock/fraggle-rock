@@ -20,8 +20,6 @@ class CreateMatch extends React.Component {
   }
 
   StartMatch() {
-    console.log('click')
-
     const screenOverlay = document.getElementById( 'screenOverlay' );
     const menuContainer = document.getElementById( 'menuContainer' );
     const hud = document.getElementById( 'HUD' );
