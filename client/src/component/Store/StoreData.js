@@ -21,7 +21,7 @@ var StoreData = props => {
   }
 
   return (
-  	<div>
+  	<div id='Skin'>
   	  <div>
   	    <img id='SkinPic' src={props.skins.skinPic} />
   	  </div>
