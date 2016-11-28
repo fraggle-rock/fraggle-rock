@@ -19,14 +19,13 @@ class JoinMatch extends React.Component {
       url: '/api/liveGames',
       method: 'GET',
       success: (data) => {
-        this.setState({liveMatches: data})
+        this.setState({liveMatches: JSON.parse(data)})
       }
     })
   }
 
   backToHome() {
-    browserHistory.push('/Home')
-
+    browserHistory.push('/Home');
   }
 
   render() {

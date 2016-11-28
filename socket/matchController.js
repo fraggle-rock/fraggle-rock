@@ -1,6 +1,6 @@
 "use strict";
 const liveMatches = {};
-const Match = require('../models/match.js');
+const Match = require('./match.js');
 
 const deleteMatch = function deleteMatch(matchId) {
   let match;
@@ -26,16 +26,15 @@ module.exports = {
     liveMatches[match.guid] = match;
     return match;
   },
-  getMatch: function getMatch(matchId) { //TODO fix to find match by id
+  getMatch: function getMatch(matchId) {
     return liveMatches[matchId];
   },
-  liveGames: function liveGames(res) {
-    // return res.send(JSON.stringify(liveMatches))
+  liveGames: function liveGames() {
     var liveMatchesArray = []
     for(var key in liveMatches) {
       liveMatchesArray.push(key)
     }
-    res.send(liveMatchesArray)
+    return liveMatchesArray;
   },
   deleteMatch: deleteMatch,
 };
