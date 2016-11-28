@@ -34,7 +34,7 @@ app.listen(process.env.PORT || 9999, () => {
   console.log(`listening on port ${process.env.PORT || 9999}`);
 });
 
-app.get('*', (req, res) => res.sendFile('index.html', {root: './client'}))
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, './../client/index.html')));
 // userController.insertUser();
 // gameController.insertGame();
 // scoreController.insertScore();
