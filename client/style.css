@@ -555,13 +555,7 @@ canvas {
 }
 
 .mapThumb {
-<<<<<<< HEAD
-  height: 150px;
-  width: 150px;
-  margin-bottom: 2px;
-  border-radius: 20px;
   pointer-events: none;
-=======
   height: auto;
   width: 173px;
   margin-bottom: 5px;
@@ -572,19 +566,15 @@ canvas {
 
 .mapThumb:hover {
   border: 2px solid black;
->>>>>>> db517d23f07451056666baef8ab9e980cea9a2b6
 }
 
 #selectMapPreview {
   width: 173px;
   height: auto;
   margin: 0 auto;
-<<<<<<< HEAD
-  padding-top: 10px;
   pointer-events: none;
-=======
   padding: 10px 0 3px;
->>>>>>> db517d23f07451056666baef8ab9e980cea9a2b6
+
 }
 
 #selectedMap {
