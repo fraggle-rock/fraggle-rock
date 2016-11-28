@@ -49,9 +49,10 @@ io.on('connection', (socket) => {
     const scene = fullScene.scene;
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
+    const spawnPoints = fullScene.spawnPoints;
     socket.join(match.guid);
     match.loadFullScene(scene, player, io);
-    match.startPhysics();
+    match.startPhysics(spawnPoints);
     match.killFloor();
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);

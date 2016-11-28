@@ -80,11 +80,11 @@ module.exports = {
     camera.quaternion = game.camera.quaternion;
     camera.direction = game.camera.getWorldDirection();
 
-    // declare your color and skin
-    camera.color = 'red';
+    // declare your name and skin
     camera.skinPath = userProfile.ChosenSkin;
+    camera.name = userProfile.User;
 
-    const fullScene = {camera: camera, scene: game.scene.toJSON()};
+    const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints};
     socket.emit('fullScene', fullScene);
   },
   joinMatch: function joinMatch(matchNumber, game) {
