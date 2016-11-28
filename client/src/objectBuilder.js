@@ -1,6 +1,7 @@
 const THREE = require('three');
 const config = require('../../config/config.js');
-const objectLoader = require('./objLoader.js')
+const objectLoader = require('./objLoader.js');
+const userProfile = require('./component/userProfile');
 
 const LoadTexture = function LoadTexture(texturePath) {
   return new THREE.TextureLoader().load(texturePath);
@@ -104,8 +105,13 @@ const BoxGeometry = function BoxGeometry(size) {
 
 
 const addShadow = function addShadow(mesh) {
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
+  if (userProfile.graphics > 0) {
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+  } else {
+    mesh.castShadow = false;
+    mesh.receiveShadow = false;
+  }
 }
 
 const initPosition = function initPosition(mesh, position, quaternion) {

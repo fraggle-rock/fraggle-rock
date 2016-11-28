@@ -17,33 +17,33 @@ const buildLevelOne = function buildLevelOne(options) {
   // builds square grass floor of A by A with a rock center of B by B, at y height.
   // Blocks will be width x height x depth;
   helpers.buildFloor(20, 20, 0, -5, 0, 6, 6, 6, scene);
-  helpers.buildFloor(4, 4, 50, 3, 50, 4, 10, 4, scene);
-  helpers.buildFloor(4, 4, -50, 3, -50, 4, 10, 4, scene);
-  helpers.buildFloor(6, 6, 50, 3, -50, 4, 10, 4, scene);
-  helpers.buildFloor(6, 6, -50, 3, 50, 4, 10, 4, scene);
+  helpers.buildFloor(4, 4, 52, 3, 52, 4, 10, 4, scene);
+  helpers.buildFloor(4, 4, -52, 3, -52, 4, 10, 4, scene);
+  helpers.buildFloor(4, 4, 52, 3, -52, 4, 10, 4, scene);
+  helpers.buildFloor(4, 4, -52, 3, 52, 4, 10, 4, scene);
 
   //Side Panels
   mesh = objectBuilder.sidePanel(
     {width: 48, height: 6, depth: 6},
-    {x: 0, y: 2, z: -61},
+    {x: 0, y: 2.2, z: -61},
     {x: 0, y: 0, z: 0, w: 0 });
   scene.add(mesh);
 
   mesh = objectBuilder.sidePanel(
     {width: 48, height: 6, depth: 6},
-    {x: 0, y: 2, z: 61},
+    {x: 0, y: 2.2, z: 61},
     {x: 0, y: 0, z: 0, w: 0 });
   scene.add(mesh);
 
   mesh = objectBuilder.sidePanel(
     {width: 6, height: 6, depth: 48},
-    {x: 61, y: 2, z: 0},
+    {x: 61, y: 2.2, z: 0},
     {x: 0, y: 0, z: 0, w: 0 });
   scene.add(mesh);
 
   mesh = objectBuilder.sidePanel(
     {width: 6, height: 6, depth: 48},
-    {x: -61, y: 2, z: 0},
+    {x: -61, y: 2.2, z: 0},
     {x: 0, y: 0, z: 0, w: 0 });
   scene.add(mesh);
 
