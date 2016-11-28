@@ -5,7 +5,11 @@ module.exports = {
   ChosenSkin: null,
   color: 'teal',
   hat: 'ha2.obj',
-  maps: [{name: 'Fraggle Rock', thumb: '../../../textures/rockygrass.jpg'}, {name: 'Dawn Mountain', thumb: '../../../textures/dawnmountainThumb.jpg'}, {name: 'High Noon', thumb: '../../../textures/dawnmountain-zneg.jpg'}],
+  maps: [
+	  {name: 'Fraggle Rock', thumb: '../../../textures/fraggleRockThumb.jpg'},
+	  {name: 'Dawn Mountain', thumb: '../../../textures/dawnMountainThumb.jpg'},
+	  {name: 'High Noon', thumb: '../../../textures/highNoonThumb.jpg'}
+  ],
   map: 0,
   graphics: 'high'
 }
