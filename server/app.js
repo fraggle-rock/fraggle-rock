@@ -27,6 +27,7 @@ app.use('/api', requestHandler.userHandler);
 app.use('/api', requestHandler.scoreHandler);
 app.use('/api', requestHandler.gameHandler);
 app.use('/api', requestHandler.leaderBoardHandler);
+app.use('/api', requestHandler.transactionHandler);
 app.use('/api', matchHandler);
 
 app.use(express.static(path.join(__dirname, './../client')));
