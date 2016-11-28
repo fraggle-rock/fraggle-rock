@@ -1,6 +1,19 @@
-const io = require('socket.io')(3333);
+const httpPort = 3332;
+const socketPort = 3333;
+const io = require('socket.io')(socketPort);
 const matchController = require('./matchController.js');
+const http = require('http');
 
+const server = http.createServer((req, res) => {
+  if (req.url === '/liveGames') {
+    const liveGames = matchController.liveGames();
+    res.end(JSON.stringify(liveGames));
+  }
+});
+server.listen(httpPort);
+console.log(`SocketServer http listening on ${httpPort}`);
+
+console.log(`SocketServer socket listening on ${socketPort}`);
 io.on('connection', (socket) => {
 
   socket.on('fullScene', function (fullScene) {
