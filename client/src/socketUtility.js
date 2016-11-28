@@ -20,10 +20,6 @@ const addUpdateListeners = function addUpdateListeners(socket) {
     socket.emit('poll', sceneUtility.getCamera().uuid.slice(0, config.uuidLength));
     sceneUtility.loadMatchInfo(JSON.parse(matchInfo));
   });
-  socket.on('playSound', function(play) {
-    const jsonObj = JSON.parse(play);
-    audio.smashBrawl.shootRound(jsonObj.play, 1, 0.08, 0, 0);
-  });
 }
 
 const roundToDec = function round(num, decimals) {
@@ -84,11 +80,11 @@ module.exports = {
     camera.quaternion = game.camera.quaternion;
     camera.direction = game.camera.getWorldDirection();
 
-    // declare your color and skin
-    camera.color = 'red';
+    // declare your name and skin
     camera.skinPath = userProfile.ChosenSkin;
+    camera.name = userProfile.User;
 
-    const fullScene = {camera: camera, scene: game.scene.toJSON()};
+    const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints};
     socket.emit('fullScene', fullScene);
   },
   joinMatch: function joinMatch(matchNumber, game) {

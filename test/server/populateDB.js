@@ -1,29 +1,50 @@
 const userModel = require('./../../server/db/models/UserModel');
 const gameModel = require('./../../server/db/models/GameModel');
 const scoreModel = require('./../../server/db/models/ScoreModel');
+const transactionModel = require('./../../server/db/models/TransactionModel');
 const scoreController = require('./../../server/db/controllers/ScoreController');
 const gameController = require('./../../server/db/controllers/GameController');
 const userController = require('./../../server/db/controllers/UserController');
+const transactionController = require('./../../server/db/controllers/TransactionController');
 // const setupSchema = require('./setupSchema');
 
 const users = [
-  { username: 'riyaz',
+  { username: 'player1',
     email: 'riyaz@hackreactor.com',
     token: 'riyazToken',
-    facebookid: 'riyazFacebookid'
+    facebookid: 'riyazFacebookid',
+    map: '1',
+    graphicsSetting: 'high',
+    skins: ['1', '2'],
+    hats: ['1'],
   },
-  { username: 'will',
+  { username: 'player2',
     email: 'will@hackreactor.com',
     token: 'willToken',
-    facebookid: 'willFacebookid' },
-  { username: 'eric',
+    facebookid: 'willFacebookid',
+    map: '1',
+    graphicsSetting: 'high',
+    skins: ['1', '2'],
+    hats: ['1'],
+  },
+  { username: 'player3',
     email: 'eric@hackreactor.com',
     token: 'ericToken',
-    facebookid: 'ericFacebookid' },
-  { username: 'nick',
+    facebookid: 'ericFacebookid',
+    map: '2',
+    graphicsSetting: 'high',
+    skins: ['1', '2'],
+    hats: ['1'],
+  },
+  { username: 'player4',
     email: 'nick@hackreactor.com',
     token: 'nickToken',
-    facebookid: 'nickFacebookid' },
+    facebookid: 'nickFacebookid',
+    map: '2',
+    graphicsSetting: 'high',
+    skins: ['1', '2'],
+    hats: ['1'],
+  },
 ];
 
 const games = [
@@ -55,27 +76,64 @@ const scores = [
     score: 32,
   },
 ];
-userModel.sync()
-.then(() => {
-  gameModel.sync()
+
+const transactions = [
+  {
+    username: 'player1',
+    points: 100,
+  },
+  {
+    username: 'player2',
+    points: 100,
+  },
+  {
+    username: 'player3',
+    points: 100,
+  },
+  {
+    username: 'player4',
+    points: 100,
+  },
+  {
+    username: 'player1',
+    points: -30,
+  },
+  {
+    username: 'player2',
+    points: -35,
+  },
+  {
+    username: 'player3',
+    points: -40,
+  },
+  {
+    username: 'player4',
+    points: -25,
+  },
+]
+const populateData = function populateData() {
+  userModel.sync()
   .then(() => {
-    scoreModel.sync()
+    gameModel.sync()
     .then(() => {
-      scoreController.clear()
+      scoreModel.sync()
       .then(() => {
-        gameController.clear()
+        scoreController.clear()
         .then(() => {
-          userController.clear()
+          gameController.clear()
           .then(() => {
-            users.forEach((user, index) => {
-              userController.insertUser(user)
-              .then((userresponse) => {
-                console.log('User Created ', userresponse.id);
-                gameController.insertGame({ uuid: games[index].uuid, user_id: userresponse.id })
-                .then((gameresponse) => {
-                  scoreController.insertScore({ score: scores[index].score,
-                    user_id: userresponse.id,
-                    game_id: gameresponse.id });
+            userController.clear()
+            .then(() => {
+              users.forEach((user, index) => {
+                userController.insertUser(user)
+                .then((userresponse) => {
+                  console.log('User Created ', userresponse.id);
+                  gameController.insertGame({ uuid: games[index].uuid, user_id: userresponse.id })
+                  .then((gameresponse) => {
+                    scoreController.insertScore({ score: scores[index].score,
+                      user_id: userresponse.id,
+                      game_id: gameresponse.id });
+                  });
                 });
               });
             });
@@ -84,7 +142,27 @@ userModel.sync()
       });
     });
   });
-});
+};
+populateData();
+const populateScores = function populateScores() {
+  console.log('Populate Done ');
+  transactionModel.sync()
+  .then(() => {
+    transactionController.clear()
+    .then(() => {
+      transactions.forEach((transaction, index) => {
+        userController.searchUserByUsername(transaction.username)
+        .then((user) => {
+          transactionController.insertTransaction({ user_id: user.id,
+            transaction: transaction.points });
+        });
+      });
+    });
+  });
+};
+setTimeout(populateScores, 3000);
+
+
 // userController.searchUserByUsername('riyaz')
 // .then((user) => {
 //   const game = { uuid: 'abc-123-456', user_id: user.id };

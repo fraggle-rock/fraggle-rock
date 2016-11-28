@@ -9,6 +9,11 @@ const getGuid = function getGuid() {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
   return [0, 0, 0, 0].map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
+let collisionSound;
+
+const random = function random(low, high) {
+  return Math.floor(Math.random() * (high - low + 1)) + low;
+}
 
 module.exports = function Match(deleteMatch) {
   this.guid = getGuid();
@@ -79,8 +84,9 @@ const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
   }
 };
 
-const startPhysics = function startPhysics() {
+const startPhysics = function startPhysics(spawnPoints) {
   const context = this;
+  this.spawnPoints = spawnPoints;
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
@@ -138,12 +144,19 @@ const startPhysics = function startPhysics() {
     const update = [boxes, balls, players];
     if (clear.length > 0) {
       update.push(clear);
+    } else {
+      update.push([]);
     }
+    if(collisionSound !== undefined) {
+      update.push(collisionSound);
+      collisionSound = undefined;
+    }
+
     if (players.length > 0) {
       if (context.sendFull || clear.length > 0) {
         context.io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
-        context.io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+         context.io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
       }
     } else {
       context.deleteMatch(context.guid);
@@ -160,7 +173,11 @@ const startPhysics = function startPhysics() {
       if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
         //PLAYER DEATH & RESPAWN
         client.lives--;
-        clientBody.position.set(0,10,0);
+
+        const spawn = context.spawnPoints[random(0, context.spawnPoints.length - 1)]
+
+        clientBody.position.set(spawn[0], spawn[1], spawn[2]);
+
         clientBody.velocity.set(0,0,0);
         context.sendPoll();
         continue;
@@ -214,17 +231,8 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
+  ballBody.uuid = camera.uuid;
   const context =this;
-
-  ballBody.addEventListener("collide",function(e){
-
-    if(e.body.userData && e.body.userData.shapeType >= 3) {
-      console.log('Sound Emitted ', e.body.userData.shapeType);
-      context.io.to(context.guid).emit('playSound', JSON.stringify({ play: e.body.userData.shapeType }));
-    } else if(e.body.mass === config.playerModelMass && e.target.mass === config.ballMass) {
-      // context.io.to(context.guid).emit('playSound', JSON.stringify({ play: 7 }));
-    }
-  });
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
@@ -232,6 +240,16 @@ const shootBall = function shootBall(camera) {
   y += shootDirection.y * 2.5;
   z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
+
+  ballBody.addEventListener("collide",function(e){
+    if(e.body.userData && e.body.userData.shapeType >= 3) {
+      collisionSound = { play: e.body.userData.shapeType };
+    } else if( e.target.uuid && (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
+    && (e.target.uuid !== e.body.uuid)) {
+      collisionSound = { play: 7 };
+    }
+  });
+
 };
 
 const loadNewClient = function loadNewClient(player) {
@@ -247,6 +265,7 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.addShape(ballShape);
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
+  ballBody.uuid = player.object.uuid;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
   player.name = player.name || 'Guest';

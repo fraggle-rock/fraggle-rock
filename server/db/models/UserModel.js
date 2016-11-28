@@ -7,6 +7,18 @@ const User = db.define('User', {
     autoIncrement: true,
     primaryKey: true,
   },
+  map: {
+    type: Sequelize.STRING,
+  },
+  graphicsSetting: {
+    type: Sequelize.STRING,
+  },
+  skins: {
+    type: Sequelize.ARRAY(Sequelize.STRING),
+  },
+  hats: {
+    type: Sequelize.ARRAY(Sequelize.STRING),
+  },
   facebookid: {
     type: Sequelize.STRING,
   },

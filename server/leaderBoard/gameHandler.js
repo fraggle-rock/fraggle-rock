@@ -8,7 +8,7 @@ const router = express.Router();
 router.route('/addGame')
 .post((req, res) => {
   // search User and then add gameMode
-  if (req.body.username) {
+  if (req.body.username && req.body.uuid) {
     UserController.searchUserByUsername(req.body.username)
     .then((user) => {
       const game = { uuid: req.body.uuid, user_id: user.id };
