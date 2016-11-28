@@ -8,7 +8,7 @@ import CreateMatch from './component/CreateMatch/CreateMatch.js';
 import JoinMatch from './component/JoinMatch/JoinMatch.js';
 import LeaderBoard from './component/LeaderBoard/LeaderBoard.js';
 import Store from './component/Store/Store.js';
-import SelectSkin from './component/SelectSkin/SelectSkin.js';
+import SelectSkin from './component/SelectSkin/selectSkin.js';
 import Settings from './component/Settings/Settings.js';
 
 ReactDOM.render((
