@@ -31,10 +31,10 @@ class Home extends React.Component {
     return (
       <div id='HomePage'>
         <div id='HomeScene'>
-          <img src='../../../textures/logotext.png' />
+          <img src='../../../textures/logotext.png' id='NonSelect'/>
           <div id="joinButtons">
-            <button id="createMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
-            <button id="joinMatch" onClick={this.JoinMatch} className='btn btn-primary'>Join Match</button>
+            <button id="joinMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
+            <button id="joinExisting" onClick={this.JoinMatch} className='btn btn-primary'>Join Match</button>
           </div>
           <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View LeaderBoards</button>
         </div>

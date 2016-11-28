@@ -4,6 +4,7 @@ module.exports = {
   Skins: [],
   ChosenSkin: null,
   color: 'teal',
+  experience: 2000,
   hat: 'ha2.obj',
   maps: [
 	  {name: 'Fraggle Rock', thumb: '../../../textures/fraggleRockThumb.jpg'},

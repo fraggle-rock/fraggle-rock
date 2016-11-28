@@ -35,6 +35,7 @@ class LogIn extends React.Component {
           if(data.length == 0) {
             var username = prompt('Welcome to Smash Ball Brawl. Please Enter a UserName');
             if(username !== null) {
+              userProfile.User = username;
               var dataSent = {                
                   username: username,
                   token: e.accessToken,
@@ -50,11 +51,14 @@ class LogIn extends React.Component {
                   console.log(error)
                 },
                 success: (data) => {
+                  userProfile.experience = 200;
                   browserHistory.push('Home')
                 }
               }) 
             }
           } else {
+            userProfile.User = data.username;
+            // userProfile.experience = data.experience;
             browserHistory.push('Home')
           }
         }
@@ -65,7 +69,7 @@ class LogIn extends React.Component {
   render() {
       return (
         <div className='logInContainer'>
-          <img src='../../../textures/logotext.png' />
+          <img src='../../../textures/logotext.png' id='NonSelect'/>
           <div id='LogIn'>
             <div id='Facebook'>
               <FacebookLogin
