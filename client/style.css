@@ -62,6 +62,10 @@ canvas {
   align-items: center;
 }
 
+.btn {
+  transition: all .25s;
+}
+
 #screenOverlay {
   position: absolute;
   width: 100%;
@@ -513,14 +517,14 @@ canvas {
   background-color: rgb(255, 255, 255);
   border-radius: 20px;
   width: 560px;
-  height: 240px;
+  height: 215px;
   border: 1px solid black;
   margin: auto;
 }
 
 .mapSelectContainer {
   width: 560px;
-  height: 240px;
+  height: 210px;
   border-radius: 20px
   background-color: white;
   margin: auto;
@@ -528,35 +532,41 @@ canvas {
 
 .mapThumbContainer {
   width: 560px;
-  height: 220px;
-  margin: 15px 0 0 0;
+  height: 210px;
+  margin: 5px 0 0 0;
 }
 
 .mapThumbBox {
   display: inline-block;
-  margin: 10px;
+  margin: 5px;
   cursor: pointer;
 }
 
 .mapThumb {
-  height: 150px;
-  width: 150px;
-  margin-bottom: 2px;
-  border-radius: 20px;
+  height: auto;
+  width: 173px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  border: 2px solid white;
+  transition: border .25s;
+}
+
+.mapThumb:hover {
+  border: 2px solid black;
 }
 
 #selectMapPreview {
-  width: 150px;
-  border-radius: 20px;
+  width: 173px;
+  height: auto;
   margin: 0 auto;
-  padding-top: 10px;
+  padding: 10px 0 3px;
 }
 
 #selectedMap {
   margin: 0 auto;
-  height: 180px;
-  width: 180px;
-  border-radius: 20px;
+  height: 190px;
+  width: 185px;
+  border-radius: 10px;
   background-color: white;
   margin-bottom: 20px;
   cursor: pointer;
