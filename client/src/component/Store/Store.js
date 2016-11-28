@@ -9,7 +9,7 @@ class Store extends React.Component {
 	  this.state = {
 	    user: null,
       skins: [
-      {skinPic: '../../../textures/skins/SmileyFaceSkinPreview.jpg', skin: '/textures/skins/SmileyFace.jpg', name: 'Big Smile', price: 500},
+      {skinPic: '../../../textures/skins/SmileyFacePreview.jpg', skin: '/textures/skins/SmileyFace.jpg', name: 'Big Smile', price: 500},
       {skinPic: '../../../textures/skins/coolGuyPreview.jpg', skin: '/textures/skins/coolGuy.jpg', name: 'Cool Guy', price: 200},
       {skinPic: '../../../textures/skins/smilePreview.jpg', skin: '/textures/skins/smile.jpg', name: 'Smiley', price: 100},
       {skinPic: '../../../textures/skins/sillyPreview.jpg', skin: '/textures/skins/silly.jpg', name: 'Silly', price: 50},
@@ -21,11 +21,11 @@ class Store extends React.Component {
       {skinPic: '../../../textures/skins/heisenbergPreview.jpg', skin: '/textures/skins/heisenberg.jpg', name: 'Heisenberg', price: 600},
       {skinPic: '../../../textures/skins/heisenbergHardcorePreview.jpg', skin: '/textures/skins/heisenbergHardcore.jpg', name: 'Hardcore Heisenberg', price: 500},
       {skinPic: '../../../textures/skins/glassesStachePreview.jpg', skin: '/textures/skins/glassesStache.jpg', name: 'Glasses N Stache', price: 500},
-      {skinPic: '../../../textures/skins/SoccerBallSkinPreview.jpg', skin: '/textures/skins/soccer2.jpg', name: 'Socer Ball', price: 50},
-      {skinPic: '../../../textures/skins/superManSkinPreview.jpg', skin: '/textures/skins/superman.jpg', name: 'Superman', price: 400},
-      {skinPic: '../../../textures/skins/batmanSkinPreview.jpg', skin: '/textures/skins/Batman.jpg', name: 'Batman', price: 400},
-      {skinPic: '../../../textures/skins/8BallSkinPreview.jpg', skin: '/textures/skins/8ball.jpg', name: '8 Ball', price: 250},
-      {skinPic: '../../../textures/skins/CaptainAmericaSkinPreview.jpg', skin: '/textures/skins/CaptainAmerica.jpg', name: 'Captain America', price: 400},
+      {skinPic: '../../../textures/skins/SoccerBallPreview.jpg', skin: '/textures/skins/soccer2.jpg', name: 'Socer Ball', price: 50},
+      {skinPic: '../../../textures/skins/superManPreview.jpg', skin: '/textures/skins/superman.jpg', name: 'Superman', price: 400},
+      {skinPic: '../../../textures/skins/batmanPreview.jpg', skin: '/textures/skins/Batman.jpg', name: 'Batman', price: 400},
+      {skinPic: '../../../textures/skins/8BallPreview.jpg', skin: '/textures/skins/8ball.jpg', name: '8 Ball', price: 250},
+      {skinPic: '../../../textures/skins/CaptainAmericaPreview.jpg', skin: '/textures/skins/CaptainAmerica.jpg', name: 'Captain America', price: 400},
       {skinPic: '../../../textures/Skins/hat.jpg', skin: 'ha2.obj', name: 'The Hat', price: 1500, type: 'hat'}
       ],
       experience: 0,

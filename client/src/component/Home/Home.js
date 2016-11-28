@@ -34,7 +34,7 @@ class Home extends React.Component {
           <img src='../../../textures/logotext.png' id='NonSelect'/>
           <div id="joinButtons">
             <button id="joinMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
-            <button id="joinExisting" onClick={this.JoinExisting} className='btn btn-primary'>Join Match</button>
+            <button id="joinExisting" onClick={this.JoinMatch} className='btn btn-primary'>Join Match</button>
           </div>
           <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View LeaderBoards</button>
         </div>
