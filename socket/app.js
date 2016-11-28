@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
     const match = matchController.getNewMatch();
     socket.join(match.guid);
     match.loadFullScene(scene, player, io);
-    match.startPhysics();
+    match.startPhysics(fullScene.spawnPoints);
     match.killFloor();
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);
