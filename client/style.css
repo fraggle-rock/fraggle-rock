@@ -1,5 +1,5 @@
 /*
-font-family: 'Press Start 2P', cursive;
+font-family: 'Press Start 2P', sans-serif;
 font-family: 'Titillium Web', sans-serif;
 font-family: 'Roboto Mono', monospace;
 font-family: 'Play', sans-serif;
@@ -30,6 +30,22 @@ canvas {
   border: 1px solid teal;
 }*/
 
+@font-face {
+  font-family: 'Press Start 2P';
+  src:
+    local('Press Start 2P'),
+    url('./assets/PressStart2P.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'Play';
+  src:
+    local('Play'),
+    url('./assets/Play.ttf')
+    format('truetype');
+}
+
 
 body {
   background: url('./textures/menubg.jpg') no-repeat center center fixed;
@@ -37,6 +53,7 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  overflow: hidden;
 }
 
 canvas {
@@ -68,12 +85,19 @@ canvas {
 }
 
 #victoryBox {
-  margin: 10% auto 0;
+  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  display: block;
+  z-index: 4;
+  width: 100%;
+  height: 0;
+  opacity: 0;
   text-align: center;
   color: white;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', sans-serif;
   font-size: 40px;
-  transition: opacity 2s, margin-top 2s;
+  transition: all 2s;
 }
 
 #victor {
@@ -83,7 +107,7 @@ canvas {
 .playerBoxContainer {
   text-align: center;
   width: 380px;
-  height: 180px;
+  height: 90px;
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -94,12 +118,13 @@ canvas {
   display: inline-block;
   position: relative;
   text-align: left;
-  transition: margin-top 2s, opacity 1s;
+  transition: opacity 2s ease-in;
+  opacity: 0;
 }
 
 .playerBox > img {
   display: inline-block;
-  float:left;
+  float: left;
   z-index: 2;
   width: 80px;
   height: auto;
@@ -245,7 +270,7 @@ canvas {
   padding: 5px;
   margin: auto;
   color: white;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', sans-serif;
 }
 
 .resume:hover, .exit:hover {
@@ -315,11 +340,11 @@ canvas {
 }
 
 
-#testButtons {
+#joinButtons {
   text-align: center;
 }
 
-#joinMatch, #joinExisting {
+#createMatch, #joinMatch {
   margin-right: 5px;
 }
 
@@ -439,7 +464,7 @@ canvas {
 /*Create Match*/
 /*-----------------------------*/
 
-#CreateMatch {
+#CreateMatchContainer {
   margin-top: 14%;
   text-align: center;
 }
@@ -461,55 +486,87 @@ canvas {
 }
 
 #CreateMatchTitle {
+  padding: 10px;
   color: white;
 }
 
-}
 #StartMatch {
   margin-top: 40px;
 }
 
 #ChooseMap {
-  margin-bottom: 5px;
+  display: inline-block;
+  margin: 10px 0px;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+  -webkit-user-select: none; /* Chrome/Safari unSelectable Text*/
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
 }
 
-#Levels {
+#ChooseMap:hover {
+  color: skyblue;
+}
+
+#maps {
   background-color: rgb(255, 255, 255);
   border-radius: 20px;
-  margin: 0 33% 0 33%;
-  padding: 1px 0 13px 0;
+  width: 560px;
+  height: 240px;
+  border: 1px solid black;
+  margin: auto;
 }
 
-#DawnMountain {
+.mapSelectContainer {
+  width: 560px;
+  height: 240px;
+  border-radius: 20px
+  background-color: white;
+  margin: auto;
+}
+
+.mapThumbContainer {
+  width: 560px;
+  height: 220px;
+  margin: 15px 0 0 0;
+}
+
+.mapThumbBox {
+  display: inline-block;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.mapThumb {
   height: 150px;
   width: 150px;
   margin-bottom: 2px;
   border-radius: 20px;
 }
 
-#DawnMountainCreate {
+#selectMapPreview {
   width: 150px;
   border-radius: 20px;
   margin: 0 auto;
   padding-top: 10px;
 }
 
-#DawnMountainCreateBackground {
+#selectedMap {
   margin: 0 auto;
   height: 180px;
   width: 180px;
   border-radius: 20px;
-  background-color: rgb(255, 255, 255);
+  background-color: white;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
 #MapSelector {
   display: none;
+  text-align: center;
 }
 
-#ChooseMapTitle {
-  font-size: 20px;
-}
 
 /*Join Match*/
 /*-----------------------------------------------------------------*/

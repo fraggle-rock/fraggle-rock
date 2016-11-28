@@ -11,14 +11,14 @@ class Home extends React.Component {
       liveMatches: []
 	  };
     this.showLeaderBoards = this.showLeaderBoards.bind(this);
-    this.JoinExisting = this.JoinExisting.bind(this);
+    this.JoinMatch = this.JoinMatch.bind(this);
   }
 
   CreateMatch() {
     browserHistory.push('/CreateMatch')
   }
 
-  JoinExisting() {
+  JoinMatch() {
     browserHistory.push('/JoinMatch')
   }
 
@@ -32,9 +32,9 @@ class Home extends React.Component {
       <div id='HomePage'>
         <div id='HomeScene'>
           <img src='../../../textures/logotext.png' />
-          <div id="testButtons">
-            <button id="joinMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
-            <button id="joinExisting" onClick={this.JoinExisting} className='btn btn-primary'>Join Match</button>
+          <div id="joinButtons">
+            <button id="createMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
+            <button id="joinMatch" onClick={this.JoinMatch} className='btn btn-primary'>Join Match</button>
           </div>
           <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View LeaderBoards</button>
         </div>

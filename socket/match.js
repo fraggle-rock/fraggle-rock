@@ -11,6 +11,10 @@ const getGuid = function getGuid() {
 };
 let collisionSound;
 
+const random = function random(low, high) {
+  return Math.floor(Math.random() * (high - low + 1)) + low;
+}
+
 module.exports = function Match(deleteMatch) {
   this.guid = getGuid();
   this.open = true;
@@ -80,8 +84,9 @@ const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
   }
 };
 
-const startPhysics = function startPhysics() {
+const startPhysics = function startPhysics(spawnPoints) {
   const context = this;
+  this.spawnPoints = spawnPoints;
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
@@ -168,7 +173,11 @@ const startPhysics = function startPhysics() {
       if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
         //PLAYER DEATH & RESPAWN
         client.lives--;
-        clientBody.position.set(0,10,0);
+
+        const spawn = context.spawnPoints[random(0, context.spawnPoints.length - 1)]
+
+        clientBody.position.set(spawn[0], spawn[1], spawn[2]);
+
         clientBody.velocity.set(0,0,0);
         context.sendPoll();
         continue;
