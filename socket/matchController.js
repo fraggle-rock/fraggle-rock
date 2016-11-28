@@ -26,11 +26,10 @@ module.exports = {
     liveMatches[match.guid] = match;
     return match;
   },
-  getMatch: function getMatch(matchId) { //TODO fix to find match by id
+  getMatch: function getMatch(matchId) {
     return liveMatches[matchId];
   },
   liveGames: function liveGames() {
-    // return res.send(JSON.stringify(liveMatches))
     var liveMatchesArray = []
     for(var key in liveMatches) {
       liveMatchesArray.push(key)
