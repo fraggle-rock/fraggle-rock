@@ -40,17 +40,16 @@ class Profile extends React.Component {
           </div>
           <div id='username'>
             {userProfile.User}
-            <button id='SettingsButton' className='btn-xs btn-danger glyphicon glyphicon-cog' onClick={this.Settings}></button>
           </div>
           <div id='ProfileButtons'>
             <div id='SignOut'>
               <button className='btn-xs btn-primary' onClick={this.signOut}>Sign Out</button>
             </div>
+            <div id='Settings'>
+              <button id='SettingsButton' className='btn-xs btn-warning glyphicon glyphicon-cog' onClick={this.Settings}></button>
+            </div>
             <div id='storeButtonHome'>
               <button className='btn-xs btn-success' onClick={this.store}><span className='glyphicon glyphicon-shopping-cart' /></button>
-            </div>
-            <div id='SelectSkin'>
-              <button className='btn-xs btn-warning' onClick={this.SelectSkin}>Select a Skin</button>
             </div>
           </div>
         </div>

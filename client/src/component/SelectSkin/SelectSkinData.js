@@ -6,10 +6,10 @@ var SelectSkinData = props => {
 	var addSkin = function() {
     if(props.skins.type === 'hat') {
       userProfile.hat = props.skins.skin
-      browserHistory.push('Home')
+      browserHistory.goBack()
     } else {
       userProfile.ChosenSkin = props.skins.skin; 
-      browserHistory.push('Home')   
+      browserHistory.goBack()   
     }
   }
 

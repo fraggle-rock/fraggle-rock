@@ -13,7 +13,7 @@ class SelectSkin extends React.Component {
   }
 
   backToHome() {
-    browserHistory.push('/Home');
+    browserHistory.goBack();
   }
 
   render() {
@@ -23,7 +23,7 @@ class SelectSkin extends React.Component {
             <div>
               <h1 id='Title'>Select Skin</h1>
             </div>
-            <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+            <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>Go Back</button>
             <div id='Skins'>
               {userProfile.Skins.map((skins) => <SelectSkinData key={skins.skin} skins={skins} />)}
             </div>

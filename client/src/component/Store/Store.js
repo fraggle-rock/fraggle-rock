@@ -40,7 +40,6 @@ class Store extends React.Component {
   }
 
   buyExperience() {
-    
   }
 
   backToStore() {

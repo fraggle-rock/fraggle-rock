@@ -10,6 +10,7 @@ import LeaderBoard from './component/LeaderBoard/LeaderBoard.js';
 import Store from './component/Store/Store.js';
 import SelectSkin from './component/SelectSkin/selectSkin.js';
 import Settings from './component/Settings/Settings.js';
+import GameOver from './component/GameOver/GameOver.js';
 
 ReactDOM.render((
   <div>
@@ -23,6 +24,7 @@ ReactDOM.render((
         <Route path='Store' component={Store} />
         <Route path='SelectSkin' component={SelectSkin} />
         <Route path='Settings' component={Settings} />
+        <Route path='GameOver' component={GameOver} />
       </Route>
     </Router>
   </div>

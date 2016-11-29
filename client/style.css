@@ -361,7 +361,7 @@ canvas {
 
 #username {
   float: right;
-  width: 190px;
+  width: 150px;
   font-size: 20px;
 }
 
@@ -413,6 +413,11 @@ canvas {
   margin-right: 5px;
 }
 
+#Settings {
+  float: right;
+  margin: 3px 5px 0 0;
+}
+
 #SignOut {
   margin-top: 4px;
   float: right;
@@ -424,10 +429,10 @@ canvas {
   margin-right: 5px;
 }
 
-#SelectSkin {
-  margin-top: 4px;
+#SelectSkinButtonCreate {
+  display: inline-block;
   float: right;
-  margin-right: 5px;
+  margin: 10px 10px 0 0px;
 }
 
 /*LeaderBoard CSS*/
@@ -498,7 +503,6 @@ canvas {
   background: linear-gradient(37deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* w3c */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020D3D', endColorstr='#1670BA',GradientType=0 );
   border-radius: 20px;
-  opacity: 0.90;
 }
 
 #CreateMatchTitle {
@@ -532,6 +536,11 @@ canvas {
   height: 215px;
   border: 1px solid black;
   margin: auto;
+}
+
+#HomeButtonCreate {
+  float: left;
+  margin: 10px 0 0 10px;
 }
 
 .mapSelectContainer {
