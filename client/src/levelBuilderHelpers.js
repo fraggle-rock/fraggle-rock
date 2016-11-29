@@ -1,5 +1,6 @@
 const THREE = require('three');
 const objectBuilder = require('./objectBuilder');
+const userProfile = require('./component/userProfile');
 
 const random = function random(low, high) {
   return Math.floor(Math.random() * (high - low + 1)) + low;
@@ -34,14 +35,22 @@ module.exports = {
     let sun = new THREE.DirectionalLight();
     sun.position.set(x, y, z);
     sun.intensity = intensity;
-    sun.castShadow = true;
-    sun.shadow.mapSize.x = sun.shadow.mapSize.y = 2048;
-    sun.shadow.camera.near = 10;
-    sun.shadow.camera.far = 400;
-    sun.shadow.camera.left = -200;
-    sun.shadow.camera.right = 200;
-    sun.shadow.camera.top = 200;
-    sun.shadow.camera.bottom = -200;
+
+    if (userProfile.graphics > 0) {
+      sun.castShadow = true;
+      sun.shadow.mapSize.x = sun.shadow.mapSize.y = 512 + 512 * userProfile.graphics;
+
+      sun.shadow.camera.near = 10;
+      sun.shadow.camera.far = 400;
+      sun.shadow.camera.left = -200;
+      sun.shadow.camera.right = 200;
+      sun.shadow.camera.top = 200;
+      sun.shadow.camera.bottom = -200;
+
+    } else {
+      sun.castShadow = false;
+    }
+
     return sun;
   },
 

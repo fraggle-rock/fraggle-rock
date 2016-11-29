@@ -2,10 +2,10 @@ import React from 'react';
 import MapSelector from './MapSelector.js'
 import { browserHistory } from 'react-router';
 import userProfile from '../userProfile.js';
-import SkinSelector from './SkinSelector.js';
 import Profile from '../Home/Profile.js';
 const clientScene = require('../../clientScene.js');
 const sceneUtility = require('../../sceneUtility.js');
+const socketUtility = require('../../socketUtility');
 
 class CreateMatch extends React.Component {
   constructor(props) {
@@ -47,8 +47,8 @@ class CreateMatch extends React.Component {
       }
     })
 
-    const button = document.getElementById('resume');
-    button.addEventListener('click', function(e) {
+    const resume = document.getElementById('resume');
+    resume.addEventListener('click', function(e) {
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
       screenOverlay.style.display = 'box';
@@ -60,6 +60,18 @@ class CreateMatch extends React.Component {
         menuContainer.style.display = '';
         hud.style.display = 'none';
       }
+    });
+
+    const exit = document.getElementById('exit');
+    console.log('exit', exit)
+    exit.addEventListener('click', function(e) {
+      console.log('click')
+      screenOverlay.style.display = '-webkit-box';
+      screenOverlay.style.display = '-moz-box';
+      screenOverlay.style.display = 'box';
+      menuContainer.style.display = 'none';
+      socketUtility.quitMatch();
+      browserHistory.push('GameOver');
     });
 
     document.getElementById( 'CreateMatchContainer' ).style.display = 'none';
@@ -88,31 +100,35 @@ class CreateMatch extends React.Component {
     browserHistory.push('/Home')
   }
 
+  selectSkin() {
+    browserHistory.push('/SelectSkin')
+  }
+
   render() {
     return (
       <div id='HomeBackground'>
         <div id='CreateMatchContainer'>
+          <div id='Profile'>
+            <Profile />
+          </div>
           <div id='CreateMatchBackground'>
-          <h1 id='CreateMatchTitle'>Create Match</h1>
-            <div>
-              <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-            </div>
-          <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
+            <button id='SelectSkinButtonCreate' className='btn btn-warning' onClick={this.selectSkin}>Select Skin</button>
+            <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+            <h1 id='CreateMatchTitle'>Create Match</h1>
 
-          <div id='MapSelector'>
-            <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />
+            <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
+
+            <div id='MapSelector'>
+              <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />
+            </div>
+            <div id='selectedMap' onClick={this.ChooseMap}>
+              <img id='selectMapPreview' src={this.state.maps[this.state.mapChoice].thumb} />
+              <div>{this.state.maps[this.state.mapChoice].name}</div>
+            </div>
+            <div id='StartMatch'>
+              <button id='Start'className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
+            </div>
           </div>
-          <div id='selectedMap' onClick={this.ChooseMap}>
-            <img id='selectMapPreview' src={this.state.maps[this.state.mapChoice].thumb} />
-            <div>{this.state.maps[this.state.mapChoice].name}</div>
-          </div>
-          <div id='StartMatch'>
-            <button id='Start'className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
-          </div>
-        </div>
-        <div id='Profile'>
-          <Profile />
-        </div>
         </div>
       </div>
     );

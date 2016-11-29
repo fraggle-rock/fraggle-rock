@@ -63,7 +63,66 @@ canvas {
 }
 
 .btn {
+  display: inline-block
+  font-weight: 400;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  border: 1px solid transparent;
+  padding: .5rem 1rem;
+  font-size: 1rem;
+  border-radius: .25rem;
   transition: all .25s;
+}
+
+.btn-primary {
+  color: white;
+  background-color: #0275d8;
+  border: 1px solid #0275d8;
+}
+
+.btn-primary:hover {
+  background-color: #025aa5;
+  border-color: #01549b;
+}
+
+.btn-success {
+  color: white;
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+}
+
+.btn-success:hover {
+  background-color: #449d44;
+  border-color: #419641;
+}
+
+.btn-warning {
+  color: white;
+  background-color: #f0ad4e;
+  border-color: #f0ad4e;
+}
+
+.btn-warning:hover {
+  background-color: #ec971f;
+  border-color: #eb9316;
+}
+
+.btn-danger {
+  color: white;
+  background-color: #d9534f;
+  border-color: #d9534f;
+}
+
+.btn-danger:hover {
+  background-color: #c9302c;
+  border-color: #c12e2a;
 }
 
 #screenOverlay {
@@ -277,7 +336,7 @@ canvas {
   font-family: 'Press Start 2P', sans-serif;
 }
 
-.resume:hover, .exit:hover {
+#resume:hover, #exit:hover {
   color: rgb(211,211,211);
 }
 
@@ -360,51 +419,36 @@ canvas {
 }
 
 #username {
-  float: right;
-  width: 190px;
+  float: left;
+  text-align: left;
+  width: 150px;
   font-size: 20px;
 }
 
-#SettingsButton {
-  float: right;
-}
-
-#username2 {
-  float: right;
-  width: 90px;
-  font-size: 20px;
+#ProfileHome {
+  display: flex;
+  align-items: center;
 }
 
 #ProfileImgHome {
   height: 53px;
   width: 53px;
+  margin-left: 5px;
   border-radius: 10px;
   border-width: 2px;
   border-style: outset;
   pointer-events: none;
 }
 
-#ProfileImgHome2 {
-  height: 50px;
-  width: 50px;
-}
-
-#Profile2 {
-  position: absolute;
-  top: 0px;
-  right: 10px;
-}
-
 #Profile {
   position: absolute;
-  top: 0px;
+  top: 10px;
   color: black;
-  right: 10px;
-  margin-right: 15px;
-  margin-top: 10px;
-  padding: 10px;
+  right: 25px;
+  padding: 5px;
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.8);
+  width: 190px;
 }
 
 #ImgHomeDiv {
@@ -413,21 +457,45 @@ canvas {
   margin-right: 5px;
 }
 
-#SignOut {
-  margin-top: 4px;
+.profileBox {
   float: right;
+  position: relative;
+  margin: 5px;
+}
+
+#Settings {
+  float: right;
+  margin: 3px 5px 0 0;
+}
+
+#SettingsButton {
+  float: left;
+  width: 15px;
+  height: 15px;
+  padding: 2px;
+  margin: 2px;
+  cursor: pointer;
 }
 
 #storeButtonHome {
-  margin-top: 4px;
-  float: right;
-  margin-right: 5px;
+  float: left;
+  width: 15px;
+  height: 15px;
+  padding: 2px;
+  margin: 2px;
+  cursor: pointer;
 }
 
-#SelectSkin {
-  margin-top: 4px;
+#SignOut {
+  margin: 2px;
+  float: left;
+  cursor: pointer;
+}
+
+#SelectSkinButtonCreate {
+  display: inline-block;
   float: right;
-  margin-right: 5px;
+  margin: 10px 10px 0 0px;
 }
 
 /*LeaderBoard CSS*/
@@ -498,7 +566,6 @@ canvas {
   background: linear-gradient(37deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* w3c */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020D3D', endColorstr='#1670BA',GradientType=0 );
   border-radius: 20px;
-  opacity: 0.90;
 }
 
 #CreateMatchTitle {
@@ -534,9 +601,14 @@ canvas {
   margin: auto;
 }
 
+#HomeButtonCreate {
+  float: left;
+  margin: 10px 0 0 10px;
+}
+
 .mapSelectContainer {
   width: 560px;
-  height: 210px;
+  height: 220px;
   border-radius: 20px
   background-color: white;
   margin: auto;
@@ -544,7 +616,7 @@ canvas {
 
 .mapThumbContainer {
   width: 560px;
-  height: 210px;
+  height: 220px;
   margin: 5px 0 0 0;
 }
 
@@ -565,7 +637,7 @@ canvas {
 }
 
 .mapThumb:hover {
-  border: 2px solid black;
+  border-color: black;
 }
 
 #selectMapPreview {
@@ -639,7 +711,7 @@ canvas {
   text-align: center;
 }
 
-#SkinPic {
+.SkinPic {
   height: 140px;
   width: 140px;
   margin-top: 10px;
@@ -652,13 +724,18 @@ canvas {
   height: 250px;
   overflow:scroll;
   overflow-x:hidden;
-  width: 300px;
+  width: 580px;
   background-color: white;
+  opacity: 1;
 }
 
+.Skin {
+  display: inline-block;
+  width: 160px;
+  margin: 5px 0 15px;
+}
 
-
-#SkinName {
+.SkinName {
   margin: auto;
   color: white;
   font-size: 16px;
@@ -667,7 +744,7 @@ canvas {
 }
 
 
-#SkinCost {
+.SkinCost {
   color: black;
 }
 
@@ -683,15 +760,28 @@ canvas {
 /*Settings*/
 /*-----------------------------------------------------------------------*/
 
-#SettingsButtons {
-  margin-top: 20px;
+.SettingsButtons {
+  margin: 45px 0;
 }
 
-#HighSettings, #MedSettings, #LowSettings {
+.SettingsButtons > h3 {
+  margin: 15px 0;
+}
+
+.gfxBtn {
   display: inline-block;
+  margin: 0 5px;
+  width: 100px;
 }
 
-#HighSettings, #MedSettings {
-  margin-right: 10px;
+.gfxBtn:hover {
+  -webkit-box-shadow: 0px 4px 2px 0px rgba(255,255,255,.75), 0px -4px 2px 0px rgba(255,255,255,0.75);
+  -moz-box-shadow: 0px 4px 2px 0px rgba(255,255,255,0.75), 0px -4px 2px 0px rgba(255,255,255,0.75);
+  box-shadow: 0px 4px 2px 0px rgba(255,255,255,0.75), 0px -4px 2px 0px rgba(255,255,255,0.75);
 }
 
+.gfxBtnActive {
+  -webkit-box-shadow: 0px 4px 2px 0px rgba(255,255,0,.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
+  -moz-box-shadow: 0px 4px 2px 0px rgba(255,255,0,0.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
+  box-shadow: 0px 4px 2px 0px rgba(255,255,0,0.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
+}

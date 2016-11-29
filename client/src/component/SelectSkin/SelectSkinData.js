@@ -6,21 +6,21 @@ var SelectSkinData = props => {
 	var addSkin = function() {
     if(props.skins.type === 'hat') {
       userProfile.hat = props.skins.skin
-      browserHistory.push('Home')
+      browserHistory.goBack()
     } else {
-      userProfile.ChosenSkin = props.skins.skin; 
-      browserHistory.push('Home')   
+      userProfile.ChosenSkin = props.skins.skin;
+      browserHistory.goBack()
     }
   }
 
   return (
   	<div>
   	  <div>
-  	    <img id='SkinPic' src={props.skins.skinPic} />
+  	    <img className='SkinPic' src={props.skins.skinPic} />
   	  </div>
-  	  <div id='SkinName'>{props.skins.name}</div>
+  	  <div className='SkinName'>{props.skins.name}</div>
   	  <div>
-  	    <button id='SkinButton' className='btn btn-warning' onClick={addSkin}>Choose Skin</button>
+  	    <button className='SkinButton' className='btn btn-warning' onClick={addSkin}>Choose Skin</button>
   	  </div>
   	</div>
   )

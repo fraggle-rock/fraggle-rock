@@ -18,10 +18,10 @@ class Store extends React.Component {
       {skinPic: '../../../textures/skins/twirlyStachePreview.jpg', skin: '/textures/skins/twirlyStache.jpg', name: 'Twirly Stache', price: 200},
       {skinPic: '../../../textures/skins/googlyStachePreview.jpg', skin: '/textures/skins/googlyStache.jpg', name: 'Googly Stache', price: 300},
       {skinPic: '../../../textures/skins/gangstaStachePreview.jpg', skin: '/textures/skins/gangstaStache.jpg', name: 'Gangsta Stache', price: 400},
-      {skinPic: '../../../textures/skins/heisenbergPreview.jpg', skin: '/textures/skins/heisenberg.jpg', name: 'Heisenberg', price: 600},
-      {skinPic: '../../../textures/skins/heisenbergHardcorePreview.jpg', skin: '/textures/skins/heisenbergHardcore.jpg', name: 'Hardcore Heisenberg', price: 500},
+      {skinPic: '../../../textures/skins/heisenbergPreview.jpg', skin: '/textures/skins/heisenberg.jpg', name: 'Heisenberg', price: 300},
+      {skinPic: '../../../textures/skins/heisenbergHardcorePreview.jpg', skin: '/textures/skins/heisenbergHardcore.jpg', name: 'Hardcore', price: 500},
       {skinPic: '../../../textures/skins/glassesStachePreview.jpg', skin: '/textures/skins/glassesStache.jpg', name: 'Glasses N Stache', price: 500},
-      {skinPic: '../../../textures/skins/SoccerBallPreview.jpg', skin: '/textures/skins/soccer2.jpg', name: 'Socer Ball', price: 50},
+      {skinPic: '../../../textures/skins/SoccerBallPreview.jpg', skin: '/textures/skins/soccer.jpg', name: 'Socer Ball', price: 50},
       {skinPic: '../../../textures/skins/superManPreview.jpg', skin: '/textures/skins/superman.jpg', name: 'Superman', price: 400},
       {skinPic: '../../../textures/skins/batmanPreview.jpg', skin: '/textures/skins/Batman.jpg', name: 'Batman', price: 400},
       {skinPic: '../../../textures/skins/8BallPreview.jpg', skin: '/textures/skins/8ball.jpg', name: '8 Ball', price: 250},
@@ -40,7 +40,7 @@ class Store extends React.Component {
   }
 
   buyExperience() {
-    
+
   }
 
   backToStore() {
@@ -59,10 +59,10 @@ class Store extends React.Component {
             <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
             <button id='storeButton' className='btn btn-primary' onClick={this.backToStore}>STORE</button>
             <div id='buyButton'>
-              <button className='btn btn-success' onClick={this.buyExperience}>Buy Experience</button>
+              <button className='btn btn-success' onClick={this.buyExperience}>Buy ✪</button>
             </div>
             <div> You have <span> {userProfile.experience}</span> experience</div>
-            <div>You dont have enough experience to buy the item. To gain experience play more games or purchase them above.</div>
+            <div>You dont have enough ✪ to buy the item. To gain ✪, play more games or purchase them above.</div>
           </div>
         </div>
       )
@@ -74,18 +74,16 @@ class Store extends React.Component {
               <h1 id='Title'>Smash Ball Brawl Store</h1>
             </div>
             <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-            <div> You have <span> {userProfile.experience}</span> experience</div>
+            <div> You have <span> {userProfile.experience}</span>✪</div>
             <div id='Skins'>
               {this.state.skins.map((skins) => <StoreData key={skins.skin} skins={skins} state={this.state}/>)}
             </div>
           </div>
         </div>
-      );   
+      );
     }
 
   }
 }
-
-
 
 export default Store;
