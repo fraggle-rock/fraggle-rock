@@ -16,20 +16,20 @@ class Settings extends React.Component {
   }
 
   HighSettings() {
-    userProfile.graphics = 'High';
+    userProfile.graphics = 2;
     browserHistory.push('Home')
   }
 
   MedSettings() {
-    userProfile.graphics = 'Medium';
+    userProfile.graphics = 1;
     browserHistory.push('Home')
   }
 
   LowSettings() {
-    userProfile.graphics = 'Low';
+    userProfile.graphics = 0;
     browserHistory.push('Home')
   }
-  
+
   render() {
       return (
         <div id='Store'>
@@ -52,7 +52,7 @@ class Settings extends React.Component {
             </div>
           </div>
         </div>
-      );   
+      );
   }
 }
 

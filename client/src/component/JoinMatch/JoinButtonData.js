@@ -1,6 +1,8 @@
 import React from 'react';
+import { browserHistory } from 'react-router';
 const clientScene = require('../../clientScene.js');
 const sceneUtility = require('../../sceneUtility.js');
+const socketUtility = require('../../socketUtility');
 
 const JoinButtonData = props => {
   const JoinGame = function(game) {
@@ -31,8 +33,8 @@ const JoinButtonData = props => {
 		  }
    });
 
-    const button = document.getElementById('resume');
-    button.addEventListener('click', function(e) {
+    const resume = document.getElementById('resume');
+    resume.addEventListener('click', function(e) {
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
       screenOverlay.style.display = 'box';
@@ -46,6 +48,19 @@ const JoinButtonData = props => {
       }
     });
     document.getElementById('JoinMatchTitle').style.display = 'none';
+
+    const exit = document.getElementById('exit');
+    console.log('exit', exit)
+    exit.addEventListener('click', function(e) {
+      console.log('click')
+      screenOverlay.style.display = '-webkit-box';
+      screenOverlay.style.display = '-moz-box';
+      screenOverlay.style.display = 'box';
+      menuContainer.style.display = 'none';
+      socketUtility.quitMatch();
+      // browserHistory.push('GameOver');
+    });
+
 	  clientScene.joinGame(this);
   }
 
