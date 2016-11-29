@@ -6,6 +6,8 @@ services:
       - '.:/fraggle-rock'
     ports:
       - '80:9999'
+    env_file:
+      .env
     command: node fraggle-rock/server/app.js
   socket:
     image: mhart/alpine-node:6
