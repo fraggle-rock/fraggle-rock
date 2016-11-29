@@ -701,11 +701,20 @@ canvas {
   margin-top: 20px;
 }
 
-#HighSettings, #MedSettings, #LowSettings {
+.gfxBtn {
   display: inline-block;
+  margin: 0 5px;
+  width: 100px;
 }
 
-#HighSettings, #MedSettings {
-  margin-right: 10px;
+.gfxBtn:hover {
+  -webkit-box-shadow: 0px 4px 2px 0px rgba(255,255,255,.75), 0px -4px 2px 0px rgba(255,255,255,0.75);
+  -moz-box-shadow: 0px 4px 2px 0px rgba(255,255,255,0.75), 0px -4px 2px 0px rgba(255,255,255,0.75);
+  box-shadow: 0px 4px 2px 0px rgba(255,255,255,0.75), 0px -4px 2px 0px rgba(255,255,255,0.75);
 }
 
+.gfxBtnActive {
+  -webkit-box-shadow: 0px 4px 2px 0px rgba(255,255,0,.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
+  -moz-box-shadow: 0px 4px 2px 0px rgba(255,255,0,0.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
+  box-shadow: 0px 4px 2px 0px rgba(255,255,0,0.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
+}

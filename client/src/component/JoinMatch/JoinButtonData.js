@@ -58,7 +58,7 @@ const JoinButtonData = props => {
       screenOverlay.style.display = 'box';
       menuContainer.style.display = 'none';
       socketUtility.quitMatch();
-      // browserHistory.push('GameOver');
+      browserHistory.push('GameOver');
     });
 
 	  clientScene.joinGame(this);

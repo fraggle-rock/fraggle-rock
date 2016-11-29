@@ -15,18 +15,8 @@ class Settings extends React.Component {
     browserHistory.push('/Home');
   }
 
-  HighSettings() {
-    userProfile.graphics = 2;
-    browserHistory.push('Home')
-  }
-
-  MedSettings() {
-    userProfile.graphics = 1;
-    browserHistory.push('Home')
-  }
-
-  LowSettings() {
-    userProfile.graphics = 0;
+  click(btn) {
+    userProfile.graphics = btn;
     browserHistory.push('Home')
   }
 
@@ -40,15 +30,9 @@ class Settings extends React.Component {
             <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
             <h3>Choose Graphics Quality</h3>
             <div id='SettingsButtons'>
-              <div id='HighSettings'>
-                <button className='btn btn-success' onClick={this.HighSettings}>High</button>
-              </div>
-              <div id='MedSettings'>
-                <button className='btn btn-warning' onClick={this.MedSettings}>Medium</button>
-              </div>
-              <div id='LowSettings'>
-                <button className='btn btn-danger' onClick={this.LowSettings}>Low</button>
-              </div>
+              <button className={'btn btn-danger gfxBtn ' + (userProfile.graphics === 0 ? 'gfxBtnActive' : '')} onClick={() => this.click(0)}>Low</button>
+              <button className={'btn btn-warning gfxBtn ' + (userProfile.graphics === 1 ? 'gfxBtnActive' : '')} onClick={() => this.click(1)}>Medium</button>
+              <button className={'btn btn-success gfxBtn ' + (userProfile.graphics === 2 ? 'gfxBtnActive' : '')} onClick={() => this.click(2)}>High</button>
             </div>
           </div>
         </div>
