@@ -12,5 +12,5 @@ module.exports = {
 	  {name: 'High Noon', thumb: '../../../textures/highNoonThumb.jpg'}
   ],
   map: 0,
-  graphics: 'high'
+  graphics: 0
 }
