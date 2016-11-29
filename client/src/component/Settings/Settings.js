@@ -28,22 +28,22 @@ class Settings extends React.Component {
   render() {
       return (
         <div id='Store'>
-          <div id='CreateMatchBackground' >
+          <div id='CreateMatchBackground'>
             <div>
               <h1 id='Title'>Settings</h1>
             </div>
             <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
             <div className='SettingsButtons'>
               <h3>Graphics Quality</h3>
-              <button className={'btn gfxBtn ' + (userProfile.graphics === 0 ? 'btn-success' : '')} onClick={() => this.clickGfx(0)}>Low</button>
-              <button className={'btn gfxBtn ' + (userProfile.graphics === 1 ? 'btn-success' : '')} onClick={() => this.clickGfx(1)}>Medium</button>
+              <button className={'btn gfxBtn ' + (userProfile.graphics === 0 ? 'btn-danger' : '')} onClick={() => this.clickGfx(0)}>Low</button>
+              <button className={'btn gfxBtn ' + (userProfile.graphics === 1 ? 'btn-warning' : '')} onClick={() => this.clickGfx(1)}>Medium</button>
               <button className={'btn gfxBtn ' + (userProfile.graphics === 2 ? 'btn-success' : '')} onClick={() => this.clickGfx(2)}>High</button>
             </div>
 
             <div className='SettingsButtons'>
               <h3>Sound</h3>
+              <button className={'btn gfxBtn ' + (userProfile.sound === 0 ? 'btn-danger' : '')} onClick={() => this.clickSound(0)}>Off</button>
               <button className={'btn gfxBtn ' + (userProfile.sound === 1 ? 'btn-success' : '')} onClick={() => this.clickSound(1)}>On</button>
-              <button className={'btn gfxBtn ' + (userProfile.sound === 0 ? 'btn-success' : '')} onClick={() => this.clickSound(0)}>Off</button>
             </div>
           </div>
         </div>
