@@ -11,8 +11,8 @@ var StoreData = props => {
         browserHistory.push('Store')
       } else {
         userProfile.Skins.push(props.skins)
-        userProfile.experience = userProfile.experience - props.skins.price; 
-        browserHistory.push('Store')   
+        userProfile.experience = userProfile.experience - props.skins.price;
+        browserHistory.push('Store')
       }
     } else {
       props.state.noFunds = true;
@@ -21,14 +21,14 @@ var StoreData = props => {
   }
 
   return (
-  	<div id='Skin'>
+  	<div className='Skin'>
   	  <div>
-  	    <img id='SkinPic' src={props.skins.skinPic} />
+  	    <img className='SkinPic' src={props.skins.skinPic} />
   	  </div>
-  	  <div id='SkinName'>{props.skins.name}</div>
-      <div id='SkinCost'>Cost: <span>{props.skins.price}</span> xp</div>
+  	  <div className='SkinName'>{props.skins.name}</div>
+      <div className='SkinCost'>Cost: <span>{props.skins.price}</span>✪</div>
   	  <div>
-  	    <button id='SkinButton' className='btn btn-warning' onClick={addSkin}>Buy Skin</button>
+  	    <button className='SkinButton' className='btn btn-warning' onClick={addSkin}>Buy Skin</button>
   	  </div>
   	</div>
   )

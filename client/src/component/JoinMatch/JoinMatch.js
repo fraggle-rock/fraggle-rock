@@ -28,12 +28,17 @@ class JoinMatch extends React.Component {
     browserHistory.push('/Home');
   }
 
+  selectSkin() {
+    browserHistory.push('/SelectSkin')
+  }
+
   render() {
     return (
       <div id='JoinMatchTitle'>
         <div id='CreateMatchBackground' >
-          <h1>Join A Match</h1>
-          <button onClick={this.backToHome} className='btn btn-primary'>HOME</button>
+          <button id='SelectSkinButtonCreate' className='btn btn-warning' onClick={this.selectSkin}>Select Skin</button>
+          <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+          <h1 id='CreateMatchTitle'>Join A Match</h1>
           <div id='JoinMatchData'>
             <div id='JoinLevelTitle'>
               <div>Level</div>

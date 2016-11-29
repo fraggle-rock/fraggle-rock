@@ -12,12 +12,8 @@ class LogIn extends React.Component {
 	  };
     this.responseFacebook = this.responseFacebook.bind(this)
   }
-  componentClicked(e) {
-  }
 
   playAsGuest() {
-    userProfile.User = 'Guest';
-    userProfile.FacebookPicture = '../../textures/GuestPicture.png';
     browserHistory.push('/Home')
   }
 
@@ -33,10 +29,11 @@ class LogIn extends React.Component {
         method: 'Get',
         success: (data) => {
           if(data.length == 0) {
-            var username = prompt('Welcome to Smash Ball Brawl. Please Enter a UserName');
+            var username = prompt('Welcome to Smash Ball Brawl. Please Enter a Username');
+            username = username.splice(0, 10);
             if(username !== null) {
               userProfile.User = username;
-              var dataSent = {                
+              var dataSent = {
                   username: username,
                   token: e.accessToken,
                   email: 'fakeEmail@gmail.com',
@@ -54,7 +51,7 @@ class LogIn extends React.Component {
                   userProfile.experience = 200;
                   browserHistory.push('Home')
                 }
-              }) 
+              })
             }
           } else {
             userProfile.User = data.username;

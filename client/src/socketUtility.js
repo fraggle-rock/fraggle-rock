@@ -4,7 +4,7 @@ const socket = io(window.location.hostname + ':3333');
 const sceneUtility = require('./sceneUtility');
 const flat = require('../../config/flat');
 const config = require('../../config/config');
-const userProfile = require('./component/userProfile')
+const userProfile = require('./component/userProfile');
 const lastEmittedClient = {theta: 0};
 const audio = require('./audio');
 let canEmitQ = true;
@@ -123,5 +123,9 @@ module.exports = {
   },
   emitShootBall: function emitShootBall(camera) {
     socket.emit('shootBall', JSON.stringify(flat.shootBall(camera)));
+  },
+  quitMatch: function quitMatch() {
+    socket.removeAllListeners();
+    socket.disconnect();
   }
 };
