@@ -1,6 +1,6 @@
 module.exports = {
-  User: null,
-  FacebookPicture: null,
+  User: 'Guest',
+  FacebookPicture: '../../textures/GuestPicture.png',
   Skins: [],
   ChosenSkin: null,
   color: 'teal',
@@ -12,5 +12,6 @@ module.exports = {
 	  {name: 'High Noon', thumb: '../../../textures/highNoonThumb.jpg'}
   ],
   map: 0,
-  graphics: 0
+  graphics: 2,
+  sound: 1
 }
