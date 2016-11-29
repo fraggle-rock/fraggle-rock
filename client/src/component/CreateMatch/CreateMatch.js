@@ -5,6 +5,7 @@ import userProfile from '../userProfile.js';
 import Profile from '../Home/Profile.js';
 const clientScene = require('../../clientScene.js');
 const sceneUtility = require('../../sceneUtility.js');
+const socketUtility = require('../../socketUtility');
 
 class CreateMatch extends React.Component {
   constructor(props) {
@@ -46,8 +47,8 @@ class CreateMatch extends React.Component {
       }
     })
 
-    const button = document.getElementById('resume');
-    button.addEventListener('click', function(e) {
+    const resume = document.getElementById('resume');
+    resume.addEventListener('click', function(e) {
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
       screenOverlay.style.display = 'box';
@@ -59,6 +60,18 @@ class CreateMatch extends React.Component {
         menuContainer.style.display = '';
         hud.style.display = 'none';
       }
+    });
+
+    const exit = document.getElementById('exit');
+    console.log('exit', exit)
+    exit.addEventListener('click', function(e) {
+      console.log('click')
+      screenOverlay.style.display = '-webkit-box';
+      screenOverlay.style.display = '-moz-box';
+      screenOverlay.style.display = 'box';
+      menuContainer.style.display = 'none';
+      socketUtility.quitMatch();
+      browserHistory.push('GameOver');
     });
 
     document.getElementById( 'CreateMatchContainer' ).style.display = 'none';
@@ -102,6 +115,7 @@ class CreateMatch extends React.Component {
             <button id='SelectSkinButtonCreate' className='btn btn-warning' onClick={this.selectSkin}>Select Skin</button>
             <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
             <h1 id='CreateMatchTitle'>Create Match</h1>
+
             <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
 
             <div id='MapSelector'>

@@ -277,7 +277,7 @@ canvas {
   font-family: 'Press Start 2P', sans-serif;
 }
 
-.resume:hover, .exit:hover {
+#resume:hover, #exit:hover {
   color: rgb(211,211,211);
 }
 
@@ -648,7 +648,7 @@ canvas {
   text-align: center;
 }
 
-#SkinPic {
+.SkinPic {
   height: 140px;
   width: 140px;
   margin-top: 10px;
@@ -661,13 +661,18 @@ canvas {
   height: 250px;
   overflow:scroll;
   overflow-x:hidden;
-  width: 300px;
+  width: 580px;
   background-color: white;
+  opacity: 1;
 }
 
+.Skin {
+  display: inline-block;
+  width: 160px;
+  margin: 5px 0 15px;
+}
 
-
-#SkinName {
+.SkinName {
   margin: auto;
   color: white;
   font-size: 16px;
@@ -676,7 +681,7 @@ canvas {
 }
 
 
-#SkinCost {
+.SkinCost {
   color: black;
 }
 
@@ -696,11 +701,20 @@ canvas {
   margin-top: 20px;
 }
 
-#HighSettings, #MedSettings, #LowSettings {
+.gfxBtn {
   display: inline-block;
+  margin: 0 5px;
+  width: 100px;
 }
 
-#HighSettings, #MedSettings {
-  margin-right: 10px;
+.gfxBtn:hover {
+  -webkit-box-shadow: 0px 4px 2px 0px rgba(255,255,255,.75), 0px -4px 2px 0px rgba(255,255,255,0.75);
+  -moz-box-shadow: 0px 4px 2px 0px rgba(255,255,255,0.75), 0px -4px 2px 0px rgba(255,255,255,0.75);
+  box-shadow: 0px 4px 2px 0px rgba(255,255,255,0.75), 0px -4px 2px 0px rgba(255,255,255,0.75);
 }
 
+.gfxBtnActive {
+  -webkit-box-shadow: 0px 4px 2px 0px rgba(255,255,0,.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
+  -moz-box-shadow: 0px 4px 2px 0px rgba(255,255,0,0.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
+  box-shadow: 0px 4px 2px 0px rgba(255,255,0,0.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
+}

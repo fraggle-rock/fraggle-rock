@@ -123,5 +123,9 @@ module.exports = {
   },
   emitShootBall: function emitShootBall(camera) {
     socket.emit('shootBall', JSON.stringify(flat.shootBall(camera)));
+  },
+  quitMatch: function quitMatch() {
+    socket.removeAllListeners();
+    socket.disconnect();
   }
 };
