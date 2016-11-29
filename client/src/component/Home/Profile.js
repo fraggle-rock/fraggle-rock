@@ -49,9 +49,6 @@ class Profile extends React.Component {
             <div id='storeButtonHome'>
               <button className='btn-xs btn-success' onClick={this.store}><span className='glyphicon glyphicon-shopping-cart' /></button>
             </div>
-            <div id='SelectSkin'>
-              <button className='btn-xs btn-warning' onClick={this.SelectSkin}>Select a Skin</button>
-            </div>
           </div>
         </div>
       );    

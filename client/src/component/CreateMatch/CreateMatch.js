@@ -2,7 +2,6 @@ import React from 'react';
 import MapSelector from './MapSelector.js'
 import { browserHistory } from 'react-router';
 import userProfile from '../userProfile.js';
-import SkinSelector from './SkinSelector.js';
 import Profile from '../Home/Profile.js';
 const clientScene = require('../../clientScene.js');
 const sceneUtility = require('../../sceneUtility.js');
@@ -88,31 +87,34 @@ class CreateMatch extends React.Component {
     browserHistory.push('/Home')
   }
 
+  selectSkin() {
+    browserHistory.push('/SelectSkin')
+  }
+
   render() {
     return (
       <div id='HomeBackground'>
         <div id='CreateMatchContainer'>
+          <div id='Profile'>
+            <Profile />
+          </div>
           <div id='CreateMatchBackground'>
-          <h1 id='CreateMatchTitle'>Create Match</h1>
-            <div>
-              <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-            </div>
-          <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
+            <button id='SelectSkinButtonCreate' className='btn btn-warning' onClick={this.selectSkin}>Select Skin</button>
+            <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+            <h1 id='CreateMatchTitle'>Create Match</h1>
+            <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
 
-          <div id='MapSelector'>
-            <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />
+            <div id='MapSelector'>
+              <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />
+            </div>
+            <div id='selectedMap' onClick={this.ChooseMap}>
+              <img id='selectMapPreview' src={this.state.maps[this.state.mapChoice].thumb} />
+              <div>{this.state.maps[this.state.mapChoice].name}</div>
+            </div>
+            <div id='StartMatch'>
+              <button id='Start'className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
+            </div>
           </div>
-          <div id='selectedMap' onClick={this.ChooseMap}>
-            <img id='selectMapPreview' src={this.state.maps[this.state.mapChoice].thumb} />
-            <div>{this.state.maps[this.state.mapChoice].name}</div>
-          </div>
-          <div id='StartMatch'>
-            <button id='Start'className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
-          </div>
-        </div>
-        <div id='Profile'>
-          <Profile />
-        </div>
         </div>
       </div>
     );
