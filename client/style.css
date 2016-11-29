@@ -413,18 +413,17 @@ canvas {
   margin-right: 5px;
 }
 
+#Settings {
+  float: right;
+  margin: 3px 5px 0 0;
+}
+
 #SignOut {
   margin-top: 4px;
   float: right;
 }
 
 #storeButtonHome {
-  margin-top: 4px;
-  float: right;
-  margin-right: 5px;
-}
-
-#SelectSkin {
   margin-top: 4px;
   float: right;
   margin-right: 5px;
