@@ -608,7 +608,7 @@ canvas {
 
 .mapSelectContainer {
   width: 560px;
-  height: 210px;
+  height: 220px;
   border-radius: 20px
   background-color: white;
   margin: auto;
@@ -616,7 +616,7 @@ canvas {
 
 .mapThumbContainer {
   width: 560px;
-  height: 210px;
+  height: 220px;
   margin: 5px 0 0 0;
 }
 
@@ -637,7 +637,7 @@ canvas {
 }
 
 .mapThumb:hover {
-  border: 2px solid black;
+  border-color: black;
 }
 
 #selectMapPreview {
