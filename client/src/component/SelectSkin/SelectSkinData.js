@@ -14,14 +14,10 @@ var SelectSkinData = props => {
   }
 
   return (
-  	<div>
-  	  <div>
-  	    <img className='SkinPic' src={props.skins.skinPic} />
-  	  </div>
+    <div className='Skin'>
+	    <img className='SkinPic' src={props.skins.skinPic} />
   	  <div className='SkinName'>{props.skins.name}</div>
-  	  <div>
-  	    <button className='SkinButton' className='btn btn-warning' onClick={addSkin}>Choose Skin</button>
-  	  </div>
+	    <button className='SkinButton btn btn-warning' onClick={addSkin}>Choose Skin</button>
   	</div>
   )
 }

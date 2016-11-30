@@ -20,16 +20,16 @@ class SelectSkin extends React.Component {
       return (
         <div id='Store'>
           <div id='CreateMatchBackground' >
-            <div>
-              <h1 id='Title'>Select Skin</h1>
-            </div>
-            <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>Go Back</button>
+          <div className='buttonBox'>
+            <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
+            <h1>Select Skin</h1>
+          </div>
             <div id='Skins'>
-              {userProfile.Skins.map((skins) => <SelectSkinData key={skins.skin} skins={skins} />)}
+              {userProfile.Skins.length ? userProfile.Skins.map((skins) => <SelectSkinData key={skins.skin} skins={skins} />) : 'Go to the store to buy skins!'}
             </div>
           </div>
         </div>
-      );   
+      );
   }
 }
 

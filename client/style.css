@@ -56,6 +56,10 @@ body {
   overflow: hidden;
 }
 
+h3 {
+  font-weight: normal;
+}
+
 canvas {
   margin: auto;
   display: flex;
@@ -548,6 +552,10 @@ canvas {
   right: 15px;
 }
 
+.storeStars {
+  margin-bottom: 20px;
+}
+
 
 /*---------------------------------Leaderboard--------------------------------------------------*/
 
@@ -767,6 +775,7 @@ canvas {
   width: 580px;
   background-color: white;
   opacity: 1;
+  color: black;
 }
 
 .Skin {
@@ -781,11 +790,21 @@ canvas {
   font-size: 16px;
   background-color: black;
   width: 140px;
+  padding: 5px 0;
+  margin-top: -5px;
+  margin-bottom: 5px;
 }
 
+.SkinButton {
+  width: 140px;
+  text-align: center;
+}
 
 .SkinCost {
-  color: black;
+  color: white;
+  background-color: black;
+  width: 140px;
+  margin: 0 auto 5px;
 }
 
 #storeButton {

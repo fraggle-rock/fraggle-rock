@@ -49,20 +49,20 @@ class Store extends React.Component {
   }
 
   render() {
-    if(this.state.noFunds === true) {
+    if (this.state.noFunds === true) {
       return (
         <div id='Store'>
           <div id='CreateMatchBackground' >
-            <div>
-              <h1 id='Title'>Smash Ball Brawl Store</h1>
+            <div className='buttonBox'>
+              <button className='btn btn-primary homeBtn' onClick={this.backToStore}>◀ Back</button>
+              <h1>Smash Ball Store</h1>
             </div>
-            <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-            <button id='storeButton' className='btn btn-primary' onClick={this.backToStore}>STORE</button>
+            <div className='storeStars'>You have {userProfile.experience}✪</div>
             <div id='buyButton'>
-              <button className='btn btn-success' onClick={this.buyExperience}>Buy ✪</button>
+              <button className='btn btn-danger' onClick={this.buyExperience}>Buy ✪</button>
             </div>
-            <div> You have <span> {userProfile.experience}</span> experience</div>
-            <div>You dont have enough ✪ to buy the item. To gain ✪, play more games or purchase them above.</div>
+            <p>You dont have enough ✪ to buy this item!</p>
+            <p>You can gain ✪ by playing more games or by purchasing them above.</p>
           </div>
         </div>
       )
@@ -70,11 +70,11 @@ class Store extends React.Component {
       return (
         <div id='Store'>
           <div id='CreateMatchBackground' >
-            <div>
-              <h1 id='Title'>Smash Ball Brawl Store</h1>
+            <div className='buttonBox'>
+              <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
+              <h1>Smash Ball Store</h1>
             </div>
-            <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-            <div> You have <span> {userProfile.experience}</span>✪</div>
+            <div className='storeStars'> You have {userProfile.experience}✪</div>
             <div id='Skins'>
               {this.state.skins.map((skins) => <StoreData key={skins.skin} skins={skins} state={this.state}/>)}
             </div>
