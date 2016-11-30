@@ -6,7 +6,7 @@ const flat = require('../config/flat.js')
 let kill;
 
 const getGuid = function getGuid() {
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_{}[]|;:<>,./?`~';
   return [0, 0, 0, 0].map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
 let collisionSound;
