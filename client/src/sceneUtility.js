@@ -3,7 +3,8 @@ const objectBuilder = require('./objectBuilder');
 const config = require('../../config/config.js');
 const flat = require('../../config/flat.js');
 const audio = require('./audio');
-const userProfile = require('./component/userProfile.js')
+const userProfile = require('./component/userProfile.js');
+import { browserHistory } from 'react-router';
 
 
 const redBallStack = (function() {
@@ -165,7 +166,7 @@ module.exports = {
     game.renderer.render(game.scene, game.camera);
     requestAnimationFrame(animate.bind(null, game));
   },
-  loadMatchInfo: function loadMatchInfo(matchInfo) {
+  loadMatchInfo: function loadMatchInfo(matchInfo, quitMatch, showMenu) {
     currentGame.matchInfo = matchInfo;
 
     let victory = false;
@@ -182,7 +183,7 @@ module.exports = {
       document.getElementById('player' + client.playerNumber + 'Name').innerHTML = client.name;
 
       if (client.lives > 0) {
-        playersAlive.push(client.playerNumber);
+        playersAlive.push(client.name);
       } else {
         document.getElementById('player' + client.playerNumber + 'Box').style.opacity = '0';
       }
@@ -197,6 +198,39 @@ module.exports = {
       document.getElementById('victoryBox').style.marginTop = '15%';
       document.getElementById('victor').innerHTML = 'Player ' + playersAlive[0] + ' Wins!';
       //END GAME HERE
+      if(playersAlive[0] === userProfile.User) {
+        var data = {username: userProfile.User, points: 100}
+        $.ajax({
+          url: '/api/addTransactionByUsername',
+          method: 'Post',
+          data: JSON.stringify(data),
+          contentType: 'application/json',
+          error: (error) => {
+            console.log(error)
+          },
+          success: (data) => {
+            quitMatch();
+            setTimeout(() => {
+              var canvas = document.getElementsByTagName('canvas');
+              canvas[0].remove();
+              document.removeEventListener('keydown', showMenu)
+              const screenOverlay = document.getElementById( 'screenOverlay' );
+              screenOverlay.style.display = 'none';
+              browserHistory.push('GameOver')
+            }, 4000)
+          }
+        })
+      } else {
+        quitMatch()
+        setTimeout(() => {
+          var canvas = document.getElementsByTagName('canvas');
+          canvas[0].remove();
+          document.removeEventListener('keydown', showMenu)
+          const screenOverlay = document.getElementById( 'screenOverlay' );
+          screenOverlay.style.display = 'none';
+          browserHistory.push('GameOver')
+        }, 4000)
+      }
     }
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
