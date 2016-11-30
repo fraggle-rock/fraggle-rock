@@ -14,13 +14,12 @@ class CreateMatch extends React.Component {
 	    user: null,
       maps: userProfile.maps,
       mapChoice: userProfile.map,
-      mapPreviewPath: userProfile.maps[userProfile.map].thumb,
-      numPlayers: 2       
+      mapPreviewPath: userProfile.maps[userProfile.map].thumb       
 	  };
 	  this.backToHome = this.backToHome.bind(this);
   }
 
-  StartMatch() {
+  StartMatch(numPlayers) {
     const screenOverlay = document.getElementById( 'screenOverlay' );
     const menuContainer = document.getElementById( 'menuContainer' );
     const hud = document.getElementById( 'HUD' );
@@ -74,7 +73,7 @@ class CreateMatch extends React.Component {
     });
 
     document.getElementById( 'CreateMatchContainer' ).style.display = 'none';
-    clientScene.startGame(this.state.numPlayers);
+    clientScene.startGame(numPlayers);
   }
 
   ChooseMap() {
@@ -126,7 +125,9 @@ class CreateMatch extends React.Component {
               <div>{this.state.maps[this.state.mapChoice].name}</div>
             </div>
             <div id='StartMatch'>
-              <button id='Start'className='btn btn-primary' onClick={this.StartMatch.bind(this)}>START MATCH</button>
+              <button id='Sandbox'className='btn btn-primary' onClick={this.StartMatch.bind(this, 0)}>SANDBOX</button>
+              <button id='Start2'className='btn btn-primary' onClick={this.StartMatch.bind(this, 2)}>2 PLAYER MATCH</button>
+              <button id='Start4'className='btn btn-primary' onClick={this.StartMatch.bind(this, 4)}>4 PLAYER MATCH</button>
             </div>
           </div>
         </div>
