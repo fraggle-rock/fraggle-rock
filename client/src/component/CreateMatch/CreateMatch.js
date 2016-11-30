@@ -14,7 +14,8 @@ class CreateMatch extends React.Component {
 	    user: null,
       maps: userProfile.maps,
       mapChoice: userProfile.map,
-      mapPreviewPath: userProfile.maps[userProfile.map].thumb
+      mapPreviewPath: userProfile.maps[userProfile.map].thumb,
+      numPlayers: 2       
 	  };
 	  this.backToHome = this.backToHome.bind(this);
   }
@@ -24,8 +25,6 @@ class CreateMatch extends React.Component {
     const menuContainer = document.getElementById( 'menuContainer' );
     const hud = document.getElementById( 'HUD' );
     const victoryBox = document.getElementById( 'victoryBox' );
-    sceneUtility.currentGame = sceneUtility.currentGame || {matchInfo: {clients: {}}};
-    const players = Object.keys(sceneUtility.currentGame.matchInfo.clients).length;
     screenOverlay.style.display = '';
     hud.style.display = 'none';
 
@@ -114,6 +113,7 @@ class CreateMatch extends React.Component {
           <div id='CreateMatchBackground'>
             <button id='SelectSkinButtonCreate' className='btn btn-warning' onClick={this.selectSkin}>Select Skin</button>
             <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+            
             <h1 id='CreateMatchTitle'>Create Match</h1>
 
             <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
