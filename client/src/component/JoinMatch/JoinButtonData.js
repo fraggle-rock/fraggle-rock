@@ -10,8 +10,6 @@ const JoinButtonData = props => {
     const menuContainer = document.getElementById( 'menuContainer' );
     const hud = document.getElementById( 'HUD' );
     const victoryBox = document.getElementById( 'victoryBox' );
-    sceneUtility.currentGame = sceneUtility.currentGame || {matchInfo: {clients: {}}};
-    const players = Object.keys(sceneUtility.currentGame.matchInfo.clients).length;
     screenOverlay.style.display = '';
     hud.style.display = 'none';
 
