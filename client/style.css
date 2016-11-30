@@ -518,19 +518,18 @@ canvas {
 .buttonBox {
   width: 100%;
   position: relative;
-  display: flex;
-  align-items: center;
+  margin-bottom: 20px;
 }
 
 .buttonBox > h1, .homeBtn, .selectSkinBtn {
 
 }
 
-h1 {
+.buttonBox > h1 {
   display: inline-block;
   text-align: center;
   padding: 0 10px;
-  margin: 10px 0;
+  margin: 15px 40px;
   color: white;
   font-weight: normal;
 }
@@ -538,15 +537,15 @@ h1 {
 .homeBtn {
   display: inline-block;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 15px;
+  left: 15px;
 }
 
 .selectSkinBtn {
   display: inline-block;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
 }
 
 
@@ -629,8 +628,8 @@ h1 {
 
 #ChooseMap {
   display: inline-block;
-  margin: 10px 0px;
-  font-size: 20px;
+  margin: 10px 0;
+  font-size: 14px;
   cursor: pointer;
   color: white;
   -webkit-user-select: none; /* Chrome/Safari unSelectable Text*/
@@ -646,7 +645,7 @@ h1 {
   background-color: rgb(255, 255, 255);
   border-radius: 20px;
   width: 560px;
-  height: 215px;
+  height: 225px;
   border: 1px solid black;
   margin: auto;
 }
@@ -677,12 +676,12 @@ h1 {
   width: 173px;
   margin-bottom: 5px;
   border-radius: 10px;
-  border: 2px solid white;
-  transition: border .25s;
+  border: 2px solid transparent;
+  transition: all .25s;
 }
 
 .mapThumb:hover {
-  border-color: black;
+  border: 2px solid black;
 }
 
 #selectMapPreview {
@@ -690,13 +689,13 @@ h1 {
   height: auto;
   margin: 0 auto;
   pointer-events: none;
-  padding: 10px 0 3px;
+  padding: 10px 0 1px;
 
 }
 
 #selectedMap {
   margin: 0 auto;
-  height: 190px;
+  height: 195px;
   width: 185px;
   border-radius: 10px;
   background-color: white;

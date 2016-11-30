@@ -111,12 +111,12 @@ class CreateMatch extends React.Component {
           </div>
           <div id='CreateMatchBackground'>
             <div className='buttonBox'>
-              <button className='btn btn-primary homeBtn' onClick={this.backToHome}>HOME</button>
+              <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
               <h1>Create Match</h1>
               <button className='btn btn-warning selectSkinBtn' onClick={this.selectSkin}>Select Skin</button>
             </div>
 
-            <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
+            <div id='ChooseMap' onClick={this.ChooseMap}>CHOOSE MAP</div>
 
             <div id='MapSelector'>
               <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />
