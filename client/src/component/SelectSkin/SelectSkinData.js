@@ -4,19 +4,19 @@ import userProfile from '../userProfile.js';
 
 var SelectSkinData = props => {
 	var addSkin = function() {
-    if(props.skins.type === 'hat') {
-      userProfile.hat = props.skins.skin
+    if (props.skin.type === 'hat') {
+      userProfile.hat = props.skin.skin
       browserHistory.goBack()
     } else {
-      userProfile.ChosenSkin = props.skins.skin;
+      userProfile.ChosenSkin = props.skin.skin;
       browserHistory.goBack()
     }
   }
 
   return (
     <div className='Skin'>
-	    <img className='SkinPic' src={props.skins.skinPic} />
-  	  <div className='SkinName'>{props.skins.name}</div>
+	    <img className='SkinPic' src={props.skin.skinPic} />
+  	  <div className='SkinName'>{props.skin.name}</div>
 	    <button className='SkinButton btn btn-warning' onClick={addSkin}>Choose Skin</button>
   	</div>
   )

@@ -1,6 +1,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import userProfile from '../userProfile.js';
+import Profile from '../Home/Profile.js';
 
 class Settings extends React.Component {
   constructor(props) {
@@ -35,6 +36,9 @@ class Settings extends React.Component {
       return (
         <div id='Store'>
           <div id='CreateMatchBackground'>
+            <div id='Profile'>
+              <Profile />
+            </div>
             <div className='buttonBox'>
               <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
               <h1>Settings</h1>

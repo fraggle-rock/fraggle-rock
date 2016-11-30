@@ -770,7 +770,7 @@ canvas {
 #Skins {
   margin: 20px auto;
   height: 250px;
-  overflow:scroll;
+  overflow-y: auto;
   overflow-x:hidden;
   width: 580px;
   background-color: white;

@@ -134,7 +134,6 @@ class CreateMatch extends React.Component {
         </div>
       </div>
     );
-
   }
 }
 
