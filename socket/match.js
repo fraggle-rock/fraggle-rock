@@ -265,7 +265,6 @@ const shootBall = function shootBall(camera) {
       e.body.mass = e.body.mass - config.onShootMassLoss;
       e.body.linearDamping = e.body.linearDamping - config.onShootDamplingLoss;
   }
-    console.log('Collision !!! Body ', e.body.mass, 'Damping  ', e.body.linearDamping);
     collisionSound = { play: 7 };
   }
 });
