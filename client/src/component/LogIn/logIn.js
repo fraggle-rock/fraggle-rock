@@ -48,14 +48,14 @@ class LogIn extends React.Component {
                   console.log(error)
                 },
                 success: (data) => {
-                  userProfile.experience = 200;
+                  userProfile.stars = 200;
                   browserHistory.push('Home')
                 }
               })
             }
           } else {
             userProfile.User = data.username;
-            // userProfile.experience = data.experience;
+            // userProfile.stars = data.stars;
             browserHistory.push('Home')
           }
         }

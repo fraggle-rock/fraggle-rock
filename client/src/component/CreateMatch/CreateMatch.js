@@ -14,7 +14,7 @@ class CreateMatch extends React.Component {
 	    user: null,
       maps: userProfile.maps,
       mapChoice: userProfile.map,
-      mapPreviewPath: userProfile.maps[userProfile.map].thumb       
+      mapPreviewPath: userProfile.maps[userProfile.map].thumb
 	  };
 	  this.backToHome = this.backToHome.bind(this);
   }
@@ -110,12 +110,13 @@ class CreateMatch extends React.Component {
             <Profile />
           </div>
           <div id='CreateMatchBackground'>
-            <button id='SelectSkinButtonCreate' className='btn btn-warning' onClick={this.selectSkin}>Select Skin</button>
-            <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-            
-            <h1 id='CreateMatchTitle'>Create Match</h1>
+            <div className='buttonBox'>
+              <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
+              <h1>Create Match</h1>
+              <button className='btn btn-warning selectSkinBtn' onClick={this.selectSkin}>Select Skin</button>
+            </div>
 
-            <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
+            <div id='ChooseMap' onClick={this.ChooseMap}>CHOOSE MAP</div>
 
             <div id='MapSelector'>
               <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />
@@ -133,7 +134,6 @@ class CreateMatch extends React.Component {
         </div>
       </div>
     );
-
   }
 }
 
