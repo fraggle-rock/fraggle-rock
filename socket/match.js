@@ -180,7 +180,8 @@ const physicsLoop = function physicsLoop(match) {
       const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)]
 
       clientBody.position.set(spawn[0], spawn[1], spawn[2]);
-
+      clientBody.mass = config.playerModelMass;
+      clientBody.linearDamping = config.playerDamping;
       clientBody.velocity.set(0,0,0);
       match.sendPoll();
       continue;
@@ -252,15 +253,22 @@ const shootBall = function shootBall(camera) {
   y += shootDirection.y * 2.5;
   z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
-
-  ballBody.addEventListener("collide",function(e){
-    if(e.body.userData && e.body.userData.shapeType >= 3) {
-      collisionSound = { play: e.body.userData.shapeType };
-    } else if( e.target.uuid && (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
-    && (e.target.uuid !== e.body.uuid)) {
-      collisionSound = { play: 7 };
-    }
-  });
+  ballBody.addEventListener("collide", function(e, context) {
+  if(e.body.userData && e.body.userData.shapeType >= 3) {
+    collisionSound = { play: e.body.userData.shapeType };
+  } else if( e.target.useruuid
+  && (e.body.userData)
+  && (e.body.userData.playername)
+  && (e.target.mass === config.ballMass)
+  && (e.target.useruuid !== e.body.uuid)) {
+    if (e.body.mass > 4) {
+      e.body.mass = e.body.mass - 4;
+      e.body.linearDamping = e.body.linearDamping - 0.15;
+  }
+    console.log('Collision !!! Body ', e.body.mass, 'Damping  ', e.body.linearDamping);
+    collisionSound = { play: 7 };
+  }
+});
 
 };
 
@@ -281,9 +289,15 @@ const loadNewClient = function loadNewClient(player) {
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
   player.name = player.name || 'Guest';
+  ballBody.userData = { playername: player.name };
 
   // player data for other users
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, quaternion: player.quaternion, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid,
+    position: ballBody.position, direction: player.direction,
+    quaternion: player.quaternion,
+    up: false, left: false, right: false, down: false,
+    lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name,
+    color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber };
   this.world.add(ballBody);
   this.sendPoll();
 };
