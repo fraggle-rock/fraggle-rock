@@ -86,7 +86,7 @@ const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
   }
 };
 
-const physicsEmit = function physicsEmit (match) {
+const physicsEmit = function physicsEmit (match, socket) {
   const balls = [];
   const boxes = [];
   const clear = [];
@@ -150,16 +150,20 @@ const physicsEmit = function physicsEmit (match) {
     update.push(collisionSound);
     collisionSound = undefined;
   }
-
-  if (players.length > 0) {
-    if (match.sendFull || clear.length > 0) {
-      match.io.to(match.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
+  if (socket === undefined) {
+    if (players.length > 0) {
+      if (match.sendFull || clear.length > 0) {
+        match.io.to(match.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
+      } else {
+        match.io.to(match.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+      }
     } else {
-       match.io.to(match.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+      match.deleteMatch(match.guid);
     }
   } else {
-    match.deleteMatch(match.guid);
+    socket.emit('fullPhysicsUpdate', JSON.stringify(update));
   }
+  
   match.sendFull = false;
 };
 

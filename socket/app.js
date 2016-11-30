@@ -51,6 +51,7 @@ io.on('connection', (socket) => {
       socket.join(match.guid, function() {
         match.loadNewClient(player);
         match.sendFull = true;
+        match.physicsEmit(match, socket);
         socket.on('shootBall', function(camera) {
           match.shootBall(camera);
         });
