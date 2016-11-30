@@ -52,18 +52,44 @@ module.exports = {
       pitchQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
       const quat = yawQuat.multiply(pitchQuat);
       camera.quaternion.copy(quat);
-      socketUtility.emitClientQuaternion(camera);
+      if (currentGame.on) {
+        socketUtility.emitClientQuaternion(camera); 
+      }
     };
    document.addEventListener('mousemove', onMouseMove, false);
   },
   addMoveControls: function addMoveControls(camera, socketUtility) {
     const playerInput = {};
+    let flyControlsTick;
+    const movePerTick = .3;
     playerInput.up = false;
     playerInput.left = false;
     playerInput.down = false;
     playerInput.right = false;
     playerInput.jump = false;
     playerInput.uuid = camera.uuid.slice(0, config.uuidLength);
+
+    if (!currentGame.on) {
+      flyControlsTick = setInterval(function() {
+          if (!currentGame.on) {
+            const direction = camera.getWorldDirection();
+            const currPosition = camera.position;
+            if (playerInput.up) {
+              camera.position.set(currPosition.x + movePerTick * direction.x, currPosition.y + movePerTick * direction.y, currPosition.z + movePerTick * direction.z);
+            }
+            if (playerInput.down) {
+              camera.position.set(currPosition.x - movePerTick * direction.x, currPosition.y - movePerTick * direction.y, currPosition.z - movePerTick * direction.z);
+            }
+            if (playerInput.right) {
+              camera.position.set(currPosition.x - movePerTick * direction.z, currPosition.y, currPosition.z + movePerTick * direction.x);
+            }
+            if (playerInput.left) {
+              camera.position.set(currPosition.x + movePerTick * direction.z, currPosition.y, currPosition.z - movePerTick * direction.x);
+            }
+          }
+      }, 1/60*1000);
+    }
+
     const onKeyDown = function onKeyDown(event) {
       if (event.keyCode === 87 || event.keyCode === 38) {
         playerInput.up = true;
@@ -77,37 +103,42 @@ module.exports = {
       if (event.keyCode === 68 || event.keyCode === 39) {
         playerInput.right = true;
       }
-      if (event.keyCode === 32) {
-        event.preventDefault();
-        if (jumpCount > 0 && playerInput.jump === false) {
-          audio.smashBrawl.shootRound(0, 1, 0.08, 0, 0);
-          document.getElementById('jump' + jumpCount).style.opacity = '0';
-          jumpCount--;
-          playerInput.jump = true;
+      if (currentGame.on) {
+        if (flyControlsTick) {
+          clearInterval(flyControlsTick);
+          flyControlsTick = false;
         }
-        const regen = function regen() {
-          if (jumpCount < config.maxJumps) {
-            jumpCount++;
-            document.getElementById('jump' + jumpCount).style.opacity = '1';
+        if (event.keyCode === 32) {
+          event.preventDefault();
+          if (jumpCount > 0 && playerInput.jump === false) {
+            audio.smashBrawl.shootRound(0, 1, 0.08, 0, 0);
+            document.getElementById('jump' + jumpCount).style.opacity = '0';
+            jumpCount--;
+            playerInput.jump = true;
           }
-          if (jumpCount < config.maxJumps) {
-            setTimeout(regen, config.jumpRegen)
-          } else {
-            jumpRegen = false;
+          const regen = function regen() {
+            if (jumpCount < config.maxJumps) {
+              jumpCount++;
+              document.getElementById('jump' + jumpCount).style.opacity = '1';
+            }
+            if (jumpCount < config.maxJumps) {
+              setTimeout(regen, config.jumpRegen)
+            } else {
+              jumpRegen = false;
+            }
+          };
+          if (!jumpRegen && jumpCount < 3) {
+            jumpRegen = true;
+            setTimeout(function() {
+              regen();
+            }, config.jumpRegen)
           }
-        };
-        if (!jumpRegen && jumpCount < 3) {
-          jumpRegen = true;
-          setTimeout(function() {
-            regen();
-          }, config.jumpRegen)
         }
+        socketUtility.emitClientPosition(camera, playerInput);
       }
-      socketUtility.emitClientPosition(camera, playerInput);
     };
 
     const onKeyUp = function onKeyUp(event) {
-
       if (event.keyCode === 87 || event.keyCode === 38) {
         playerInput.up = false;
       }
@@ -120,7 +151,13 @@ module.exports = {
       if (event.keyCode === 68 || event.keyCode === 39) {
         playerInput.right = false;
       }
-      socketUtility.emitClientPosition(camera, playerInput);
+      if (currentGame.on) {
+        if (flyControlsTick) {
+          clearInterval(flyControlsTick);
+          flyControlsTick = false;
+        }
+        socketUtility.emitClientPosition(camera, playerInput);
+      }
     };
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
@@ -128,33 +165,35 @@ module.exports = {
   },
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
-      if (shotCount > 0) {
-        audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
-        document.getElementById('ammo' + shotCount).style.opacity = '0';
-        shotCount--;
-        socketUtility.emitShootBall({
-          position: currentGame.camera.position,
-          direction: currentGame.camera.getWorldDirection(),
-          uuid: currentGame.camera.uuid.slice(0, config.uuidLength),
-        });
-      }
-      const regen = function regen() {
-        if (shotCount < config.maxShots) {
-          shotCount++;
-          document.getElementById('ammo' + shotCount).style.opacity = '1';
+      if (currentGame.on) {
+        if (shotCount > 0) {
+          audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
+          document.getElementById('ammo' + shotCount).style.opacity = '0';
+          shotCount--;
+          socketUtility.emitShootBall({
+            position: currentGame.camera.position,
+            direction: currentGame.camera.getWorldDirection(),
+            uuid: currentGame.camera.uuid.slice(0, config.uuidLength),
+          });
         }
-        if (shotCount < config.maxShots) {
-          setTimeout(regen, config.shotRegen)
-        } else {
-          shotRegen = false;
+        const regen = function regen() {
+          if (shotCount < config.maxShots) {
+            shotCount++;
+            document.getElementById('ammo' + shotCount).style.opacity = '1';
+          }
+          if (shotCount < config.maxShots) {
+            setTimeout(regen, config.shotRegen)
+          } else {
+            shotRegen = false;
+          }
+        };
+        if (!shotRegen && shotCount < 3) {
+          shotRegen = true;
+          setTimeout(function() {
+            regen();
+          }, config.shotRegen)
         }
-      };
-      if (!shotRegen && shotCount < 3) {
-        shotRegen = true;
-        setTimeout(function() {
-          regen();
-        }, config.shotRegen)
-      }
+      }  
     });
   },
   animate: function animate(game) {
@@ -189,7 +228,7 @@ module.exports = {
     });
 
     //if you are the last player alive, display victory screen
-    if (players > 1 && playersAlive.length === 1) {
+    if (players > 1 && playersAlive.length === 1 && matchInfo.numPlayers !== 0) {
       document.getElementById('HUD').style.display = 'none';
       // document.getElementById('victoryBox').style.display = '';
       document.getElementById('victoryBox').style.opacity = '1';
@@ -261,6 +300,13 @@ module.exports = {
     latestServerUpdate = meshObject;
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
+    if (!currentGame.on) {
+      if (currentGame.on === undefined) {
+        currentGame.on = 0; //this allows the initial physics update to load once without starting controls
+      } else {
+        currentGame.on = true;
+      }
+    }
     meshObject = JSON.parse(meshObject);
     if (!meshLookup.init) {
       currentGame.scene.children.forEach(function(mesh) {

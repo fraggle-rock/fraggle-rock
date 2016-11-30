@@ -577,6 +577,11 @@ canvas {
   margin-top: 40px;
 }
 
+#StartMatch .btn {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
 #ChooseMap {
   display: inline-block;
   margin: 10px 0px;

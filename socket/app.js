@@ -20,10 +20,9 @@ io.on('connection', (socket) => {
     const scene = fullScene.scene;
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
+    const numPlayers = fullScene.numPlayers;
     socket.join(match.guid);
-    match.loadFullScene(scene, player, io);
-    match.startPhysics(fullScene.spawnPoints);
-    match.killFloor();
+    match.loadFullScene(scene, player, io, numPlayers, fullScene.spawnPoints);
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);
     });
@@ -36,30 +35,40 @@ io.on('connection', (socket) => {
     socket.on('poll', function(clientUuid) {
       match.loadPoll(clientUuid);
     });
+    if (match.numPlayers === 0) {
+      match.startPhysics();
+      match.killFloor();
+    }
   });
 
   socket.on('addMeToMatch', function (newMatchRequest) {
     const matchId = newMatchRequest.matchId;
     const player = newMatchRequest.player;
     const match = matchController.getMatch(matchId);
-    if (!match) {
-      return;
+    if (!match || match.numPlayers === Object.keys(match.clients).length || Object.keys(match.clients).length >= 6) {
+      socket.emit('matchUnavailable');
+    } else {
+      socket.join(match.guid, function() {
+        match.loadNewClient(player);
+        match.sendFull = true;
+        match.physicsEmit(match, socket);
+        socket.on('shootBall', function(camera) {
+          match.shootBall(camera);
+        });
+        socket.on('clientUpdate', function (clientPosition) { // listener for client position updates
+          match.loadClientUpdate(clientPosition); // update server's copy of client position
+        });
+        socket.on('clientQ', function (clientQuaternion) {
+          match.loadClientQuaternion(clientQuaternion);
+        });
+        socket.on('poll', function(clientUuid) {
+          match.loadPoll(clientUuid);
+        });
+        if (match.numPlayers === Object.keys(match.clients).length) {
+            match.startPhysics();
+            match.killFloor();
+        }
+      });
     }
-    socket.join(match.guid, function() {
-      match.loadNewClient(player);
-      match.sendFull = true;
-      socket.on('shootBall', function(camera) {
-        match.shootBall(camera);
-      });
-      socket.on('clientUpdate', function (clientPosition) { // listener for client position updates
-        match.loadClientUpdate(clientPosition); // update server's copy of client position
-      });
-      socket.on('clientQ', function (clientQuaternion) {
-        match.loadClientQuaternion(clientQuaternion);
-      });
-      socket.on('poll', function(clientUuid) {
-        match.loadPoll(clientUuid);
-      });
-    });
   });
 });

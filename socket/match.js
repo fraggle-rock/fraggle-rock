@@ -6,7 +6,7 @@ const flat = require('../config/flat.js')
 let kill;
 
 const getGuid = function getGuid() {
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_{}[]|;:<>,./?`~';
   return [0, 0, 0, 0].map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
 let collisionSound;
@@ -28,6 +28,9 @@ module.exports = function Match(deleteMatch) {
   this.loadNewClient = loadNewClient.bind(this);
   this.loadFullScene = loadFullScene.bind(this);
   this.startPhysics = startPhysics.bind(this);
+  this.physicsLoop = physicsLoop;
+  this.physicsEmit = physicsEmit;
+  this.buildPhysicsEmit = buildPhysicsEmit;
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
   this.loadPoll = loadPoll.bind(this);
@@ -51,7 +54,7 @@ const loadPoll = function loadPoll(clientUuid) {
 };
 
 const sendPoll = function sendPoll() {
-  const matchInfo = {clients: {}};
+  const matchInfo = {clients: {}, numPlayers: this.numPlayers};
   for (var key in this.clients) {
     const client = this.clients[key];
     matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color, playerNumber: client.playerNumber})
@@ -84,138 +87,147 @@ const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
   }
 };
 
-const startPhysics = function startPhysics(spawnPoints) {
-  const context = this;
-  this.spawnPoints = spawnPoints;
-  const physicsEmit = function physicsEmit () {
-    const balls = [];
-    const boxes = [];
-    const clear = [];
-    const players = [];
-    const expiredBoxes = [];
-    const expiredBoxIndices = [];
-    const expiredBallIndices = [];
-    const now = performance.now();
-    for (var key in context.clients) {
-      const client = context.clients[key];
-      if (now - client.lastUpdate > config.playerTimeout) {
-        const clientBody = context.clientToCannon[client.uuid];
-        context.world.remove(clientBody);
-        clear.push(client.uuid);
-        delete context.clients[key];
-        delete context.clientToCannon[client.uuid];
-      } else {
-        players.push(flat.player(context.clients[key]));
-      }
-    }
-    while (context.balls.length > config.maxBalls) {
-      const ball = context.balls.shift();
-      context.world.remove(ball);
-      clear.push(ball.id);
-    }
-    context.balls.forEach(function(ball, i) {
-      if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
-        expiredBallIndices.push(i);
-        context.world.remove(ball);
-        clear.push(ball.id)
-      } else {
-        balls.push(flat.ball(ball));
-      }
-    });
-    context.boxes.forEach(function(box, i) {
-      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
-          context.world.remove(box);
-          context.boxes.splice(i, 1);
-          clear.push(box.uuid);
-      } else {
-        if (box.mass || context.sendFull) {
-          boxes.push(flat.box(box));
-        };
-      }
-    });
-    if (expiredBallIndices.length > 0) {
-      // console.log('Deleted out of bounds ball!');
-      let offset = 0;
-      expiredBallIndices.forEach(function(index) {
-        context.balls.splice(index - offset, 1);
-        offset--;
-      });
-    }
-    const update = [boxes, balls, players];
-    if (clear.length > 0) {
-      update.push(clear);
+const buildPhysicsEmit = function buildPhysicsEmit(match) {
+  const balls = [];
+  const boxes = [];
+  const clear = [];
+  const players = [];
+  const expiredBoxes = [];
+  const expiredBoxIndices = [];
+  const expiredBallIndices = [];
+  const now = performance.now();
+  for (var key in match.clients) {
+    const client = match.clients[key];
+    if (now - client.lastUpdate > config.playerTimeout) {
+      const clientBody = match.clientToCannon[client.uuid];
+      match.world.remove(clientBody);
+      clear.push(client.uuid);
+      delete match.clients[key];
+      delete match.clientToCannon[client.uuid];
     } else {
-      update.push([]);
+      players.push(flat.player(match.clients[key]));
     }
-    if(collisionSound !== undefined) {
-      update.push(collisionSound);
-      collisionSound = undefined;
+  }
+  while (match.balls.length > config.maxBalls) {
+    const ball = match.balls.shift();
+    match.world.remove(ball);
+    clear.push(ball.id);
+  }
+  match.balls.forEach(function(ball, i) {
+    if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
+      expiredBallIndices.push(i);
+      match.world.remove(ball);
+      clear.push(ball.id)
+    } else {
+      balls.push(flat.ball(ball));
     }
+  });
+  match.boxes.forEach(function(box, i) {
+    if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
+        match.world.remove(box);
+        match.boxes.splice(i, 1);
+        clear.push(box.uuid);
+    } else {
+      if (box.mass || match.sendFull) {
+        boxes.push(flat.box(box));
+      };
+    }
+  });
+  if (expiredBallIndices.length > 0) {
+    // console.log('Deleted out of bounds ball!');
+    let offset = 0;
+    expiredBallIndices.forEach(function(index) {
+      match.balls.splice(index - offset, 1);
+      offset--;
+    });
+  }
+  const update = [boxes, balls, players, clear, collisionSound];
+  collisionSound = undefined;
+  return update;
+}
 
+const physicsEmit = function physicsEmit (match, socket) {
+  const update = buildPhysicsEmit(match);
+  const players = update[2];
+  const clear = update[3];
+  if (socket === undefined) {
     if (players.length > 0) {
-      if (context.sendFull || clear.length > 0) {
-        context.io.to(context.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
+      if (match.sendFull || clear.length > 0) {
+        match.io.to(match.guid).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
-         context.io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
+        match.io.to(match.guid).volatile.emit('physicsUpdate', JSON.stringify(update));
       }
     } else {
-      context.deleteMatch(context.guid);
+      match.deleteMatch(match.guid);
     }
-    context.sendFull = false;
-  };
-  const physicsLoop = function physicsLoop() {
-    for (var key in context.clients) {
-      const client = context.clients[key];
-      const clientBody = context.clientToCannon[client.uuid];
-      const currVelocity = clientBody.velocity;
-      let movePerTick = config.playerMovePerTick;
-      let isMoving = false;
-      if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
-        //PLAYER DEATH & RESPAWN
-        client.lives--;
+  } else {
+    socket.emit('fullPhysicsUpdate', JSON.stringify(update));
+  }
+  match.sendFull = false;
+};
 
-        const spawn = context.spawnPoints[random(0, context.spawnPoints.length - 1)]
+const physicsLoop = function physicsLoop(match) {
+  for (var key in match.clients) {
+    const client = match.clients[key];
+    const clientBody = match.clientToCannon[client.uuid];
+    const currVelocity = clientBody.velocity;
+    let movePerTick = config.playerMovePerTick;
+    let isMoving = false;
+    if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
+      //PLAYER DEATH & RESPAWN
+      client.lives--;
 
-        clientBody.position.set(spawn[0], spawn[1], spawn[2]);
+      const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)]
 
-        clientBody.velocity.set(0,0,0);
-        context.sendPoll();
-        continue;
-      }
-      if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
-        movePerTick = movePerTick * .707;
-      }
-      if (client.up) {
-        isMoving = true;
-        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
-      }
-      if (client.down) {
-        isMoving = true;
-        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
-      }
-      if (client.right) {
-        isMoving = true;
-        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
-      }
-      if (client.left) {
-        isMoving = true;
-        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
-      }
-      if (client.jump) {
-        isMoving = true;
-          clientBody.velocity.set(currVelocity.x, currVelocity.y + config.jumpVelocity, currVelocity.z);
-          client.jump = false;
-      }
-      if (clientBody.velocity.x < 40 && clientBody.velocity.z < 40 && !isMoving) {
-        clientBody.velocity.set(clientBody.velocity.x / 1.05, clientBody.velocity.y, clientBody.velocity.z / 1.05);
-      }
+      clientBody.position.set(spawn[0], spawn[1], spawn[2]);
+
+      clientBody.velocity.set(0,0,0);
+      match.sendPoll();
+      continue;
     }
+    if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
+      movePerTick = movePerTick * .707;
+    }
+    if (client.up) {
+      isMoving = true;
+      clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
+    }
+    if (client.down) {
+      isMoving = true;
+      clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
+    }
+    if (client.right) {
+      isMoving = true;
+      clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
+    }
+    if (client.left) {
+      isMoving = true;
+      clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
+    }
+    if (client.jump) {
+      isMoving = true;
+        clientBody.velocity.set(currVelocity.x, currVelocity.y + config.jumpVelocity, currVelocity.z);
+        client.jump = false;
+    }
+    if (clientBody.velocity.x < 40 && clientBody.velocity.z < 40 && !isMoving) {
+      clientBody.velocity.set(clientBody.velocity.x / 1.05, clientBody.velocity.y, clientBody.velocity.z / 1.05);
+    }
+  }
 
-    context.world.step(context.physicsTick);
-    context.world.step(context.physicsTick);
-    physicsEmit();
+  match.world.step(match.physicsTick);
+  match.world.step(match.physicsTick);
+  physicsEmit(match);
+};
+
+const startPhysics = function startPhysics() {
+  for (var key in this.clients) {
+    const client = this.clients[key];
+    const clientBody = this.clientToCannon[client.uuid];
+    const spawn = this.spawnPoints[random(0, this.spawnPoints.length - 1)]
+    clientBody.position.set(spawn[0], spawn[1], spawn[2]);
+    clientBody.velocity.set(0,0,0);
   };
-  context.physicsClock = setInterval(physicsLoop, context.tickRate * 1000);
+  this.physicsClock = setInterval(this.physicsLoop.bind(null, this), this.tickRate * 1000);
 };
 
 const shootBall = function shootBall(camera) {
@@ -276,9 +288,11 @@ const loadNewClient = function loadNewClient(player) {
   this.sendPoll();
 };
 
-const loadFullScene = function loadFullScene(scene, player, io) {
+const loadFullScene = function loadFullScene(scene, player, io, numPlayers, spawnPoints) {
   // Setup our world
   this.io = io;
+  this.numPlayers = numPlayers;
+  this.spawnPoints = spawnPoints;
   const context = this;
   let world = new CANNON.World();
   world.quatNormalizeSkip = 0;
