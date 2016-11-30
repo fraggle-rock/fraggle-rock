@@ -4,6 +4,7 @@ const THREE = require('three');
 const config = require('../config/config.js');
 const flat = require('../config/flat.js')
 let kill;
+const scoreTable = {};
 
 const getGuid = function getGuid() {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_{}[]|;:<>,./?`~';
@@ -57,7 +58,12 @@ const sendPoll = function sendPoll() {
   const matchInfo = {clients: {}, numPlayers: this.numPlayers};
   for (var key in this.clients) {
     const client = this.clients[key];
-    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color, playerNumber: client.playerNumber})
+    matchInfo.clients[client.uuid] = ({uuid: client.uuid,
+      name: client.name,
+      lives: client.lives,
+      skinPath: client.skinPath,
+      color: client.color,
+      playerNumber: client.playerNumber });
   }
   this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
@@ -114,7 +120,9 @@ const buildPhysicsEmit = function buildPhysicsEmit(match) {
     clear.push(ball.id);
   }
   match.balls.forEach(function(ball, i) {
-    if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
+    if (Math.abs(ball.position.x) > config.physicsBounds ||
+    Math.abs(ball.position.y) > config.physicsBounds ||
+    Math.abs(ball.position.z) > config.physicsBounds) {
       expiredBallIndices.push(i);
       match.world.remove(ball);
       clear.push(ball.id)
@@ -123,7 +131,9 @@ const buildPhysicsEmit = function buildPhysicsEmit(match) {
     }
   });
   match.boxes.forEach(function(box, i) {
-    if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
+    if (Math.abs(box.position.x) > 200
+    || Math.abs(box.position.y) > 200
+    || Math.abs(box.position.z) > 200) {
         match.world.remove(box);
         match.boxes.splice(i, 1);
         clear.push(box.uuid);
@@ -173,7 +183,9 @@ const physicsLoop = function physicsLoop(match) {
     const currVelocity = clientBody.velocity;
     let movePerTick = config.playerMovePerTick;
     let isMoving = false;
-    if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
+    if (Math.abs(clientBody.position.y) > config.playerVerticalBound ||
+    Math.abs(clientBody.position.x) > config.playerHorizontalBound ||
+    Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
       //PLAYER DEATH & RESPAWN
       client.lives--;
 
@@ -248,12 +260,15 @@ const shootBall = function shootBall(camera) {
   const context =this;
 
   const shootDirection = camera.direction;
-  ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
+  ballBody.velocity.set(shootDirection.x * config.ballVelocity,
+    shootDirection.y * config.ballVelocity,
+    shootDirection.z * config.ballVelocity);
   x += shootDirection.x * 2.5;
   y += shootDirection.y * 2.5;
   z += shootDirection.z * 2.5;
-  ballBody.position.set(x,y,z);
-  ballBody.addEventListener("collide", function(e, context) {
+  ballBody.position.set(x, y, z);
+
+  ballBody.addEventListener('collide', function (e) {
   if(e.body.userData && e.body.userData.shapeType >= 3) {
     collisionSound = { play: e.body.userData.shapeType };
   } else if( e.target.useruuid
@@ -262,9 +277,13 @@ const shootBall = function shootBall(camera) {
   && (e.target.mass === config.ballMass)
   && (e.target.useruuid !== e.body.uuid)) {
     if (e.body.mass > config.onShootMassLoss) {
-      e.body.mass = e.body.mass - config.onShootMassLoss;
-      e.body.linearDamping = e.body.linearDamping - config.onShootDamplingLoss;
+      e.body.mass -= config.onShootMassLoss;
+      e.body.linearDamping -= config.onShootDamplingLoss;
+      if(scoreTable[e.target.useruuid] !== undefined) {
+        scoreTable[e.target.useruuid] = scoreTable[e.target.useruuid] + config.onShootScore;
+      }
   }
+    console.log('Mass ', e.body.mass, ' Damping ', e.body.linearDamping, 'Score ', scoreTable);
     collisionSound = { play: 7 };
   }
 });
@@ -285,6 +304,7 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
   ballBody.uuid = player.object.uuid;
+  scoreTable[ballBody.uuid] = 0;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
   player.name = player.name || 'Guest';
