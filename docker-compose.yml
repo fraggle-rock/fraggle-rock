@@ -9,6 +9,13 @@ services:
     env_file:
       .env
     command: node fraggle-rock/server/app.js
+  socketManager:
+    image: mhart/alpine-node:6
+    volumes:
+      - '.:/fraggle-rock'
+    env_file:
+      .env
+    command: node fraggle-rock/socket/socketManager.js
   socket1:
     image: mhart/alpine-node:6
     volumes:
