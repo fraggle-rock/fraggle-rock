@@ -249,7 +249,7 @@ const shootBall = function shootBall(camera) {
   z += shootDirection.z * 2.5;
   ballBody.position.set(x,y,z);
 
-  ballBody.addEventListener("collide",function(e){
+  ballBody.addEventListener("collide",function(e, context){
     if(e.body.userData && e.body.userData.shapeType >= 3) {
       collisionSound = { play: e.body.userData.shapeType };
     } else if( e.target.useruuid
@@ -261,7 +261,7 @@ const shootBall = function shootBall(camera) {
         e.body.mass = e.body.mass - 4;
         e.body.linearDamping = e.body.linearDamping - 0.15;
     }
-      console.log('Collision !!! Body ', e.body.mass, 'Damping  ', e.body.linearDamping);
+      console.log('Collision !!! Body ', e.body.mass, 'Damping  ', e.body.linearDamping, 'Clients ', context.clients);
       collisionSound = { play: 7 };
     }
   });
@@ -295,7 +295,7 @@ const loadNewClient = function loadNewClient(player) {
     up: false,
     left: false,
     right: false, down: false, lastUpdate: performance.now(),
-    skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3,
+    skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: config.playerLives,
     playerNumber: playerNumber};
   this.world.add(ballBody);
   this.sendPoll();
