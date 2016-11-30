@@ -86,6 +86,15 @@ const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
 
 const startPhysics = function startPhysics() {
   const context = this;
+
+  for (var key in context.clients) {
+    const client = context.clients[key];
+    const clientBody = context.clientToCannon[client.uuid];
+    const spawn = context.spawnPoints[random(0, context.spawnPoints.length - 1)]
+    clientBody.position.set(spawn[0], spawn[1], spawn[2]);
+    clientBody.velocity.set(0,0,0);
+  };
+  
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
