@@ -196,7 +196,8 @@ module.exports = {
       document.getElementById('victoryBox').style.opacity = '1';
       document.getElementById('victoryBox').style.height = '300px';
       document.getElementById('victoryBox').style.marginTop = '15%';
-      document.getElementById('victor').innerHTML = 'Player ' + playersAlive[0] + ' Wins!';
+      document.getElementById('victor').innerHTML = playersAlive[0] + ' Wins!';
+      userProfile.winner = playersAlive[0];
       //END GAME HERE
       if(playersAlive[0] === userProfile.User) {
         var data = {username: userProfile.User, points: 100}

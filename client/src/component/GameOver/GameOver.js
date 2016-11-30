@@ -1,6 +1,6 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
-import userProfile from '../userProfile.js'
+import userProfile from '../userProfile.js';
 
 class GameOver extends React.Component {
   constructor(props) {
@@ -16,9 +16,14 @@ class GameOver extends React.Component {
 
   render() {
       return (
-        <div>
-         <h1>Game Over</h1>
-         <button className='btn-primary' onClick={this.backToHome}>HOME</button>
+        <div id='GameOver'>
+          <div id='GameOverContainer'>
+            <div id='CreateMatchBackground'>
+              <h1>Game Over</h1>
+              <button className='btn-primary GameOverHome' onClick={this.backToHome}>HOME</button>
+              <h3 id='PlayerWins'><span>{userProfile.winner}</span> Wins!!!!!</h3>
+            </div>
+          </div>
         </div>
       );
 
