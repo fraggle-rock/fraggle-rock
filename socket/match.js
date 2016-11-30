@@ -263,7 +263,7 @@ const shootBall = function shootBall(camera) {
   && (e.target.useruuid !== e.body.uuid)) {
     if (e.body.mass > config.onShootMassLoss) {
       e.body.mass = e.body.mass - config.onShootMassLoss;
-      e.body.linearDamping = e.body.linearDamping - config.onShootDamplingLosse;
+      e.body.linearDamping = e.body.linearDamping - config.onShootDamplingLoss;
   }
     console.log('Collision !!! Body ', e.body.mass, 'Damping  ', e.body.linearDamping);
     collisionSound = { play: 7 };
