@@ -71,20 +71,22 @@ module.exports = {
 
     if (!currentGame.on) {
       flyControlsTick = setInterval(function() {
-        const direction = camera.getWorldDirection();
-        const currPosition = camera.position;
-        if (playerInput.up) {
-          camera.position.set(currPosition.x + movePerTick * direction.x, currPosition.y + movePerTick * direction.y, currPosition.z + movePerTick * direction.z);
-        }
-        if (playerInput.down) {
-          camera.position.set(currPosition.x - movePerTick * direction.x, currPosition.y - movePerTick * direction.y, currPosition.z - movePerTick * direction.z);
-        }
-        if (playerInput.right) {
-          camera.position.set(currPosition.x - movePerTick * direction.z, currPosition.y, currPosition.z + movePerTick * direction.x);
-        }
-        if (playerInput.left) {
-          camera.position.set(currPosition.x + movePerTick * direction.z, currPosition.y, currPosition.z - movePerTick * direction.x);
-        }
+          if (!currentGame.on) {
+            const direction = camera.getWorldDirection();
+            const currPosition = camera.position;
+            if (playerInput.up) {
+              camera.position.set(currPosition.x + movePerTick * direction.x, currPosition.y + movePerTick * direction.y, currPosition.z + movePerTick * direction.z);
+            }
+            if (playerInput.down) {
+              camera.position.set(currPosition.x - movePerTick * direction.x, currPosition.y - movePerTick * direction.y, currPosition.z - movePerTick * direction.z);
+            }
+            if (playerInput.right) {
+              camera.position.set(currPosition.x - movePerTick * direction.z, currPosition.y, currPosition.z + movePerTick * direction.x);
+            }
+            if (playerInput.left) {
+              camera.position.set(currPosition.x + movePerTick * direction.z, currPosition.y, currPosition.z - movePerTick * direction.x);
+            }
+          }
       }, 1/60*1000);
     }
 
@@ -102,6 +104,11 @@ module.exports = {
         playerInput.right = true;
       }
       if (currentGame.on) {
+        if (flyControlsTick) {
+          clearInterval(flyControlsTick);
+          flyControlsTick = false;
+          console.log('fly controls off');
+        }
         if (event.keyCode === 32) {
           event.preventDefault();
           if (jumpCount > 0 && playerInput.jump === false) {
@@ -146,6 +153,11 @@ module.exports = {
         playerInput.right = false;
       }
       if (currentGame.on) {
+        if (flyControlsTick) {
+          clearInterval(flyControlsTick);
+          flyControlsTick = false;
+          console.log('fly controls off');
+        }
         socketUtility.emitClientPosition(camera, playerInput);
       }
     };
