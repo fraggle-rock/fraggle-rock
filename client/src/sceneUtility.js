@@ -107,7 +107,6 @@ module.exports = {
         if (flyControlsTick) {
           clearInterval(flyControlsTick);
           flyControlsTick = false;
-          console.log('fly controls off');
         }
         if (event.keyCode === 32) {
           event.preventDefault();
@@ -156,7 +155,6 @@ module.exports = {
         if (flyControlsTick) {
           clearInterval(flyControlsTick);
           flyControlsTick = false;
-          console.log('fly controls off');
         }
         socketUtility.emitClientPosition(camera, playerInput);
       }
