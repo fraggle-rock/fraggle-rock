@@ -84,9 +84,8 @@ const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
   }
 };
 
-const startPhysics = function startPhysics(spawnPoints) {
+const startPhysics = function startPhysics() {
   const context = this;
-  this.spawnPoints = spawnPoints;
   const physicsEmit = function physicsEmit () {
     const balls = [];
     const boxes = [];
@@ -276,10 +275,11 @@ const loadNewClient = function loadNewClient(player) {
   this.sendPoll();
 };
 
-const loadFullScene = function loadFullScene(scene, player, io, numPlayers) {
+const loadFullScene = function loadFullScene(scene, player, io, numPlayers, spawnPoints) {
   // Setup our world
   this.io = io;
   this.numPlayers = numPlayers;
+  this.spawnPoints = spawnPoints;
   const context = this;
   let world = new CANNON.World();
   world.quatNormalizeSkip = 0;

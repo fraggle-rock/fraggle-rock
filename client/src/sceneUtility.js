@@ -268,7 +268,13 @@ module.exports = {
     latestServerUpdate = meshObject;
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
-    currentGame.on = true;
+    if (!currentGame.on) {
+      if (currentGame.on === undefined) {
+        currentGame.on = 0; //this allows the initial physics update to load once without starting controls
+      } else {
+        currentGame.on = true;
+      }
+    }
     meshObject = JSON.parse(meshObject);
     if (!meshLookup.init) {
       currentGame.scene.children.forEach(function(mesh) {
