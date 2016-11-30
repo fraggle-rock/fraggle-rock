@@ -35,6 +35,8 @@ module.exports = {
   killFloorInterval: 1000,
   killFloorUpVelocity: 50,
   maxBalls: 20,
+  onShootMassLoss: 4,
+  onShootDamplingLoss: 0.15,
   colors: ['red', 'blue', 'green', 'magenta', 'teal'],
   hatAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2)),
   skinAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI)).multiply((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2)),

@@ -244,7 +244,7 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
-  ballBody.uuid = camera.uuid;
+  ballBody.useruuid = camera.uuid;
   const context =this;
 
   const shootDirection = camera.direction;
@@ -261,9 +261,9 @@ const shootBall = function shootBall(camera) {
   && (e.body.userData.playername)
   && (e.target.mass === config.ballMass)
   && (e.target.useruuid !== e.body.uuid)) {
-    if (e.body.mass > 4) {
-      e.body.mass = e.body.mass - 4;
-      e.body.linearDamping = e.body.linearDamping - 0.15;
+    if (e.body.mass > config.onShootMassLoss) {
+      e.body.mass = e.body.mass - config.onShootMassLoss;
+      e.body.linearDamping = e.body.linearDamping - config.onShootDamplingLosse;
   }
     console.log('Collision !!! Body ', e.body.mass, 'Damping  ', e.body.linearDamping);
     collisionSound = { play: 7 };
