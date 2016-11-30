@@ -16,8 +16,8 @@ const redBallStack = (function() {
   return result;
 })();
 
-const remoteClients = {};
-const remoteScene = {};
+let remoteClients = {};
+let remoteScene = {};
 let currentGame = {};
 
 //make sure object exists
@@ -31,9 +31,9 @@ let shotRegen = false;
 let jumpCount = config.maxJumps;
 let jumpRegen = false;
 let latestServerUpdate;
-const serverShapeMap = {};
-const meshLookup = {init: false};
-const clearLookup = {};
+let serverShapeMap = {};
+let meshLookup = {init: false};
+let clearLookup = {};
 
 //DEBUGGING
 let ticks = 0;
@@ -210,11 +210,27 @@ module.exports = {
           },
           success: (data) => {
             quitMatch();
+            remoteClients = {};
+            currentGame = {};
+            remoteScene = {};
+            pitch = 0;
+            yaw = 0;
+            host = false;
+            shotCount = null;
+            shotRegen = false;
+            jumpCount = null;
+            jumpRegen = null;
+            latestServerUpdate = null;
+            serverShapeMap = null;
+            meshLookup = {};
+            clearLookup = {};
             setTimeout(() => {
               var canvas = document.getElementsByTagName('canvas');
               canvas[0].remove();
               document.removeEventListener('keydown', showMenu)
               const screenOverlay = document.getElementById( 'screenOverlay' );
+              const victoryBox = document.getElementById( 'victoryBox' );
+              victoryBox.style.display = 'none';
               screenOverlay.style.display = 'none';
               browserHistory.push('GameOver')
             }, 4000)
@@ -222,11 +238,27 @@ module.exports = {
         })
       } else {
         quitMatch()
+        remoteClients = {};
+        currentGame = {};
+        remoteScene = {};
+        pitch = 0;
+        yaw = 0;
+        host = false;
+        shotCount = null;
+        shotRegen = false;
+        jumpCount = null;
+        jumpRegen = null;
+        latestServerUpdate = null;
+        serverShapeMap = null;
+        meshLookup = {};
+        clearLookup = {};
         setTimeout(() => {
           var canvas = document.getElementsByTagName('canvas');
           canvas[0].remove();
           document.removeEventListener('keydown', showMenu)
           const screenOverlay = document.getElementById( 'screenOverlay' );
+          const victoryBox = document.getElementById( 'victoryBox' );
+          victoryBox.style.display = 'none';
           screenOverlay.style.display = 'none';
           browserHistory.push('GameOver')
         }, 4000)

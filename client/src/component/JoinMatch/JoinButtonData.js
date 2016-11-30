@@ -62,7 +62,6 @@ const JoinButtonData = props => {
       socketUtility.quitMatch();
       browserHistory.push('GameOver');
     });
-
 	  clientScene.joinGame(this, showMenu);
   }
 
