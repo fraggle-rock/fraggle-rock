@@ -10,7 +10,7 @@ const audio = require('./audio');
 let canEmitQ = true;
 let emitQ;
 
-const addUpdateListeners = function addUpdateListeners(socket) {
+const addUpdateListeners = function addUpdateListeners(socket, showMenu) {
   socket.on('physicsUpdate', function(meshesObject) {
     sceneUtility.savePhysicsUpdate(meshesObject);
   });
@@ -19,7 +19,7 @@ const addUpdateListeners = function addUpdateListeners(socket) {
   });
   socket.on('poll', function(matchInfo) {
     socket.emit('poll', sceneUtility.getCamera().uuid.slice(0, config.uuidLength));
-    sceneUtility.loadMatchInfo(JSON.parse(matchInfo));
+    sceneUtility.loadMatchInfo(JSON.parse(matchInfo), module.exports.quitMatch, showMenu);
   });
 }
 
@@ -74,8 +74,8 @@ const hasChangedInput = function hasChangedInput(playerInput) {
 
 
 module.exports = {
-  requestNewMatch: function requestNewMatch(game) {
-    addUpdateListeners(socket);
+  requestNewMatch: function requestNewMatch(game, showMenu) {
+    addUpdateListeners(socket, showMenu);
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
     camera.quaternion = game.camera.quaternion;
@@ -88,8 +88,8 @@ module.exports = {
     const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints};
     socket.emit('fullScene', fullScene);
   },
-  joinMatch: function joinMatch(matchNumber, game) {
-    addUpdateListeners(socket);
+  joinMatch: function joinMatch(matchNumber, game, showMenu) {
+    addUpdateListeners(socket, showMenu);
     const player = game.camera.toJSON();
     player.position = game.camera.position;
     player.direction = game.camera.getWorldDirection();

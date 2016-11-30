@@ -9,7 +9,7 @@ class GameOver extends React.Component {
 	    user: null
 	  };
   }
-
+  
   render() {
       return (
         <div>
