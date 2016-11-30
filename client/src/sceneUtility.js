@@ -52,7 +52,9 @@ module.exports = {
       pitchQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
       const quat = yawQuat.multiply(pitchQuat);
       camera.quaternion.copy(quat);
-      socketUtility.emitClientQuaternion(camera);
+      if (currentGame.on) {
+        socketUtility.emitClientQuaternion(camera); 
+      }
     };
    document.addEventListener('mousemove', onMouseMove, false);
   },
@@ -65,62 +67,65 @@ module.exports = {
     playerInput.jump = false;
     playerInput.uuid = camera.uuid.slice(0, config.uuidLength);
     const onKeyDown = function onKeyDown(event) {
-      if (event.keyCode === 87 || event.keyCode === 38) {
-        playerInput.up = true;
-      }
-      if (event.keyCode === 65 || event.keyCode === 37) {
-        playerInput.left = true;
-      }
-      if (event.keyCode === 83 || event.keyCode === 40) {
-        playerInput.down = true;
-      }
-      if (event.keyCode === 68 || event.keyCode === 39) {
-        playerInput.right = true;
-      }
-      if (event.keyCode === 32) {
-        event.preventDefault();
-        if (jumpCount > 0 && playerInput.jump === false) {
-          audio.smashBrawl.shootRound(0, 1, 0.08, 0, 0);
-          document.getElementById('jump' + jumpCount).style.opacity = '0';
-          jumpCount--;
-          playerInput.jump = true;
+      if (currentGame.on) {
+        if (event.keyCode === 87 || event.keyCode === 38) {
+          playerInput.up = true;
         }
-        const regen = function regen() {
-          if (jumpCount < config.maxJumps) {
-            jumpCount++;
-            document.getElementById('jump' + jumpCount).style.opacity = '1';
-          }
-          if (jumpCount < config.maxJumps) {
-            setTimeout(regen, config.jumpRegen)
-          } else {
-            jumpRegen = false;
-          }
-        };
-        if (!jumpRegen && jumpCount < 3) {
-          jumpRegen = true;
-          setTimeout(function() {
-            regen();
-          }, config.jumpRegen)
+        if (event.keyCode === 65 || event.keyCode === 37) {
+          playerInput.left = true;
         }
+        if (event.keyCode === 83 || event.keyCode === 40) {
+          playerInput.down = true;
+        }
+        if (event.keyCode === 68 || event.keyCode === 39) {
+          playerInput.right = true;
+        }
+        if (event.keyCode === 32) {
+          event.preventDefault();
+          if (jumpCount > 0 && playerInput.jump === false) {
+            audio.smashBrawl.shootRound(0, 1, 0.08, 0, 0);
+            document.getElementById('jump' + jumpCount).style.opacity = '0';
+            jumpCount--;
+            playerInput.jump = true;
+          }
+          const regen = function regen() {
+            if (jumpCount < config.maxJumps) {
+              jumpCount++;
+              document.getElementById('jump' + jumpCount).style.opacity = '1';
+            }
+            if (jumpCount < config.maxJumps) {
+              setTimeout(regen, config.jumpRegen)
+            } else {
+              jumpRegen = false;
+            }
+          };
+          if (!jumpRegen && jumpCount < 3) {
+            jumpRegen = true;
+            setTimeout(function() {
+              regen();
+            }, config.jumpRegen)
+          }
+        }
+        socketUtility.emitClientPosition(camera, playerInput);
       }
-      socketUtility.emitClientPosition(camera, playerInput);
     };
 
     const onKeyUp = function onKeyUp(event) {
-
-      if (event.keyCode === 87 || event.keyCode === 38) {
-        playerInput.up = false;
+      if (currentGame.on) {
+        if (event.keyCode === 87 || event.keyCode === 38) {
+          playerInput.up = false;
+        }
+        if (event.keyCode === 65 || event.keyCode === 37) {
+          playerInput.left = false;
+        }
+        if (event.keyCode === 83 || event.keyCode === 40) {
+          playerInput.down = false;
+        }
+        if (event.keyCode === 68 || event.keyCode === 39) {
+          playerInput.right = false;
+        }
+        socketUtility.emitClientPosition(camera, playerInput);
       }
-      if (event.keyCode === 65 || event.keyCode === 37) {
-        playerInput.left = false;
-      }
-      if (event.keyCode === 83 || event.keyCode === 40) {
-        playerInput.down = false;
-      }
-      if (event.keyCode === 68 || event.keyCode === 39) {
-        playerInput.right = false;
-      }
-      socketUtility.emitClientPosition(camera, playerInput);
     };
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
@@ -128,33 +133,35 @@ module.exports = {
   },
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
-      if (shotCount > 0) {
-        audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
-        document.getElementById('ammo' + shotCount).style.opacity = '0';
-        shotCount--;
-        socketUtility.emitShootBall({
-          position: currentGame.camera.position,
-          direction: currentGame.camera.getWorldDirection(),
-          uuid: currentGame.camera.uuid.slice(0, config.uuidLength),
-        });
-      }
-      const regen = function regen() {
-        if (shotCount < config.maxShots) {
-          shotCount++;
-          document.getElementById('ammo' + shotCount).style.opacity = '1';
+      if (currentGame.on) {
+        if (shotCount > 0) {
+          audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
+          document.getElementById('ammo' + shotCount).style.opacity = '0';
+          shotCount--;
+          socketUtility.emitShootBall({
+            position: currentGame.camera.position,
+            direction: currentGame.camera.getWorldDirection(),
+            uuid: currentGame.camera.uuid.slice(0, config.uuidLength),
+          });
         }
-        if (shotCount < config.maxShots) {
-          setTimeout(regen, config.shotRegen)
-        } else {
-          shotRegen = false;
+        const regen = function regen() {
+          if (shotCount < config.maxShots) {
+            shotCount++;
+            document.getElementById('ammo' + shotCount).style.opacity = '1';
+          }
+          if (shotCount < config.maxShots) {
+            setTimeout(regen, config.shotRegen)
+          } else {
+            shotRegen = false;
+          }
+        };
+        if (!shotRegen && shotCount < 3) {
+          shotRegen = true;
+          setTimeout(function() {
+            regen();
+          }, config.shotRegen)
         }
-      };
-      if (!shotRegen && shotCount < 3) {
-        shotRegen = true;
-        setTimeout(function() {
-          regen();
-        }, config.shotRegen)
-      }
+      }  
     });
   },
   animate: function animate(game) {
@@ -261,6 +268,7 @@ module.exports = {
     latestServerUpdate = meshObject;
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
+    currentGame.on = true;
     meshObject = JSON.parse(meshObject);
     if (!meshLookup.init) {
       currentGame.scene.children.forEach(function(mesh) {

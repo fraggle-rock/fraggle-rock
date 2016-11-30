@@ -51,7 +51,7 @@ const loadPoll = function loadPoll(clientUuid) {
 };
 
 const sendPoll = function sendPoll() {
-  const matchInfo = {clients: {}};
+  const matchInfo = {clients: {}, numPlayers: this.numPlayers};
   for (var key in this.clients) {
     const client = this.clients[key];
     matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color, playerNumber: client.playerNumber})
@@ -280,7 +280,6 @@ const loadFullScene = function loadFullScene(scene, player, io, numPlayers) {
   // Setup our world
   this.io = io;
   this.numPlayers = numPlayers;
-  debugger;
   const context = this;
   let world = new CANNON.World();
   world.quatNormalizeSkip = 0;
