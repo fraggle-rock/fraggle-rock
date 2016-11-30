@@ -54,7 +54,13 @@ const sendPoll = function sendPoll() {
   const matchInfo = {clients: {}};
   for (var key in this.clients) {
     const client = this.clients[key];
-    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color, playerNumber: client.playerNumber})
+    matchInfo.clients[client.uuid] = ({
+      uuid: client.uuid,
+      name: client.name,
+      lives: client.lives,
+      skinPath: client.skinPath,
+      color: client.color,
+      playerNumber: client.playerNumber })
   }
   this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
@@ -175,11 +181,10 @@ const startPhysics = function startPhysics(spawnPoints) {
       || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
         //PLAYER DEATH & RESPAWN
         client.lives--;
-
         const spawn = context.spawnPoints[random(0, context.spawnPoints.length - 1)]
-
         clientBody.position.set(spawn[0], spawn[1], spawn[2]);
         clientBody.mass = config.playerModelMass;
+        clientBody.linearDamping = config.playerDamping;
 
         clientBody.velocity.set(0,0,0);
         context.sendPoll();
@@ -252,10 +257,11 @@ const shootBall = function shootBall(camera) {
     && (e.body.userData.playername)
     && (e.target.mass === config.ballMass)
     && (e.target.useruuid !== e.body.uuid)) {
-    if(e.body.mass > 4) {
+      if (e.body.mass > 4) {
         e.body.mass = e.body.mass - 4;
+        e.body.linearDamping = e.body.linearDamping - 0.15;
     }
-      console.log('Collision !!! Body ', e.body.mass, 'Target ', e.target);
+      console.log('Collision !!! Body ', e.body.mass, 'Damping  ', e.body.linearDamping);
       collisionSound = { play: 7 };
     }
   });
@@ -276,12 +282,21 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
   ballBody.uuid = player.object.uuid;
+  ballBody.score = 0;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
   player.name = player.name || 'Guest';
   ballBody.userData = { playername: player.name };
   // player data for other users
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, quaternion: player.quaternion, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid,
+    position: ballBody.position,
+    direction: player.direction,
+    quaternion: player.quaternion,
+    up: false,
+    left: false,
+    right: false, down: false, lastUpdate: performance.now(),
+    skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3,
+    playerNumber: playerNumber};
   this.world.add(ballBody);
   this.sendPoll();
 };

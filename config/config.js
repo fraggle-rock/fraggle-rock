@@ -26,6 +26,7 @@ module.exports = {
   playerMovePerTick: 3,
   playerVerticalBound: 100,
   playerHorizontalBound: 200,
+  playerLives: 3,
   jumpVelocity: 50,
   gravity: -98,
   physicsBounds: 200,
