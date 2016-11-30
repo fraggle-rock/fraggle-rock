@@ -15,23 +15,25 @@ const JoinButtonData = props => {
     screenOverlay.style.display = '';
     hud.style.display = 'none';
 
-    //check ~ key for menu
-	  document.addEventListener('keydown', function(e) {
+    const showMenu = (e) => {
       if (e.keyCode === 192) {
         screenOverlay.style.display = '-webkit-box';
         screenOverlay.style.display = '-moz-box';
         screenOverlay.style.display = 'box';
         if (menuContainer.style.display === '') {
-        	menuContainer.style.display = 'none';
-        	hud.style.display = '';
+          menuContainer.style.display = 'none';
+          hud.style.display = '';
           document.body.requestPointerLock();
         } else {
           menuContainer.style.display = '';
           hud.style.display = 'none';
           document.exitPointerLock();
         }
-		  }
-   });
+      }
+   }
+
+    //check ~ key for menu
+	  document.addEventListener('keydown', showMenu);
 
     const resume = document.getElementById('resume');
     resume.addEventListener('click', function(e) {
@@ -61,7 +63,7 @@ const JoinButtonData = props => {
       browserHistory.push('GameOver');
     });
 
-	  clientScene.joinGame(this);
+	  clientScene.joinGame(this, showMenu);
   }
 
   return (
