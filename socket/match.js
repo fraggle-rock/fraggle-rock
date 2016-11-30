@@ -170,13 +170,16 @@ const startPhysics = function startPhysics(spawnPoints) {
       const currVelocity = clientBody.velocity;
       let movePerTick = config.playerMovePerTick;
       let isMoving = false;
-      if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
+      if (Math.abs(clientBody.position.y) > config.playerVerticalBound
+      || Math.abs(clientBody.position.x) > config.playerHorizontalBound
+      || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
         //PLAYER DEATH & RESPAWN
         client.lives--;
 
         const spawn = context.spawnPoints[random(0, context.spawnPoints.length - 1)]
 
         clientBody.position.set(spawn[0], spawn[1], spawn[2]);
+        clientBody.mass = config.playerModelMass;
 
         clientBody.velocity.set(0,0,0);
         context.sendPoll();
@@ -231,7 +234,7 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
-  ballBody.uuid = camera.uuid;
+  ballBody.useruuid = camera.uuid;
   const context =this;
 
   const shootDirection = camera.direction;
@@ -244,8 +247,12 @@ const shootBall = function shootBall(camera) {
   ballBody.addEventListener("collide",function(e){
     if(e.body.userData && e.body.userData.shapeType >= 3) {
       collisionSound = { play: e.body.userData.shapeType };
-    } else if( e.target.uuid && (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
-    && (e.target.uuid !== e.body.uuid)) {
+    } else if( e.target.useruuid
+    && (e.body.userData.playername)
+    && (e.target.mass === config.ballMass)
+    && (e.target.useruuid !== e.body.uuid)) {
+      e.body.mass = e.body.mass - 10;
+      console.log('Collision !!! Body ', e.body.mass, 'Target ', e.target);
       collisionSound = { play: 7 };
     }
   });
@@ -269,7 +276,7 @@ const loadNewClient = function loadNewClient(player) {
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
   player.name = player.name || 'Guest';
-
+  ballBody.userData = { playername: player.name };
   // player data for other users
   this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, quaternion: player.quaternion, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
   this.world.add(ballBody);
