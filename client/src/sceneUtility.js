@@ -60,26 +60,48 @@ module.exports = {
   },
   addMoveControls: function addMoveControls(camera, socketUtility) {
     const playerInput = {};
+    let flyControlsTick;
+    const movePerTick = .3;
     playerInput.up = false;
     playerInput.left = false;
     playerInput.down = false;
     playerInput.right = false;
     playerInput.jump = false;
     playerInput.uuid = camera.uuid.slice(0, config.uuidLength);
+
+    if (!currentGame.on) {
+      flyControlsTick = setInterval(function() {
+        const direction = camera.getWorldDirection();
+        const currPosition = camera.position;
+        if (playerInput.up) {
+          camera.position.set(currPosition.x + movePerTick * direction.x, currPosition.y + movePerTick * direction.y, currPosition.z + movePerTick * direction.z);
+        }
+        if (playerInput.down) {
+          camera.position.set(currPosition.x - movePerTick * direction.x, currPosition.y - movePerTick * direction.y, currPosition.z - movePerTick * direction.z);
+        }
+        if (playerInput.right) {
+          camera.position.set(currPosition.x - movePerTick * direction.z, currPosition.y, currPosition.z + movePerTick * direction.x);
+        }
+        if (playerInput.left) {
+          camera.position.set(currPosition.x + movePerTick * direction.z, currPosition.y, currPosition.z - movePerTick * direction.x);
+        }
+      }, 1/60*1000);
+    }
+
     const onKeyDown = function onKeyDown(event) {
+      if (event.keyCode === 87 || event.keyCode === 38) {
+        playerInput.up = true;
+      }
+      if (event.keyCode === 65 || event.keyCode === 37) {
+        playerInput.left = true;
+      }
+      if (event.keyCode === 83 || event.keyCode === 40) {
+        playerInput.down = true;
+      }
+      if (event.keyCode === 68 || event.keyCode === 39) {
+        playerInput.right = true;
+      }
       if (currentGame.on) {
-        if (event.keyCode === 87 || event.keyCode === 38) {
-          playerInput.up = true;
-        }
-        if (event.keyCode === 65 || event.keyCode === 37) {
-          playerInput.left = true;
-        }
-        if (event.keyCode === 83 || event.keyCode === 40) {
-          playerInput.down = true;
-        }
-        if (event.keyCode === 68 || event.keyCode === 39) {
-          playerInput.right = true;
-        }
         if (event.keyCode === 32) {
           event.preventDefault();
           if (jumpCount > 0 && playerInput.jump === false) {
@@ -111,19 +133,19 @@ module.exports = {
     };
 
     const onKeyUp = function onKeyUp(event) {
+      if (event.keyCode === 87 || event.keyCode === 38) {
+        playerInput.up = false;
+      }
+      if (event.keyCode === 65 || event.keyCode === 37) {
+        playerInput.left = false;
+      }
+      if (event.keyCode === 83 || event.keyCode === 40) {
+        playerInput.down = false;
+      }
+      if (event.keyCode === 68 || event.keyCode === 39) {
+        playerInput.right = false;
+      }
       if (currentGame.on) {
-        if (event.keyCode === 87 || event.keyCode === 38) {
-          playerInput.up = false;
-        }
-        if (event.keyCode === 65 || event.keyCode === 37) {
-          playerInput.left = false;
-        }
-        if (event.keyCode === 83 || event.keyCode === 40) {
-          playerInput.down = false;
-        }
-        if (event.keyCode === 68 || event.keyCode === 39) {
-          playerInput.right = false;
-        }
         socketUtility.emitClientPosition(camera, playerInput);
       }
     };
