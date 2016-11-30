@@ -3,6 +3,7 @@ const CANNON = require('cannon');
 const THREE = require('three');
 const config = require('../config/config.js');
 const flat = require('../config/flat.js')
+const scoreTable = {};
 let kill;
 
 const getGuid = function getGuid() {
@@ -260,8 +261,12 @@ const shootBall = function shootBall(camera) {
       if (e.body.mass > 4) {
         e.body.mass = e.body.mass - 4;
         e.body.linearDamping = e.body.linearDamping - 0.15;
-    }
-      console.log('Collision !!! Body ', e.body.mass, 'Damping  ', e.body.linearDamping, 'Clients ', context.clients);
+        if (scoreTable[e.target.useruuid] !== undefined ) {
+          scoreTable[e.target.useruuid] += 1;
+        }
+      }
+      console.log('Collision !!! Body ', e.body.mass, 'Damping  ', e.body.linearDamping,
+      'Score ', scoreTable[e.target.useruuid]);
       collisionSound = { play: 7 };
     }
   });
@@ -282,7 +287,7 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
   ballBody.uuid = player.object.uuid;
-  ballBody.score = 0;
+  scoreTable[ballBody.uuid] = 0;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
   player.name = player.name || 'Guest';
