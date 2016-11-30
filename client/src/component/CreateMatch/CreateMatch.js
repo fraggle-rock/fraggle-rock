@@ -28,9 +28,9 @@ class CreateMatch extends React.Component {
     const players = Object.keys(sceneUtility.currentGame.matchInfo.clients).length;
     screenOverlay.style.display = '';
     hud.style.display = 'none';
+    
 
-    //check ~ key for menu
-    document.addEventListener('keydown', function(e) {
+    const showMenu = (e) => {
       if(e.keyCode === 192) {
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
@@ -45,7 +45,9 @@ class CreateMatch extends React.Component {
           document.exitPointerLock();
         }
       }
-    })
+    }
+    //check ~ key for menu
+    document.addEventListener('keydown', showMenu)
 
     const resume = document.getElementById('resume');
     resume.addEventListener('click', function(e) {
@@ -75,7 +77,7 @@ class CreateMatch extends React.Component {
     });
 
     document.getElementById( 'CreateMatchContainer' ).style.display = 'none';
-    clientScene.startGame();
+    clientScene.startGame(showMenu);
   }
 
   ChooseMap() {
