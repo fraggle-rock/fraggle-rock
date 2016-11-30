@@ -20,8 +20,9 @@ io.on('connection', (socket) => {
     const scene = fullScene.scene;
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
+    const numPlayers = fullScene.numPlayers;
     socket.join(match.guid);
-    match.loadFullScene(scene, player, io);
+    match.loadFullScene(scene, player, io, numPlayers);
     match.startPhysics(fullScene.spawnPoints);
     match.killFloor();
     socket.on('shootBall', function(camera) {

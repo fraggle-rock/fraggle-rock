@@ -276,9 +276,11 @@ const loadNewClient = function loadNewClient(player) {
   this.sendPoll();
 };
 
-const loadFullScene = function loadFullScene(scene, player, io) {
+const loadFullScene = function loadFullScene(scene, player, io, numPlayers) {
   // Setup our world
   this.io = io;
+  this.numPlayers = numPlayers;
+  debugger;
   const context = this;
   let world = new CANNON.World();
   world.quatNormalizeSkip = 0;

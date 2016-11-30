@@ -74,7 +74,7 @@ class CreateMatch extends React.Component {
     });
 
     document.getElementById( 'CreateMatchContainer' ).style.display = 'none';
-    clientScene.startGame();
+    clientScene.startGame(this.state.numPlayers);
   }
 
   ChooseMap() {
@@ -126,7 +126,7 @@ class CreateMatch extends React.Component {
               <div>{this.state.maps[this.state.mapChoice].name}</div>
             </div>
             <div id='StartMatch'>
-              <button id='Start'className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
+              <button id='Start'className='btn btn-primary' onClick={this.StartMatch.bind(this)}>START MATCH</button>
             </div>
           </div>
         </div>
