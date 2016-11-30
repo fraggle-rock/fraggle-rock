@@ -9,11 +9,16 @@ class GameOver extends React.Component {
 	    user: null
 	  };
   }
-  
+
+  backToHome() {
+    browserHistory.push('/Home')
+  }
+
   render() {
       return (
         <div>
          <h1>Game Over</h1>
+         <button className='btn-primary' onClick={this.backToHome}>HOME</button>
         </div>
       );
 
