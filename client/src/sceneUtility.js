@@ -230,7 +230,7 @@ module.exports = {
     });
 
     //if you are the last player alive, display victory screen
-    if (players > 1 && playersAlive.length === 1) {
+    if (players > 1 && playersAlive.length === 1 && matchInfo.numPlayers !== 0) {
       document.getElementById('HUD').style.display = 'none';
       // document.getElementById('victoryBox').style.display = '';
       document.getElementById('victoryBox').style.opacity = '1';

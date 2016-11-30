@@ -35,13 +35,17 @@ io.on('connection', (socket) => {
     socket.on('poll', function(clientUuid) {
       match.loadPoll(clientUuid);
     });
+    if (match.numPlayers === 0) {
+      match.startPhysics();
+      match.killFloor();
+    }
   });
 
   socket.on('addMeToMatch', function (newMatchRequest) {
     const matchId = newMatchRequest.matchId;
     const player = newMatchRequest.player;
     const match = matchController.getMatch(matchId);
-    if (!match || match.numPlayers === Object.keys(match.clients).length) {
+    if (!match || match.numPlayers === Object.keys(match.clients).length || Object.keys(match.clients).length >= 6) {
       socket.emit('matchUnavailable');
     } else {
       socket.join(match.guid, function() {
