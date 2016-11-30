@@ -30,6 +30,7 @@ module.exports = function Match(deleteMatch) {
   this.startPhysics = startPhysics.bind(this);
   this.physicsLoop = physicsLoop;
   this.physicsEmit = physicsEmit;
+  this.buildPhysicsEmit = buildPhysicsEmit;
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
   this.loadPoll = loadPoll.bind(this);
@@ -86,7 +87,7 @@ const loadClientQuaternion = function loadClientQuaternion(clientQuaternion) {
   }
 };
 
-const physicsEmit = function physicsEmit (match, socket) {
+const buildPhysicsEmit = function buildPhysicsEmit(match) {
   const balls = [];
   const boxes = [];
   const clear = [];
@@ -140,16 +141,15 @@ const physicsEmit = function physicsEmit (match, socket) {
       offset--;
     });
   }
-  const update = [boxes, balls, players];
-  if (clear.length > 0) {
-    update.push(clear);
-  } else {
-    update.push([]);
-  }
-  if(collisionSound !== undefined) {
-    update.push(collisionSound);
-    collisionSound = undefined;
-  }
+  const update = [boxes, balls, players, clear, collisionSound];
+  collisionSound = undefined;
+  return update;
+}
+
+const physicsEmit = function physicsEmit (match, socket) {
+  const update = buildPhysicsEmit(match);
+  const players = update[2];
+  const clear = update[3];
   if (socket === undefined) {
     if (players.length > 0) {
       if (match.sendFull || clear.length > 0) {
@@ -163,7 +163,6 @@ const physicsEmit = function physicsEmit (match, socket) {
   } else {
     socket.emit('fullPhysicsUpdate', JSON.stringify(update));
   }
-  
   match.sendFull = false;
 };
 
