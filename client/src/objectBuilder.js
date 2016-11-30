@@ -255,10 +255,12 @@ module.exports = {
     objLoader.setPath('src/');
     objLoader.load('ha2.obj', function (object) {
         initPosition(object.children[0], position, quaternion)
+        object.children[0].material = new THREE.MeshLambertMaterial({ color: 'white'});
         object.children[0].material.side = 2;
         object.scale.y = 0.02;
         object.scale.x = 0.02;
         object.scale.z = 0.02;
+        addShadow(object.children[0]);
         cb(object)
     });
   }
