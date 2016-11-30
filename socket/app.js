@@ -1,5 +1,5 @@
-const httpPort = 3332;
-const socketPort = 3333;
+const httpPort = 4444;
+const socketPort = 3001;
 const io = require('socket.io')(socketPort);
 const matchController = require('./matchController.js');
 const http = require('http');

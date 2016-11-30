@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.route('/liveGames')
   .get((req, res) => {
-    http.get('http://localhost:3332/liveGames', function(response) {
+    http.get('http://socket1:4444/liveGames', function(response) {
       response.setEncoding('utf8');
-        let rawData = '';
+      let rawData = '';
       response.on('data', (chunk) => rawData += chunk);
       response.on('end', () => {
         try {
