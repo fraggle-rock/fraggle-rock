@@ -176,6 +176,17 @@ const physicsEmit = function physicsEmit (match, socket) {
   match.sendFull = false;
 };
 
+const updateScoreTable = function updateScoreTable(uuid,num) {
+  if (num > 0 ) {
+    const bonus = config.pointsOnPlayerDeath * (num - 1);
+    for (var key in scoreTable) {
+      if (key !== uuid) {
+        scoreTable[key] += bonus;
+      }
+    }
+  }
+  console.log('Update score table ', scoreTable);
+}
 const physicsLoop = function physicsLoop(match) {
   for (var key in match.clients) {
     const client = match.clients[key];
@@ -187,8 +198,8 @@ const physicsLoop = function physicsLoop(match) {
     Math.abs(clientBody.position.x) > config.playerHorizontalBound ||
     Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
       //PLAYER DEATH & RESPAWN
-      client.lives--;
-
+      client.lives--
+      updateScoreTable(client.uuid,match.numPlayers);
       const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)]
 
       clientBody.position.set(spawn[0], spawn[1], spawn[2]);
