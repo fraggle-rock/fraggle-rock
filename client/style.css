@@ -56,11 +56,17 @@ body {
   overflow: hidden;
 }
 
+h3 {
+  font-weight: normal;
+}
+
 canvas {
   margin: auto;
   display: flex;
   align-items: center;
 }
+
+/*----------------------BUTTONS----------------------*/
 
 .btn {
   display: inline-block
@@ -78,6 +84,25 @@ canvas {
   padding: .5rem 1rem;
   font-size: 1rem;
   border-radius: .25rem;
+  transition: all .25s;
+}
+
+.btn-xs {
+  display: inline-block
+  font-weight: 400;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  border: 1px solid transparent;
+  padding: .15rem .25rem;
+  font-size: .75rem;
+  border-radius: .1rem;
   transition: all .25s;
 }
 
@@ -124,6 +149,8 @@ canvas {
   background-color: #c9302c;
   border-color: #c12e2a;
 }
+
+/*-------------------HUD--------------------------*/
 
 #screenOverlay {
   position: absolute;
@@ -369,9 +396,8 @@ canvas {
   color: white;
 }
 
-/*LogIn Page CSS*/
-/*
------------------------------------------------------------------------------------*/
+/*-----------------------------------------Login Page------------------------------------------*/
+
 .logInContainer {
   text-align: center;
   width: 100%;
@@ -392,9 +418,8 @@ canvas {
   text-align: center;
 }
 
-/*Home Page CSS*/
-/*
------------------------------------------------------------------------------------*/
+/*--------------------------------Home Page---------------------------------------------------*/
+
 #HomePage {
   text-align: center;
   width: 100%;
@@ -492,15 +517,48 @@ canvas {
   cursor: pointer;
 }
 
-#SelectSkinButtonCreate {
-  display: inline-block;
-  float: right;
-  margin: 10px 10px 0 0px;
+/*---------------------------------Menu Layout--------------------------------------------------*/
+
+.buttonBox {
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
 }
 
-/*LeaderBoard CSS*/
-/*
------------------------------------------------------------------------------------*/
+.buttonBox > h1, .homeBtn, .selectSkinBtn {
+
+}
+
+.buttonBox > h1 {
+  display: inline-block;
+  text-align: center;
+  padding: 0 10px;
+  margin: 15px 40px;
+  color: white;
+  font-weight: normal;
+}
+
+.homeBtn {
+  display: inline-block;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.selectSkinBtn {
+  display: inline-block;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.storeStars {
+  margin-bottom: 20px;
+}
+
+
+/*---------------------------------Leaderboard--------------------------------------------------*/
+
 #LeaderData {
   text-align: center;
   color: white;
@@ -545,8 +603,7 @@ canvas {
   color: white;
 }
 
-/*Create Match*/
-/*-----------------------------*/
+/*-----------------------Create Match------------------------*/
 
 #CreateMatchContainer {
   margin-top: 14%;
@@ -568,11 +625,6 @@ canvas {
   border-radius: 20px;
 }
 
-#CreateMatchTitle {
-  padding: 10px;
-  color: white;
-}
-
 #StartMatch {
   margin-top: 40px;
 }
@@ -584,8 +636,8 @@ canvas {
 
 #ChooseMap {
   display: inline-block;
-  margin: 10px 0px;
-  font-size: 20px;
+  margin: 10px 0;
+  font-size: 14px;
   cursor: pointer;
   color: white;
   -webkit-user-select: none; /* Chrome/Safari unSelectable Text*/
@@ -601,14 +653,9 @@ canvas {
   background-color: rgb(255, 255, 255);
   border-radius: 20px;
   width: 560px;
-  height: 215px;
+  height: 225px;
   border: 1px solid black;
   margin: auto;
-}
-
-#HomeButtonCreate {
-  float: left;
-  margin: 10px 0 0 10px;
 }
 
 .mapSelectContainer {
@@ -637,12 +684,12 @@ canvas {
   width: 173px;
   margin-bottom: 5px;
   border-radius: 10px;
-  border: 2px solid white;
-  transition: border .25s;
+  border: 2px solid transparent;
+  transition: all .25s;
 }
 
 .mapThumb:hover {
-  border-color: black;
+  border: 2px solid black;
 }
 
 #selectMapPreview {
@@ -650,13 +697,13 @@ canvas {
   height: auto;
   margin: 0 auto;
   pointer-events: none;
-  padding: 10px 0 3px;
+  padding: 10px 0 1px;
 
 }
 
 #selectedMap {
   margin: 0 auto;
-  height: 190px;
+  height: 195px;
   width: 185px;
   border-radius: 10px;
   background-color: white;
@@ -669,9 +716,7 @@ canvas {
   text-align: center;
 }
 
-
-/*Join Match*/
-/*-----------------------------------------------------------------*/
+/*--------------------------Join Match---------------------------------------*/
 
 #JoinDawnMountain {
   height: 50px;
@@ -706,9 +751,7 @@ canvas {
   margin-top: 5px;
 }
 
-
-/*Store*/
-/*------------------------------------------------------*/
+/*----------------------Store--------------------------------*/
 
 #Store {
   margin-top: 14%;
@@ -727,11 +770,12 @@ canvas {
 #Skins {
   margin: 20px auto;
   height: 250px;
-  overflow:scroll;
+  overflow-y: auto;
   overflow-x:hidden;
   width: 580px;
   background-color: white;
   opacity: 1;
+  color: black;
 }
 
 .Skin {
@@ -746,11 +790,21 @@ canvas {
   font-size: 16px;
   background-color: black;
   width: 140px;
+  padding: 5px 0;
+  margin-top: -5px;
+  margin-bottom: 5px;
 }
 
+.SkinButton {
+  width: 140px;
+  text-align: center;
+}
 
 .SkinCost {
-  color: black;
+  color: white;
+  background-color: black;
+  width: 140px;
+  margin: 0 auto 5px;
 }
 
 #storeButton {
