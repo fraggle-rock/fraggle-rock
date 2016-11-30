@@ -248,10 +248,13 @@ const shootBall = function shootBall(camera) {
     if(e.body.userData && e.body.userData.shapeType >= 3) {
       collisionSound = { play: e.body.userData.shapeType };
     } else if( e.target.useruuid
+    && (e.body.userData)
     && (e.body.userData.playername)
     && (e.target.mass === config.ballMass)
     && (e.target.useruuid !== e.body.uuid)) {
-      e.body.mass = e.body.mass - 10;
+    if(e.body.mass > 4) {
+        e.body.mass = e.body.mass - 4;
+    }
       console.log('Collision !!! Body ', e.body.mass, 'Target ', e.target);
       collisionSound = { play: 7 };
     }
