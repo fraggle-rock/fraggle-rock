@@ -55,6 +55,12 @@ body {
   background-size: cover;
   overflow: hidden;
   font-family: sans-serif;
+  color: white;
+  margin: 0;
+}
+
+#app {
+  margin: 0;
 }
 
 h3 {
@@ -63,8 +69,6 @@ h3 {
 
 canvas {
   margin: auto;
-  display: flex;
-  align-items: center;
 }
 
 /*----------------------BUTTONS----------------------*/
@@ -174,7 +178,8 @@ canvas {
 
 #screenOverlay {
   position: absolute;
-  display: none;
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -297,6 +302,8 @@ canvas {
   height: 15px;
   margin: 0 auto;
   padding-right: 4px;
+  display: block;
+  text-align: center;
 }
 
 #crosshair {
@@ -310,6 +317,7 @@ canvas {
   height: 15px;
   display: inline-block;
   margin-right: 6px;
+  margin-top: -3px;
   float: left;
   line-height: 8px;
 }
@@ -330,6 +338,7 @@ canvas {
 .ammoBox {
   display: inline-block;
   margin-left: 5px;
+  margin-top: -2px;
   height: 15px;
   width: 5px;
   float: right;
@@ -564,7 +573,6 @@ canvas {
 .menuContainer {
   margin-top: 14%;
   text-align: center;
-  color: white;
 }
 
 .menuBackground {
@@ -593,7 +601,6 @@ canvas {
   text-align: center;
   padding: 0 10px;
   margin: 15px 40px;
-  color: white;
   font-weight: normal;
 }
 
@@ -647,13 +654,11 @@ canvas {
 #LeaderBoardDataScore {
   margin-top: 13px;
   font-size: 15px;
-  color: white;
 }
 
 #LeaderBoardDataUser {
   margin-top: 13px;
   font-size: 15px;
-  color: white;
 }
 
 /*-----------------------Create Match------------------------*/
@@ -671,15 +676,6 @@ canvas {
   display: inline-block;
   margin: 10px 0;
   font-size: 14px;
-  cursor: pointer;
-  color: white;
-  -webkit-user-select: none; /* Chrome/Safari unSelectable Text*/
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+ */
-}
-
-#ChooseMap:hover {
-  color: skyblue;
 }
 
 #maps {
@@ -805,13 +801,13 @@ canvas {
 
 .SkinName {
   margin: auto;
-  color: white;
   font-size: 16px;
   background-color: black;
   width: 140px;
   padding: 5px 0;
   margin-top: -5px;
   margin-bottom: 5px;
+  color: white;
 }
 
 .SkinButton {
@@ -820,7 +816,6 @@ canvas {
 }
 
 .SkinCost {
-  color: white;
   background-color: black;
   width: 140px;
   margin: 0 auto 5px;
@@ -868,7 +863,6 @@ canvas {
 
 #GameOver {
   text-align: center;
-  color: white;
   margin: auto;
 }
 

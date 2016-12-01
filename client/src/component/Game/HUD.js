@@ -14,13 +14,8 @@ class HUD extends React.Component {
   }
 
   componentDidMount() {
-    const screenOverlay = document.getElementById( 'screenOverlay' );
     const menuContainer = document.getElementById( 'menuContainer' );
     const hud = document.getElementById( 'HUD' );
-    const victoryBox = document.getElementById( 'victoryBox' );
-    screenOverlay.style.display = '-webkit-box';
-    screenOverlay.style.display = '-moz-box';
-    screenOverlay.style.display = 'box';
     menuContainer.style.display = '';
     hud.style.display = 'none';
 
@@ -29,9 +24,6 @@ class HUD extends React.Component {
       if (e.keyCode === 192) {
         const hud = document.getElementById( 'HUD' );
         const menuContainer = document.getElementById( 'menuContainer' );
-        screenOverlay.style.display = '-webkit-box';
-        screenOverlay.style.display = '-moz-box';
-        screenOverlay.style.display = 'box';
 
         if (menuContainer.style.display === '') {
           menuContainer.style.display = 'none';
@@ -72,6 +64,7 @@ class HUD extends React.Component {
         <div id="HUD">
 
           <div className="playerBoxContainer">
+
             <div className="player1 playerBox" id="player1Box">
               <img src="./textures/playerRedHealth.png" className="playerPic" />
               <div className="playerLives">

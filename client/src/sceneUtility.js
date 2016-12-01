@@ -118,7 +118,7 @@ module.exports = {
           const regen = function regen() {
             if (jumpCount < config.maxJumps) {
               jumpCount++;
-              if (userProfile.matchId) {
+              if (userProfile.matchId || userProfile.createMatch) {
                 document.getElementById('jump' + jumpCount).style.opacity = '1';
               }
             }
@@ -169,9 +169,7 @@ module.exports = {
       if (currentGame.on) {
         if (shotCount > 0) {
           audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
-          if (userProfile.matchId) {
-            document.getElementById('ammo' + shotCount).style.opacity = '0';
-          }
+          document.getElementById('ammo' + shotCount).style.opacity = '0';
           shotCount--;
           socketUtility.emitShootBall({
             position: currentGame.camera.position,
@@ -182,7 +180,7 @@ module.exports = {
         const regen = function regen() {
           if (shotCount < config.maxShots) {
             shotCount++;
-            if (userProfile.matchId) {
+            if (userProfile.matchId || userProfile.createMatch) {
               document.getElementById('ammo' + shotCount).style.opacity = '1';
             }
           }

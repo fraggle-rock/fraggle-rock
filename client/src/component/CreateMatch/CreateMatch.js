@@ -87,7 +87,7 @@ class CreateMatch extends React.Component {
               <button className='btn btn-warning selectSkinBtn' onClick={this.selectSkin}>Select Skin</button>
             </div>
 
-            <div id='ChooseMap' onClick={this.ChooseMap}>CHOOSE MAP</div>
+            <div id='ChooseMap' className='btn-md btn-primary' onClick={this.ChooseMap}>CHOOSE MAP</div>
 
             <div id='MapSelector'>
               <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />
