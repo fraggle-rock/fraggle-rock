@@ -74,7 +74,7 @@ const hasChangedInput = function hasChangedInput(playerInput) {
 
 
 module.exports = {
-  requestNewMatch: function requestNewMatch(game, showMenu) {
+  requestNewMatch: function requestNewMatch(game, numPlayers, showMenu) {
     addUpdateListeners(socket, showMenu);
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
@@ -85,7 +85,7 @@ module.exports = {
     camera.skinPath = userProfile.ChosenSkin;
     camera.name = userProfile.User;
 
-    const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints};
+    const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints, numPlayers: numPlayers};
     socket.emit('fullScene', fullScene);
   },
   joinMatch: function joinMatch(matchNumber, game, showMenu) {

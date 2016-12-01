@@ -33,15 +33,17 @@ class LeaderBoard extends React.Component {
       <div id='LeaderBoardTitle'>
         <div id='LeaderData'>
           <div id='CreateMatchBackground'>
-          <h1 id='LeaderBoardTitle2'>Smash Ball Brawl Leaderboard</h1>
-          <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
+          <div className='buttonBox'>
+            <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
+            <h1>Top 10 Players</h1>
+          </div>
           <div id='DataLeader'>
             <div id='LeaderBoardUser'>
-              <div id="LeaderBoardUserNameTitle">USERNAME</div>
+              <h3>USERNAME</h3>
               {this.state.leaderBoards.map(leader => <LeaderBoardDataUser key={leader.username.toString()} leader={leader} />)}
             </div>
             <div id='LeaderBoardScore'>
-              <div id="LeaderBoardScoreTitle">SCORE</div>
+              <h3>SCORE</h3>
               {this.state.leaderBoards.map(leader => <LeaderBoardDataScore key={leader.score.toString()} leader={leader} />)}
             </div>
           </div>
@@ -52,7 +54,7 @@ class LeaderBoard extends React.Component {
         </div>
       </div>
     );
-  	
+
   }
 }
 

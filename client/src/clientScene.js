@@ -39,13 +39,14 @@ const join = function join() {
   return { camera, renderer, scene };
 }
 
-const startGame = function startGame(showMenu) {
+
+const startGame = function startGame(numPlayers, showMenu) {
   const game = init(); //creates camera, renderer and scene data
   sceneUtility.addLookControls(game.camera, socketUtility);
   const playerInput = sceneUtility.addMoveControls(game.camera, socketUtility);
   sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game); //Renders screen to page and requests re-render at next animation frame
-  socketUtility.requestNewMatch(game, showMenu); //Request to the server to create a new match
+  socketUtility.requestNewMatch(game, numPlayers, showMenu); //Request to the server to create a new match
 };
 
 const joinGame = function joinGame(matchNumber, showMenu) {

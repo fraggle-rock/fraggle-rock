@@ -30,16 +30,16 @@ class Home extends React.Component {
   render() {
     return (
       <div id='HomePage'>
+        <div id='Profile'>
+          <Profile />
+        </div>
         <div id='HomeScene'>
           <img src='../../../textures/logotext.png' id='NonSelect'/>
           <div id="joinButtons">
             <button id="joinMatch" onClick={this.CreateMatch} className='btn btn-primary'>Create Match</button>
             <button id="joinExisting" onClick={this.JoinMatch} className='btn btn-primary'>Join Match</button>
           </div>
-          <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View LeaderBoards</button>
-        </div>
-        <div id='Profile'>
-          <Profile />
+          <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View Leaderboards</button>
         </div>
         <div className='version'>v0.7</div>
         <div className='createdBy'>Created by Nick Lathen, Will Stockman, Eric Eakin, and Riyaz Ahmed, 2016</div>

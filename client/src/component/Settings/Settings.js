@@ -1,12 +1,15 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import userProfile from '../userProfile.js';
+import Profile from '../Home/Profile.js';
 
 class Settings extends React.Component {
   constructor(props) {
 	  super(props);
 	  this.state = {
 	    user: null,
+      graphics: userProfile.graphics,
+      sound: userProfile.sound
 	  };
 	  this.backToHome = this.backToHome.bind(this);
   }
@@ -15,24 +18,47 @@ class Settings extends React.Component {
     browserHistory.push('/Home');
   }
 
-  click(btn) {
-    userProfile.graphics = btn;
-    browserHistory.push('Home')
+  clickGfx(btn) {
+    this.setState({graphics: btn});
+  }
+
+  clickSound(btn) {
+    this.setState({sound: btn});
+  }
+
+  accept() {
+    userProfile.graphics = this.state.graphics;
+    userProfile.sound = this.state.sound;
+    browserHistory.push('/Home');
   }
 
   render() {
       return (
         <div id='Store'>
-          <div id='CreateMatchBackground' >
-            <div>
-              <h1 id='Title'>Settings</h1>
+          <div id='CreateMatchBackground'>
+            <div id='Profile'>
+              <Profile />
             </div>
-            <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-            <h3>Choose Graphics Quality</h3>
-            <div id='SettingsButtons'>
-              <button className={'btn btn-danger gfxBtn ' + (userProfile.graphics === 0 ? 'gfxBtnActive' : '')} onClick={() => this.click(0)}>Low</button>
-              <button className={'btn btn-warning gfxBtn ' + (userProfile.graphics === 1 ? 'gfxBtnActive' : '')} onClick={() => this.click(1)}>Medium</button>
-              <button className={'btn btn-success gfxBtn ' + (userProfile.graphics === 2 ? 'gfxBtnActive' : '')} onClick={() => this.click(2)}>High</button>
+            <div className='buttonBox'>
+              <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
+              <h1>Settings</h1>
+            </div>
+
+            <div className='SettingsButtons'>
+              <h3>Graphics Quality</h3>
+              <button className={'btn gfxBtn ' + (this.state.graphics === 0 ? 'btn-danger' : '')} onClick={() => this.clickGfx(0)}>Low</button>
+              <button className={'btn gfxBtn ' + (this.state.graphics === 1 ? 'btn-warning' : '')} onClick={() => this.clickGfx(1)}>Medium</button>
+              <button className={'btn gfxBtn ' + (this.state.graphics === 2 ? 'btn-success' : '')} onClick={() => this.clickGfx(2)}>High</button>
+            </div>
+
+            <div className='SettingsButtons'>
+              <h3>Sound</h3>
+              <button className={'btn gfxBtn ' + (this.state.sound === 0 ? 'btn-danger' : '')} onClick={() => this.clickSound(0)}>Off</button>
+              <button className={'btn gfxBtn ' + (this.state.sound === 1 ? 'btn-success' : '')} onClick={() => this.clickSound(1)}>On</button>
+            </div>
+
+            <div id='StartMatch'>
+              <button id='Start' className='btn btn-warning' onClick={() => this.accept()}>Accept Changes</button>
             </div>
           </div>
         </div>

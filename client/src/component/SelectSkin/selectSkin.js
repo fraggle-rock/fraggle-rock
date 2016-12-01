@@ -1,7 +1,8 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import userProfile from '../userProfile.js';
-import SelectSkinData from './SelectSkinData.js'
+import SelectSkinData from './SelectSkinData.js';
+import Profile from '../Home/Profile.js';
 
 class SelectSkin extends React.Component {
   constructor(props) {
@@ -27,16 +28,19 @@ class SelectSkin extends React.Component {
       return (
         <div id='Store'>
           <div id='CreateMatchBackground' >
-            <div>
-              <h1 id='Title'>Select Skin</h1>
+            <div id='Profile'>
+              <Profile />
             </div>
-            <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>Go Back</button>
+            <div className='buttonBox'>
+              <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
+              <h1>Select Skin</h1>
+            </div>
             <div id='Skins'>
-              {this.state.skins.map((skins) => <SelectSkinData key={skins.skin} skins={skins} />)}
+              {this.state.skins.length ? this.state.skins.map((skin) => <SelectSkinData key={skin.skin} skin={skin} />) : 'Go to the store to buy skins!'}
             </div>
           </div>
         </div>
-      );   
+      );
   }
 }
 

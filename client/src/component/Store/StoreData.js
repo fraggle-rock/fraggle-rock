@@ -4,8 +4,10 @@ import userProfile from '../userProfile.js';
 
 var StoreData = props => {
 	var addSkin = function() {
-    if(userProfile.experience >= props.skins.price) {
-      var data = {facebookid: userProfile.facebookid, points: -(props.skins.price)}
+
+  if(!props.state.storeSkins[props.i].owned) {
+    if(userProfile.stars >= props.skin.price) {
+      var data = {facebookid: userProfile.facebookid, points: -(props.skin.price)}
       $.ajax({
         url: '/api/addTransactionByFacebookID',
         method: 'Post',
@@ -15,10 +17,9 @@ var StoreData = props => {
           console.log(error)
         },
         success: (data) => {
-          userProfile.Skins.push(props.skins.skin)
-          console.log(userProfile.userId)
+          userProfile.Skins.push(props.skin.skin)
+          props.state.storeSkins[props.i].owned = true;
           var skins = {id: userProfile.userId, skins: userProfile.Skins}
-          console.log(JSON.stringify(skins))
           $.ajax({
             url: '/api/updateSkins',
             method: 'Post',
@@ -28,7 +29,8 @@ var StoreData = props => {
               console.log(error)
             },
             success: (error) => {
-              userProfile.experience = userProfile.experience - props.skins.price;
+              userProfile.stars = userProfile.stars - props.skin.price;
+              console.log('userProfile')
               browserHistory.push('Store')
             }
           })
@@ -40,18 +42,16 @@ var StoreData = props => {
     }
   }
 
+    browserHistory.push('Store');
+  };
+
   return (
   	<div className='Skin'>
-  	  <div>
-  	    <img className='SkinPic' src={props.skins.skinPic} />
-  	  </div>
-  	  <div className='SkinName'>{props.skins.name}</div>
-      <div className='SkinCost'>Cost: <span>{props.skins.price}</span>✪</div>
-  	  <div>
-  	    <button className='SkinButton' className='btn btn-warning' onClick={addSkin}>Buy Skin</button>
-  	  </div>
+	    <img className='SkinPic' src={props.skin.skinPic} />
+  	  <div className='SkinName'>{props.skin.name}</div>
+  	  <button className='SkinButton btn btn-danger' onClick={addSkin}>{props.skin.owned ? 'Owned' : props.skin.price + '✪'}</button>
   	</div>
   )
-}
+};
 
 export default StoreData

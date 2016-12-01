@@ -19,13 +19,11 @@ class CreateMatch extends React.Component {
 	  this.backToHome = this.backToHome.bind(this);
   }
 
-  StartMatch() {
+  StartMatch(numPlayers) {
     const screenOverlay = document.getElementById( 'screenOverlay' );
     const menuContainer = document.getElementById( 'menuContainer' );
     const hud = document.getElementById( 'HUD' );
     const victoryBox = document.getElementById( 'victoryBox' );
-    sceneUtility.currentGame = sceneUtility.currentGame || {matchInfo: {clients: {}}};
-    const players = Object.keys(sceneUtility.currentGame.matchInfo.clients).length;
     screenOverlay.style.display = '';
     hud.style.display = 'none';
     
@@ -77,7 +75,7 @@ class CreateMatch extends React.Component {
     });
 
     document.getElementById( 'CreateMatchContainer' ).style.display = 'none';
-    clientScene.startGame(showMenu);
+    clientScene.startGame(numPlayers, showMenu);
   }
 
   ChooseMap() {
@@ -114,11 +112,13 @@ class CreateMatch extends React.Component {
             <Profile />
           </div>
           <div id='CreateMatchBackground'>
-            <button id='SelectSkinButtonCreate' className='btn btn-warning' onClick={this.selectSkin}>Select Skin</button>
-            <button id='HomeButtonCreate' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
-            <h1 id='CreateMatchTitle'>Create Match</h1>
+            <div className='buttonBox'>
+              <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
+              <h1>Create Match</h1>
+              <button className='btn btn-warning selectSkinBtn' onClick={this.selectSkin}>Select Skin</button>
+            </div>
 
-            <div id='ChooseMap' onClick={this.ChooseMap}>Choose Map</div>
+            <div id='ChooseMap' onClick={this.ChooseMap}>CHOOSE MAP</div>
 
             <div id='MapSelector'>
               <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />
@@ -128,13 +128,14 @@ class CreateMatch extends React.Component {
               <div>{this.state.maps[this.state.mapChoice].name}</div>
             </div>
             <div id='StartMatch'>
-              <button id='Start'className='btn btn-primary' onClick={this.StartMatch}>START MATCH</button>
+              <button id='Sandbox'className='btn btn-primary' onClick={this.StartMatch.bind(this, 0)}>SANDBOX</button>
+              <button id='Start2'className='btn btn-primary' onClick={this.StartMatch.bind(this, 2)}>2 PLAYER MATCH</button>
+              <button id='Start4'className='btn btn-primary' onClick={this.StartMatch.bind(this, 4)}>4 PLAYER MATCH</button>
             </div>
           </div>
         </div>
       </div>
     );
-
   }
 }
 
