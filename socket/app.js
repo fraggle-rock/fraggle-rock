@@ -1,19 +1,35 @@
-const httpPort = 4444;
 const socketPort = 3001;
+const socketManager = 'socketManager';
+const socketManagerPort = 4444;
 const io = require('socket.io')(socketPort);
 const matchController = require('./matchController.js');
 const http = require('http');
 
-const server = http.createServer((req, res) => {
-  if (req.url === '/liveGames') {
-    const liveGames = matchController.liveGames();
-    res.end(JSON.stringify(liveGames));
-  }
-});
-server.listen(httpPort);
-console.log(`SocketServer http listening on ${httpPort}`);
+setTimeout(function() {
+  var postData = JSON.stringify({
+    'msg' : 'Hello World!'
+  });
+  var options = {
+    host: socketManager,
+    port: socketManagerPort,
+    path: '/register',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+      'Content-Length': Buffer.byteLength(postData)
+    }
+  };
+  var req = http.request(options);
+  req.on('error', (e) => {
+    console.log(`problem with request: ${e.message}`);
+  });
+  req.write(postData);
+  req.end(function() {
+    console.log('succesfully registered');
+  });
+}, 3000); 
 
-console.log(`SocketServer socket listening on ${socketPort}`);
+console.log('Physics server listening on ' + socketPort);
 io.on('connection', (socket) => {
 
   socket.on('fullScene', function (fullScene) {
