@@ -55,15 +55,21 @@ const loadPoll = function loadPoll(clientUuid) {
 };
 
 const sendPoll = function sendPoll() {
-  const matchInfo = {clients: {}, numPlayers: this.numPlayers};
+  const matchInfo = { clients: {}, numPlayers: this.numPlayers };
   for (var key in this.clients) {
     const client = this.clients[key];
-    matchInfo.clients[client.uuid] = ({uuid: client.uuid,
+    let score = 0;
+    if (scoreTable[key] !== undefined) {
+      score = scoreTable[key];
+    }
+    matchInfo.clients[client.uuid] = ({ uuid: client.uuid,
       name: client.name,
       lives: client.lives,
       skinPath: client.skinPath,
       color: client.color,
-      playerNumber: client.playerNumber });
+      playerNumber: client.playerNumber,
+      score
+    });
   }
   this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
@@ -249,7 +255,7 @@ const startPhysics = function startPhysics() {
     const clientBody = this.clientToCannon[client.uuid];
     const spawn = this.spawnPoints[random(0, this.spawnPoints.length - 1)]
     clientBody.position.set(spawn[0], spawn[1], spawn[2]);
-    clientBody.velocity.set(0,0,0);
+    clientBody.velocity.set(0, 0, 0);
   };
   this.physicsClock = setInterval(this.physicsLoop.bind(null, this), this.tickRate * 1000);
 };
