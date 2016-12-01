@@ -65,6 +65,9 @@ class Home extends React.Component {
             <button id="joinExisting" onClick={this.JoinMatch} className='btn btn-primary'>Join Match</button>
           </div>
           <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View Leaderboards</button>
+          <div>
+            <button id="About" className='btn btn-danger'>About</button>
+          </div>
         </div>
         <div className='version'>v0.7</div>
         <div className='createdBy'>Created by Nick Lathen, Will Stockman, Eric Eakin, and Riyaz Ahmed, 2016</div>
