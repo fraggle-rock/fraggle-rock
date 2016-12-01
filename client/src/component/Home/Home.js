@@ -47,6 +47,10 @@ class Home extends React.Component {
     browserHistory.push('/JoinMatch')
   }
 
+  About() {
+    browserHistory.push('About')
+  }
+
   showLeaderBoards() {
     //send request for leaderBoards
     browserHistory.push('/LeaderBoard')
@@ -66,7 +70,7 @@ class Home extends React.Component {
           </div>
           <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View Leaderboards</button>
           <div>
-            <button id="About" className='btn btn-danger'>About</button>
+            <button id="About" onClick={this.About} className='btn btn-danger'>About</button>
           </div>
         </div>
         <div className='version'>v0.7</div>
