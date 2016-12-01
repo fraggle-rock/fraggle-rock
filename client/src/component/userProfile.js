@@ -38,6 +38,9 @@ module.exports = {
       'ha2.obj': {skinPic: '../../../textures/Skins/hat.jpg', skin: 'ha2.obj', name: 'The Hat', price: 1500, type: 'hat'}
     },
   sound: 1,
+  players: 2,
+  createMatch: false,
+  matchId: null,
   storeSkins: [
   {skinPic: '../../../textures/skins/SmileyFacePreview.jpg', skin: '/textures/skins/SmileyFace.jpg', name: 'Big Smile', price: 500, owned: false},
   {skinPic: '../../../textures/skins/coolGuyPreview.jpg', skin: '/textures/skins/coolGuy.jpg', name: 'Cool Guy', price: 300, owned: false},

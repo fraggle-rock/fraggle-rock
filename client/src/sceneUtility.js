@@ -6,7 +6,6 @@ const audio = require('./audio');
 const userProfile = require('./component/userProfile.js');
 import { browserHistory } from 'react-router';
 
-
 const redBallStack = (function() {
   const result = [];
   const mesh = new objectBuilder.redBall({radius: config.ballRadius, widthSegments: 32, heightSegments: 32});
@@ -42,7 +41,7 @@ let averageTickRate = 0;
 
 module.exports = {
   addLookControls: function addLookControls(camera, socketUtility) {
-    const onMouseMove = function onMouseMove(event) {
+    $(document).mousemove(() => {
       const movementX = event.movementX;
       const movementY = event.movementY;
       yaw -= movementX * config.mouseSensitivity;
@@ -54,10 +53,9 @@ module.exports = {
       const quat = yawQuat.multiply(pitchQuat);
       camera.quaternion.copy(quat);
       if (currentGame.on) {
-        socketUtility.emitClientQuaternion(camera); 
+        socketUtility.emitClientQuaternion(camera);
       }
-    };
-   document.addEventListener('mousemove', onMouseMove, false);
+    });
   },
   addMoveControls: function addMoveControls(camera, socketUtility) {
     const playerInput = {};
@@ -160,12 +158,12 @@ module.exports = {
         socketUtility.emitClientPosition(camera, playerInput);
       }
     };
-    document.addEventListener('keydown', onKeyDown, false);
-    document.addEventListener('keyup', onKeyUp, false);
+    $(document).on('keydown', onKeyDown);
+    $(document).on('keyup', onKeyUp);
     return playerInput;
   },
   addClickControls: function addClickControls(socketUtility) {
-    window.addEventListener('click', () => {
+    const clickHandler = function clickHandler() {
       if (currentGame.on) {
         if (shotCount > 0) {
           audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
@@ -194,8 +192,9 @@ module.exports = {
             regen();
           }, config.shotRegen)
         }
-      }  
-    });
+      }
+    };
+    $(document).on('click', clickHandler);
   },
   animate: function animate(game) {
     currentGame = game;

@@ -1,11 +1,11 @@
 import React from 'react';
-import MapSelector from './MapSelector.js'
+import MapSelector from './MapSelector.js';
+import Game from '../Game/Game.js';
 import { browserHistory } from 'react-router';
 import userProfile from '../userProfile.js';
 import Profile from '../Home/Profile.js';
 const clientScene = require('../../clientScene.js');
 const sceneUtility = require('../../sceneUtility.js');
-const socketUtility = require('../../socketUtility');
 
 class CreateMatch extends React.Component {
   constructor(props) {
@@ -20,59 +20,9 @@ class CreateMatch extends React.Component {
   }
 
   StartMatch(numPlayers) {
-    const screenOverlay = document.getElementById( 'screenOverlay' );
-    const menuContainer = document.getElementById( 'menuContainer' );
-    const hud = document.getElementById( 'HUD' );
-    const victoryBox = document.getElementById( 'victoryBox' );
-    screenOverlay.style.display = '';
-    hud.style.display = 'none';
-    
-
-    const showMenu = (e) => {
-      if(e.keyCode === 192) {
-      screenOverlay.style.display = '-webkit-box';
-      screenOverlay.style.display = '-moz-box';
-      screenOverlay.style.display = 'box';
-        if (menuContainer.style.display === '') {
-          menuContainer.style.display = 'none';
-          hud.style.display = '';
-          document.body.requestPointerLock();
-        } else {
-          menuContainer.style.display = '';
-          hud.style.display = 'none';
-          document.exitPointerLock();
-        }
-      }
-    }
-    //check ~ key for menu
-    document.addEventListener('keydown', showMenu)
-    const resume = document.getElementById('resume');
-    resume.addEventListener('click', function(e) {
-      screenOverlay.style.display = '-webkit-box';
-      screenOverlay.style.display = '-moz-box';
-      screenOverlay.style.display = 'box';
-      if (menuContainer.style.display === '') {
-        menuContainer.style.display = 'none';
-        hud.style.display = '';
-        document.body.requestPointerLock();
-      } else {
-        menuContainer.style.display = '';
-        hud.style.display = 'none';
-      }
-    });
-
-    const exit = document.getElementById('exit');
-    exit.addEventListener('click', function(e) {
-      screenOverlay.style.display = '-webkit-box';
-      screenOverlay.style.display = '-moz-box';
-      screenOverlay.style.display = 'box';
-      menuContainer.style.display = 'none';
-      socketUtility.quitMatch();
-      browserHistory.push('GameOver');
-    });
-
-    document.getElementById( 'CreateMatchContainer' ).style.display = 'none';
-    clientScene.startGame(numPlayers, showMenu);
+    userProfile.players = numPlayers;
+    userProfile.createMatch = true;
+    browserHistory.push('/Game');
   }
 
   ChooseMap() {
@@ -94,11 +44,11 @@ class CreateMatch extends React.Component {
   }
 
   backToHome() {
-    browserHistory.push('/Home')
+    browserHistory.push('/Home');
   }
 
   selectSkin() {
-    browserHistory.push('/SelectSkin')
+    browserHistory.push('/SelectSkin');
   }
 
   render() {

@@ -9,7 +9,7 @@ const userProfile = require('./component/userProfile.js');
 let serverUpdateTick;
 
 const appendRenderer = function appendRenderer(renderer) {
-  document.querySelector('body').appendChild(renderer.domElement);
+  document.querySelector('#GameViewContainer').appendChild(renderer.domElement);
 }
 
 const init = function init() {
@@ -21,11 +21,11 @@ const init = function init() {
 
   // build level
   if (userProfile.map === 0) {
-    scene = levelBuilder.buildLevelOne();
+    scene = levelBuilder.buildFraggleRock();
   } else if (userProfile.map === 1) {
-    scene = levelBuilder.buildLevelTwo();
+    scene = levelBuilder.buildDawnMountain();
   } else {
-    scene = levelBuilder.buildLevelThree();
+    scene = levelBuilder.buildHighNoon();
   }
 
   return { camera, renderer, scene, spawnPoints };
