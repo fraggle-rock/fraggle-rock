@@ -1,32 +1,22 @@
 const socketPort = 3001;
-const socketManager = 'socketManager';
+const socketManager = '127.0.0.1';
 const socketManagerPort = 4444;
 const io = require('socket.io')(socketPort);
 const matchController = require('./matchController.js');
-const http = require('http');
+const request = require('request');
 
 setTimeout(function() {
-  var postData = JSON.stringify({
-    'msg' : 'Hello World!'
-  });
-  var options = {
-    host: socketManager,
-    port: socketManagerPort,
-    path: '/register',
+  const options = {
     method: 'POST',
+    uri: `http://${socketManager}:${socketManagerPort}/register`,
     headers: {
-      'Content-Type': 'text/plain',
-      'Content-Length': Buffer.byteLength(postData)
-    }
-  };
-  var req = http.request(options);
-  req.on('error', (e) => {
-    console.log(`problem with request: ${e.message}`);
-  });
-  req.write(postData);
-  req.end(function() {
+      'Content-Type': 'text/plain'
+    },
+    body: 'registerMe'
+  }
+  request(options, function(error, response, body) {
     console.log('succesfully registered');
-  });
+  })
 }, 3000); 
 
 console.log('Physics server listening on ' + socketPort);
