@@ -30,11 +30,12 @@ class LogIn extends React.Component {
         success: (data) => {
           if(data.length == 0) {
             var username = prompt('Welcome to Smash Ball Brawl. Please Enter a Username');
-            username = username.splice(0, 10);
+            username = username || 'Random stringify'
+            username = username.slice(0, 10);
             if(username !== null) {
               userProfile.User = username;
               userProfile.facebookid = e.id;
-              var dataSent = {                
+              var dataSent = {
                   username: username,
                   token: e.accessToken,
                   email: 'fakeEmail@gmail.com',
