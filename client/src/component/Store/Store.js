@@ -50,10 +50,6 @@ class Store extends React.Component {
     })
   }
 
-  buyExperience() {
-
-  }
-
   backToStore() {
     this.state.noFunds = false;
     browserHistory.push('Store')
@@ -69,11 +65,8 @@ class Store extends React.Component {
             </div>
             <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>HOME</button>
             <button id='storeButton' className='btn btn-primary' onClick={this.backToStore}>STORE</button>
-            <div id='buyButton'>
-              <button className='btn btn-success' onClick={this.buyExperience}>Buy ✪</button>
-            </div>
             <div> You have <span> {userProfile.experience}</span> experience</div>
-            <div>You dont have enough ✪ to buy the item. To gain ✪, play more games or purchase them above.</div>
+            <div>You dont have enough ✪ to buy the item. To gain ✪, play more games</div>
           </div>
         </div>
       )

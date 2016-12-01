@@ -18,7 +18,6 @@ class SelectSkin extends React.Component {
   }
   
   componentWillMount() {
-    console.log(this.state.skins)
     for(var i = 0; i < userProfile.Skins.length; i++) {
       this.state.skins.push(userProfile.skinsObj[userProfile.Skins[i]])
     }
