@@ -199,71 +199,32 @@ module.exports = {
       document.getElementById('victor').innerHTML = playersAlive[0] + ' Wins!';
       userProfile.winner = playersAlive[0];
       //END GAME HERE
-      if(playersAlive[0] === userProfile.User) {
-        var data = {username: userProfile.User, points: 100}
-        $.ajax({
-          url: '/api/addTransactionByUsername',
-          method: 'Post',
-          data: JSON.stringify(data),
-          contentType: 'application/json',
-          error: (error) => {
-            console.log(error)
-          },
-          success: (data) => {
-            quitMatch();
-            remoteClients = {};
-            currentGame = {};
-            remoteScene = {};
-            pitch = 0;
-            yaw = 0;
-            host = false;
-            shotCount = null;
-            shotRegen = false;
-            jumpCount = null;
-            jumpRegen = null;
-            latestServerUpdate = null;
-            serverShapeMap = null;
-            meshLookup = {};
-            clearLookup = {};
-            setTimeout(() => {
-              var canvas = document.getElementsByTagName('canvas');
-              canvas[0].remove();
-              document.removeEventListener('keydown', showMenu)
-              const screenOverlay = document.getElementById( 'screenOverlay' );
-              const victoryBox = document.getElementById( 'victoryBox' );
-              victoryBox.style.display = 'none';
-              screenOverlay.style.display = 'none';
-              browserHistory.push('GameOver')
-            }, 4000)
-          }
-        })
-      } else {
-        quitMatch()
-        remoteClients = {};
-        currentGame = {};
-        remoteScene = {};
-        pitch = 0;
-        yaw = 0;
-        host = false;
-        shotCount = null;
-        shotRegen = false;
-        jumpCount = null;
-        jumpRegen = null;
-        latestServerUpdate = null;
-        serverShapeMap = null;
-        meshLookup = {};
-        clearLookup = {};
-        setTimeout(() => {
-          var canvas = document.getElementsByTagName('canvas');
-          canvas[0].remove();
-          document.removeEventListener('keydown', showMenu)
-          const screenOverlay = document.getElementById( 'screenOverlay' );
-          const victoryBox = document.getElementById( 'victoryBox' );
-          victoryBox.style.display = 'none';
-          screenOverlay.style.display = 'none';
-          browserHistory.push('GameOver')
-        }, 4000)
-      }
+
+      quitMatch()
+      remoteClients = {};
+      currentGame = {};
+      remoteScene = {};
+      pitch = 0;
+      yaw = 0;
+      host = false;
+      shotCount = null;
+      shotRegen = false;
+      jumpCount = null;
+      jumpRegen = null;
+      latestServerUpdate = null;
+      serverShapeMap = null;
+      meshLookup = {};
+      clearLookup = {};
+      setTimeout(() => {
+        var canvas = document.getElementsByTagName('canvas');
+        canvas[0].remove();
+        document.removeEventListener('keydown', showMenu)
+        const screenOverlay = document.getElementById( 'screenOverlay' );
+        const victoryBox = document.getElementById( 'victoryBox' );
+        victoryBox.style.display = 'none';
+        screenOverlay.style.display = 'none';
+        browserHistory.push('GameOver')
+      }, 4000)
     }
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
