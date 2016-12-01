@@ -17,17 +17,26 @@ class SelectSkin extends React.Component {
   backToHome() {
     browserHistory.goBack();
   }
-  
+
   componentWillMount() {
-    for(var i = 0; i < userProfile.Skins.length; i++) {
-      this.state.skins.push(userProfile.skinsObj[userProfile.Skins[i]])
-    }
+    userProfile.Skins.forEach((userSkin) => {
+      userProfile.storeSkins.forEach((storeSkin) => {
+        if (userSkin === storeSkin.skin) {
+          //state doesnt set fast enough so you have to use asynch state or it over-writes
+          this.setState(function (prevState) {
+            return {
+              skins: prevState.skins.concat(storeSkin)
+            };
+          });
+        }
+      });
+    });
   }
 
   render() {
       return (
-        <div id='Store'>
-          <div id='CreateMatchBackground' >
+        <div className='menuContainer'>
+          <div className='menuBackground'>
             <div id='Profile'>
               <Profile />
             </div>

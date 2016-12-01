@@ -11,6 +11,8 @@ import Store from './component/Store/Store.js';
 import SelectSkin from './component/SelectSkin/selectSkin.js';
 import Settings from './component/Settings/Settings.js';
 import GameOver from './component/GameOver/GameOver.js';
+import Game from './component/Game/Game.js';
+
 
 ReactDOM.render((
   <div>
@@ -20,6 +22,7 @@ ReactDOM.render((
         <Route path='Home' component={Home} />
         <Route path='CreateMatch' component={CreateMatch} />
         <Route path='JoinMatch' component={JoinMatch} />
+        <Route path='Game' component={Game} />
         <Route path='LeaderBoard' component={LeaderBoard} />
         <Route path='Store' component={Store} />
         <Route path='SelectSkin' component={SelectSkin} />
@@ -30,5 +33,5 @@ ReactDOM.render((
   </div>
 
 
-  ), 
+  ),
 document.getElementById('app'));

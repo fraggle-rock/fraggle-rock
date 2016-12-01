@@ -55,7 +55,7 @@ const loadPoll = function loadPoll(clientUuid) {
 };
 
 const sendPoll = function sendPoll() {
-  const matchInfo = { clients: {}, numPlayers: this.numPlayers };
+  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers}, numPlayers: this.numPlayers ;
   for (var key in this.clients) {
     const client = this.clients[key];
     let score = 0;
@@ -338,11 +338,13 @@ const loadNewClient = function loadNewClient(player) {
   this.sendPoll();
 };
 
-const loadFullScene = function loadFullScene(scene, player, io, numPlayers, spawnPoints) {
+const loadFullScene = function loadFullScene(scene, player, io, maxPlayers, spawnPoints, owner, mapChoice) {
   // Setup our world
   this.io = io;
-  this.numPlayers = numPlayers;
+  this.maxPlayers = maxPlayers;
   this.spawnPoints = spawnPoints;
+  this.owner = owner;
+  this.mapChoice = mapChoice;
   const context = this;
   let world = new CANNON.World();
   world.quatNormalizeSkip = 0;
