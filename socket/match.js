@@ -55,15 +55,21 @@ const loadPoll = function loadPoll(clientUuid) {
 };
 
 const sendPoll = function sendPoll() {
-  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers};
+  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: this.numPlayers };
   for (var key in this.clients) {
     const client = this.clients[key];
-    matchInfo.clients[client.uuid] = ({uuid: client.uuid,
+    let score = 0;
+    if (scoreTable[key] !== undefined) {
+      score = scoreTable[key];
+    }
+    matchInfo.clients[client.uuid] = ({ uuid: client.uuid,
       name: client.name,
       lives: client.lives,
       skinPath: client.skinPath,
       color: client.color,
-      playerNumber: client.playerNumber });
+      playerNumber: client.playerNumber,
+      score
+    });
   }
   this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
@@ -176,6 +182,17 @@ const physicsEmit = function physicsEmit (match, socket) {
   match.sendFull = false;
 };
 
+const updateScoreTable = function updateScoreTable(uuid, num) {
+  if (num > 0 ) {
+    const bonus = config.pointsOnPlayerDeath * (num - 1);
+    for (var key in scoreTable) {
+      if (key !== uuid) {
+        scoreTable[key] += bonus;
+      }
+    }
+  }
+  // console.log('Update score table ', scoreTable);
+}
 const physicsLoop = function physicsLoop(match) {
   for (var key in match.clients) {
     const client = match.clients[key];
@@ -187,8 +204,8 @@ const physicsLoop = function physicsLoop(match) {
     Math.abs(clientBody.position.x) > config.playerHorizontalBound ||
     Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
       //PLAYER DEATH & RESPAWN
-      client.lives--;
-
+      client.lives--
+      updateScoreTable(client.uuid, match.numPlayers);
       const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)]
 
       clientBody.position.set(spawn[0], spawn[1], spawn[2]);
@@ -238,7 +255,7 @@ const startPhysics = function startPhysics() {
     const clientBody = this.clientToCannon[client.uuid];
     const spawn = this.spawnPoints[random(0, this.spawnPoints.length - 1)]
     clientBody.position.set(spawn[0], spawn[1], spawn[2]);
-    clientBody.velocity.set(0,0,0);
+    clientBody.velocity.set(0, 0, 0);
   };
   this.physicsClock = setInterval(this.physicsLoop.bind(null, this), this.tickRate * 1000);
 };
@@ -283,7 +300,7 @@ const shootBall = function shootBall(camera) {
         scoreTable[e.target.useruuid] = scoreTable[e.target.useruuid] + config.onShootScore;
       }
   }
-    console.log('Mass ', e.body.mass, ' Damping ', e.body.linearDamping, 'Score ', scoreTable);
+    // console.log('Mass ', e.body.mass, ' Damping ', e.body.linearDamping, 'Score ', scoreTable);
     collisionSound = { play: 7 };
   }
 });

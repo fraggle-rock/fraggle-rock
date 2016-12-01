@@ -841,8 +841,6 @@ canvas {
   -moz-box-shadow: 0px 4px 2px 0px rgba(255,255,0,0.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
   box-shadow: 0px 4px 2px 0px rgba(255,255,0,0.75), 0px -4px 2px 0px rgba(255,255,0,0.75);
 }
-
-
 /*GAMEOVER*/
 /*---------------------------------------------------------------------------*/
 
@@ -859,4 +857,3 @@ canvas {
 #PlayerWins {
   margin-top: 100px;
 }
-

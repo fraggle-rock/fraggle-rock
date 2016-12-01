@@ -217,6 +217,7 @@ module.exports = {
     let playersAlive = [];
     let players = Object.keys(matchInfo.clients).length;
 
+
     //check who is alive and set health and names
     Object.keys(matchInfo.clients).forEach( (uuid) => {
       let client = matchInfo.clients[uuid];
@@ -225,7 +226,7 @@ module.exports = {
       document.getElementById('player' + client.playerNumber + 'life2').style.opacity = client.lives > 1 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'life3').style.opacity = client.lives > 2 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'Name').innerHTML = client.name;
-
+      document.getElementById('player' + client.playerNumber + 'Score').innerHTML = client.score;
       if (client.lives > 0) {
         playersAlive.push(client.name);
       } else {
@@ -277,7 +278,9 @@ module.exports = {
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     // Player out of bounds -> death
-    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound || Math.abs(clientPosition.position.x) > config.playerHorizontalBound || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
+    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound
+    || Math.abs(clientPosition.position.x) > config.playerHorizontalBound
+    || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
       //death sound
       audio.smashBrawl.shootRound(2, 1, 0.08, 0, 1);
 

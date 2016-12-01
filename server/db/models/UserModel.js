@@ -22,6 +22,9 @@ const User = db.define('User', {
   facebookid: {
     type: Sequelize.STRING,
   },
+  url: {
+    type: Sequelize.STRING,
+  },
   username: {
     type: Sequelize.STRING,
   },
