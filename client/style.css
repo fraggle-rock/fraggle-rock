@@ -1,8 +1,7 @@
 /*
 font-family: 'Press Start 2P', sans-serif;
-font-family: 'Titillium Web', sans-serif;
-font-family: 'Roboto Mono', monospace;
 font-family: 'Play', sans-serif;
+font-family: 'Bungee', sans-serif;
 */
 /*FOR DEBUGGING WIREFRAME*/
 /*div {
@@ -223,7 +222,7 @@ canvas {
 .playerBoxContainer {
   text-align: center;
   width: 380px;
-  height: 90px;
+  height: 140px; /*90px*/
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -236,6 +235,12 @@ canvas {
   text-align: left;
   transition: opacity 2s ease-in;
   opacity: 0;
+}
+
+.playerScore {
+  display: inline-block;
+  font-size: 15px;
+  font-family: 'Bungee', sans-serif;
 }
 
 .playerBox > img {
@@ -354,7 +359,7 @@ canvas {
   transition: all .25s;
 }
 
-#menuContainer {
+#menuContainer { /*CHANGE MY NAME!*/
 
   width: 100%;
   height: 100%;
@@ -417,16 +422,6 @@ canvas {
 .menu-descr {
   font-size: 10px;
   padding: 10px;
-}
-
-#menuContainer {
-
-  width: 100%;
-  height: 100%;
-
-  display: -webkit-box;
-  display: -moz-box;
-  display: block;
 }
 
 .version {
