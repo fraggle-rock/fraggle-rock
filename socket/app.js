@@ -13,9 +13,22 @@ setTimeout(function() {
       'Content-Type': 'text/plain'
     },
     body: 'registerMe'
-  }
+  };
   request(options, function(error, response, body) {
     console.log('succesfully registered');
+    setInterval(function() {
+      const options = {
+        method: 'POST',
+        uri: `http://${socketManager}:${socketManagerPort}/statusPoll`,
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: 'testFromSocketUpdate'
+      };
+      request(options, function(error, response, body) {
+        console.log('successful poll update');
+      })
+    }, 5000);
   })
 }, 3000); 
 

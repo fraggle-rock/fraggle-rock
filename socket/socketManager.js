@@ -5,31 +5,47 @@ const physicsServers = {};
 
 const server = http.createServer((req, res) => {
   if (req.url === '/register') {
-    const serverUrl = req.connection.remoteAddress;
-    console.log('registering new physics server at ' + serverUrl);
-    
-    physicsServers[serverUrl] = {status: 'empty'};
-    const server = physicsServers[serverUrl];
-    server.lastUpdate = Date.now();
-    server.timeout = setInterval(function() {
-      if (Date.now() - server.lastUpdate > 8000) {
-        console.log(`Server at ${serverUrl} timed out.`);
-        clearInterval(server.timeout);
-        delete physicsServers[serverUrl];
-      }
-    }, 10 * 1000);
-
-    res.statusCode = 200;
-    res.end();
+    register(req, res);
   }
   if (req.url === '/liveGames') {
-    console.log('serving livegames')
-    res.statusCode = 200;
-    res.end('hi from socketmanger');
+    liveGames(req, res);
   }
-  if (req.url === 'statusPoll') {
-
+  if (req.url === '/statusPoll') {
+    statusPoll(req, res);
   }
 });
 server.listen(httpPort);
+
+const register = function(req, res) {
+  const serverUrl = req.connection.remoteAddress;
+  console.log('registering new physics server at ' + serverUrl);
+  
+  physicsServers[serverUrl] = {status: 'empty'};
+  const server = physicsServers[serverUrl];
+  server.lastUpdate = Date.now();
+  server.timeout = setInterval(function() {
+    if (Date.now() - server.lastUpdate > 8000) {
+      console.log(`Server at ${serverUrl} timed out.`);
+      clearInterval(server.timeout);
+      delete physicsServers[serverUrl];
+    }
+  }, 10 * 1000);
+
+  res.statusCode = 200;
+  res.end();
+}
+
+const liveGames = function(req, res) {
+  console.log('serving livegames')
+  res.statusCode = 200;
+  res.end('hi from socketmanger');
+}
+
+const statusPoll = function(req, res) {
+  let statusPoll = '';
+  req.on('data', function(chunk) {statusPoll += chunk});
+  req.on('end', function() {
+    console.log(statusPoll);
+  });
+}
 console.log(`SocketManager listening on ${httpPort}`);
