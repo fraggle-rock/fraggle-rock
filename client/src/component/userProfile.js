@@ -5,7 +5,6 @@ module.exports = {
   ChosenSkin: null,
   color: 'teal',
   facebookid: null,
-  experience: 2000,
   stars: 2000,
   hat: 'ha2.obj',
   maps: [
@@ -14,7 +13,7 @@ module.exports = {
     {name: 'High Noon', thumb: '../../../textures/highNoonThumb.jpg'}
   ],
   map: 0,
-  graphics: 0,
+  graphics: 2,
   winner: null,
   userId: null,
   skinsObj: {

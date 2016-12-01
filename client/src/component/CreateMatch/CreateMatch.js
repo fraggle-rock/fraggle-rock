@@ -54,11 +54,11 @@ class CreateMatch extends React.Component {
   render() {
     return (
       <div id='HomeBackground'>
-        <div id='CreateMatchContainer'>
+        <div className='menuContainer'>
           <div id='Profile'>
             <Profile />
           </div>
-          <div id='CreateMatchBackground'>
+          <div className='menuBackground'>
             <div className='buttonBox'>
               <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
               <h1>Create Match</h1>
