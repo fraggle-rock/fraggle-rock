@@ -36,6 +36,7 @@ class LogIn extends React.Component {
             var username = prompt('Welcome to Smash Ball Brawl. Please Enter a UserName');
             if(username !== null) {
               userProfile.User = username;
+              userProfile.facebookid = e.id;
               var dataSent = {                
                   username: username,
                   token: e.accessToken,
@@ -58,6 +59,9 @@ class LogIn extends React.Component {
             }
           } else {
             userProfile.User = data.username;
+            userProfile.Skins = data.skins || [];
+            userProfile.facebookid = e.id;
+            userProfile.userId = data.id;
             // userProfile.experience = data.experience;
             browserHistory.push('Home')
           }
