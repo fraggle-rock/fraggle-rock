@@ -16,9 +16,9 @@ class JoinMatchData extends React.Component {
     }
   }
 
-  JoinMatch(matchId) {
+  JoinMatch(matchUrl) {
     userProfile.createMatch = false;
-    userProfile.matchId = matchId;
+    userProfile.matchUrl = matchUrl;
     browserHistory.push('/Game');
   }
 
@@ -31,7 +31,7 @@ class JoinMatchData extends React.Component {
       <div className='JoinMatchSpan'>{this.props.match.owner}</div>
       <div className='JoinMatchSpan'>{this.props.match.numPlayers} / {this.props.match.maxPlayers}</div>
       <div className='JoinMatchSpan'>
-        <button onClick={() => this.JoinMatch(this.props.match.matchId)} className='btn-md btn-success'>Join Game</button>
+        <button onClick={() => this.JoinMatch(this.props.match.url)} className='btn-md btn-success'>Join Game</button>
       </div>
     </div>
     )

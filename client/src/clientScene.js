@@ -51,14 +51,14 @@ const startGame = function startGame(maxPlayers) {
   socketUtility.requestNewMatch(game, maxPlayers); //Request to the server to create a new match
 };
 
-const joinGame = function joinGame(matchNumber) {
+const joinGame = function joinGame(matchUrl) {
   // load game of this matchNumber
-  const game = join(matchNumber);
+  const game = join();
   sceneUtility.addLookControls(game.camera, socketUtility);
   const playerInput = sceneUtility.addMoveControls(game.camera, socketUtility);
   sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game);
-  socketUtility.joinMatch(matchNumber, game);
+  socketUtility.joinMatch(matchUrl, game);
 };
 
 module.exports = { startGame, joinGame };

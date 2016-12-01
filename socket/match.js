@@ -56,7 +56,7 @@ const loadPoll = function loadPoll(clientUuid) {
 };
 
 const buildMatchInfo = function buildMatchInfo() {
-  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: this.numPlayers };
+  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: this.numPlayers, owner: this.owner, mapChoice: this.mapChoice };
   for (var key in this.clients) {
     const client = this.clients[key];
     let score = 0;

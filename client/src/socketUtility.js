@@ -109,7 +109,14 @@ module.exports = {
       }
     });
   },
-  joinMatch: function joinMatch(matchNumber, game) {
+  joinMatch: function joinMatch(matchUrl, game) {
+    let serverUrl;
+    if (matchUrl !== '::ffff:127.0.0.1') {
+      serverUrl = matchUrl;
+    } else {
+      serverUrl = '127.0.0.1';
+    }
+    socket = io(serverUrl + ':3001');
     addUpdateListeners(socket);
     const player = game.camera.toJSON();
     player.position = game.camera.position;
@@ -120,7 +127,7 @@ module.exports = {
     player.name = userProfile.User;
     player.skinPath = userProfile.ChosenSkin;
 
-    socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
+    socket.emit('addMeToMatch', {player: player});
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
     playerInput.direction = camera.getWorldDirection();

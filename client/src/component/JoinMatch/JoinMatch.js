@@ -18,7 +18,15 @@ class JoinMatch extends React.Component {
       method: 'GET',
       success: (data) => {
         const physicsServers = JSON.parse(data);
-        this.setState({liveMatches: JSON.parse(data)})
+        const liveMatches = [];
+        for (var url in physicsServers) {
+          const server = physicsServers[url];
+          if (server !== 'empty' && Object.keys(server.clients).length !== server.maxPlayers && Object.keys(server.clients).length < 6) {
+            server.url = url;
+            liveMatches.push(server)
+          }
+        }
+        this.setState({liveMatches: liveMatches})
       }
     });
   }
@@ -52,7 +60,7 @@ class JoinMatch extends React.Component {
                 <div className='JoinMatchSpan'></div>
               </div>
               <div className='JoinMatchBody'>
-                {this.state.liveMatches.map((match) => <JoinMatchData key={match.matchId} match={match} />)}
+                {this.state.liveMatches.map((match) => <JoinMatchData key={match.url} match={match} />)}
               </div>
             </div>
           </div>
