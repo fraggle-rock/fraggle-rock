@@ -18,7 +18,7 @@ class JoinMatchData extends React.Component {
   }
 
   JoinMatch(matchId) {
-    if(this.props.match.numPlayers === this.props.match.maxPlayers) {
+    if(this.props.match.numPlayers === this.props.match.maxPlayers || this.props.match.numPlayers === 6) {
 
     } else {
       userProfile.createMatch = false;
@@ -36,7 +36,7 @@ class JoinMatchData extends React.Component {
       <div className='JoinMatchSpan'>{this.props.match.owner}</div>
       <div className='JoinMatchSpan'>{this.props.match.numPlayers} / {this.props.match.maxPlayers}</div>
       <div className='JoinMatchSpan'>
-        <button onClick={() => this.JoinMatch(this.props.match.matchId)} className='btn-md btn-success'>{this.props.match.numPlayers === this.props.match.maxPlayers ? 'Game Full' : 'Join Game'}</button>
+        <button onClick={() => this.JoinMatch(this.props.match.matchId)} className={this.props.match.numPlayers === this.props.match.maxPlayers || this.props.match.numPlayers === 6 ? 'btn btn-danger' : 'btn btn-success'}>{this.props.match.numPlayers === this.props.match.maxPlayers || this.props.match.numPlayers === 6 ? 'Game Full' : 'Join Game'}</button>
       </div>
     </div>
     )
