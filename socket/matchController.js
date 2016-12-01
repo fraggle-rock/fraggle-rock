@@ -33,7 +33,6 @@ module.exports = {
     var liveMatchesArray = []
     for (var matchId in liveMatches) {
       let currentMatch = liveMatches[matchId];
-      // console.log('TEXT', liveMatches[matchId].owner)
       let match = {
         numPlayers: Object.keys(currentMatch.clients).length,
         maxPlayers: currentMatch.maxPlayers,
