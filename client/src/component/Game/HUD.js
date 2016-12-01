@@ -84,7 +84,7 @@ class HUD extends React.Component {
               </div>
               <div class="player1 playerScoreBox">
                 <div class="playerScore" id="player1Score">0</div>
-              </div>              
+              </div>
             </div>
 
             <div className="player2 playerBox" id="player2Box">
@@ -96,6 +96,9 @@ class HUD extends React.Component {
               </div>
               <div className="player2 playerNameBox">
                 <div className="playerName" id="player2Name">Player 2</div>
+              </div>
+              <div class="player2 playerScoreBox">
+                <div class="playerScore" id="player2Score">0</div>
               </div>
             </div>
 
@@ -109,6 +112,9 @@ class HUD extends React.Component {
               <div className="player3 playerNameBox">
                 <div className="playerName" id="player3Name">Player 3</div>
               </div>
+              <div class="player3 playerScoreBox">
+                <div class="playerScore" id="player3Score">0</div>
+              </div>
             </div>
 
             <div className="player4 playerBox" id="player4Box">
@@ -121,6 +127,9 @@ class HUD extends React.Component {
               <div className="player4 playerNameBox">
                 <div className="playerName" id="player4Name">Player 4</div>
               </div>
+              <div class="player4 playerScoreBox">
+                <div class="playerScore" id="player4Score">0</div>
+              </div>              
             </div>
 
           </div>
