@@ -42,10 +42,16 @@ const liveGames = function(req, res) {
 }
 
 const statusPoll = function(req, res) {
+  const serverUrl = req.connection.remoteAddress;
   let statusPoll = '';
   req.on('data', function(chunk) {statusPoll += chunk});
   req.on('end', function() {
+    const server = physicsServers[serverUrl];
+    statusPoll = JSON.parse(statusPoll);
     console.log(statusPoll);
+    server.lastUpdate = Date.now();
+    res.statusCode = 200;
+    res.end();
   });
 }
 console.log(`SocketManager listening on ${httpPort}`);

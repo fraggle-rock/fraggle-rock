@@ -23,7 +23,7 @@ setTimeout(function() {
         headers: {
           'Content-Type': 'text/plain'
         },
-        body: 'testFromSocketUpdate'
+        body: matchController.getMatch() ? JSON.stringify(matchController.getMatch().buildMatchInfo()) : '{}'
       };
       request(options, function(error, response, body) {
         console.log('successful poll update');
@@ -61,9 +61,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('addMeToMatch', function (newMatchRequest) {
-    const matchId = newMatchRequest.matchId;
     const player = newMatchRequest.player;
-    const match = matchController.getMatch(matchId);
+    const match = matchController.getMatch();
     if (!match || match.maxPlayers === Object.keys(match.clients).length || Object.keys(match.clients).length >= 6) {
       socket.emit('matchUnavailable');
     } else {

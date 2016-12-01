@@ -42,6 +42,7 @@ module.exports = function Match(deleteMatch) {
   this.sendFull = true;
   this.kill = function() {deleteMatch(this.guid)}.bind(this);
   this.io;
+  this.buildMatchInfo = buildMatchInfo.bind(this);
   this.sendPoll = sendPoll.bind(this);
   this.clientPoll = setInterval(function() {
     this.sendPoll();
@@ -54,7 +55,7 @@ const loadPoll = function loadPoll(clientUuid) {
   }
 };
 
-const sendPoll = function sendPoll() {
+const buildMatchInfo = function buildMatchInfo() {
   const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: this.numPlayers };
   for (var key in this.clients) {
     const client = this.clients[key];
@@ -71,7 +72,11 @@ const sendPoll = function sendPoll() {
       score
     });
   }
-  this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
+  return matchInfo;
+};
+
+const sendPoll = function sendPoll() {
+  this.io.to(this.guid).emit('poll', JSON.stringify(this.buildMatchInfo()));
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
