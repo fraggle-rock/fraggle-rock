@@ -17,6 +17,7 @@ class JoinMatch extends React.Component {
       url: '/api/liveGames',
       method: 'GET',
       success: (data) => {
+        debugger;
         this.setState({liveMatches: JSON.parse(data)})
       }
     })

@@ -38,7 +38,13 @@ const register = function(req, res) {
 const liveGames = function(req, res) {
   console.log('serving livegames')
   res.statusCode = 200;
-  res.end('hi from socketmanger');
+  let liveGames = {};
+  for (var url in physicsServers) {
+    const matchInfo = physicsServers[url].matchInfo;
+    liveGames[url] = matchInfo;
+  }
+  console.log(liveGames);
+  res.end(JSON.stringify(liveGames));
 }
 
 const statusPoll = function(req, res) {
@@ -46,9 +52,27 @@ const statusPoll = function(req, res) {
   let statusPoll = '';
   req.on('data', function(chunk) {statusPoll += chunk});
   req.on('end', function() {
-    const server = physicsServers[serverUrl];
+    let server = physicsServers[serverUrl];
+    if (!server) {
+      physicsServers[serverUrl] = {status: 'empty'};
+      server = physicsServers[serverUrl];
+      server.lastUpdate = Date.now();
+      server.timeout = setInterval(function() {
+        if (Date.now() - server.lastUpdate > 8000) {
+          console.log(`Server at ${serverUrl} timed out.`);
+          clearInterval(server.timeout);
+          delete physicsServers[serverUrl];
+        }
+      }, 10 * 1000);
+    }
     statusPoll = JSON.parse(statusPoll);
-    console.log(statusPoll);
+    if (Object.keys(statusPoll).length > 0) { //there is a live match
+      server.status = 'live';
+      server.matchInfo = statusPoll;
+    } else { //there is no live match
+      server.status = 'empty';
+      server.matchInfo = undefined;
+    }
     server.lastUpdate = Date.now();
     res.statusCode = 200;
     res.end();
