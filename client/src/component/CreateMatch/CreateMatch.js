@@ -26,9 +26,9 @@ class CreateMatch extends React.Component {
     const victoryBox = document.getElementById( 'victoryBox' );
     screenOverlay.style.display = '';
     hud.style.display = 'none';
+    
 
-    //check ~ key for menu
-    document.addEventListener('keydown', function(e) {
+    const showMenu = (e) => {
       if(e.keyCode === 192) {
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
@@ -43,8 +43,9 @@ class CreateMatch extends React.Component {
           document.exitPointerLock();
         }
       }
-    })
-
+    }
+    //check ~ key for menu
+    document.addEventListener('keydown', showMenu)
     const resume = document.getElementById('resume');
     resume.addEventListener('click', function(e) {
       screenOverlay.style.display = '-webkit-box';
@@ -61,9 +62,7 @@ class CreateMatch extends React.Component {
     });
 
     const exit = document.getElementById('exit');
-    console.log('exit', exit)
     exit.addEventListener('click', function(e) {
-      console.log('click')
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
       screenOverlay.style.display = 'box';
@@ -73,7 +72,7 @@ class CreateMatch extends React.Component {
     });
 
     document.getElementById( 'CreateMatchContainer' ).style.display = 'none';
-    clientScene.startGame(numPlayers);
+    clientScene.startGame(numPlayers, showMenu);
   }
 
   ChooseMap() {
