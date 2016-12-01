@@ -10,18 +10,11 @@ class Store extends React.Component {
 	  this.state = {
 	    user: null,
       storeSkins: userProfile.storeSkins,
-      stars: 0,
+      stars: userProfile.stars,
       noFunds: false
 	  };
 	  this.backToHome = this.backToHome.bind(this);
     this.backToStore = this.backToStore.bind(this);
-  }
-
-  backToHome() {
-    browserHistory.push('/Home');
-  }
-
-  componentWillMount() {
     if(userProfile.User === 'Guest') {
       if(window.localStorage.id) {
         $.ajax({
@@ -41,6 +34,13 @@ class Store extends React.Component {
         })
       }
     }
+  }
+
+  backToHome() {
+    browserHistory.push('/Home');
+  }
+
+  componentWillMount() {
     $.ajax({
       url: '/api/getPointsByUsername/' + userProfile.User,
       method: 'Get',
@@ -59,15 +59,15 @@ class Store extends React.Component {
   }
 
   backToStore() {
-    this.state.noFunds = false;
+    this.setState({noFunds: false});
     browserHistory.push('Store')
   }
 
   render() {
     if (this.state.noFunds === true) {
       return (
-        <div id='Store'>
-          <div id='CreateMatchBackground'>
+        <div className='menuContainer'>
+          <div className='menuBackground'>
             <div id='Profile'>
               <Profile />
             </div>
@@ -83,8 +83,8 @@ class Store extends React.Component {
       )
     } else {
       return (
-        <div id='Store'>
-          <div id='CreateMatchBackground'>
+        <div className='menuContainer'>
+          <div className='menuBackground'>
             <div id='Profile'>
               <Profile />
             </div>

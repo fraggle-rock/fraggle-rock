@@ -5,12 +5,11 @@ import userProfile from '../userProfile.js';
 var SelectSkinData = props => {
 	var addSkin = function() {
     if (props.skin.type === 'hat') {
-      userProfile.hat = props.skin.skin
-      browserHistory.goBack()
+      userProfile.hat = props.skin.skin;
     } else {
       userProfile.ChosenSkin = props.skin.skin;
-      browserHistory.goBack()
     }
+    browserHistory.goBack();
   }
 
   return (

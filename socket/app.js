@@ -20,9 +20,9 @@ io.on('connection', (socket) => {
     const scene = fullScene.scene;
     const player = fullScene.camera;
     const match = matchController.getNewMatch();
-    const numPlayers = fullScene.numPlayers;
+    const maxPlayers = fullScene.maxPlayers;
     socket.join(match.guid);
-    match.loadFullScene(scene, player, io, numPlayers, fullScene.spawnPoints);
+    match.loadFullScene(scene, player, io, maxPlayers, fullScene.spawnPoints, fullScene.owner, fullScene.mapChoice);
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);
     });
@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
     socket.on('poll', function(clientUuid) {
       match.loadPoll(clientUuid);
     });
-    if (match.numPlayers === 0) {
+    if (match.maxPlayers === 0) {
       match.startPhysics();
       match.killFloor();
     }
@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
     const matchId = newMatchRequest.matchId;
     const player = newMatchRequest.player;
     const match = matchController.getMatch(matchId);
-    if (!match || match.numPlayers === Object.keys(match.clients).length || Object.keys(match.clients).length >= 6) {
+    if (!match || match.maxPlayers === Object.keys(match.clients).length || Object.keys(match.clients).length >= 6) {
       socket.emit('matchUnavailable');
     } else {
       socket.join(match.guid, function() {
@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
         socket.on('poll', function(clientUuid) {
           match.loadPoll(clientUuid);
         });
-        if (match.numPlayers === Object.keys(match.clients).length) {
+        if (match.maxPlayers === Object.keys(match.clients).length) {
             match.startPhysics();
             match.killFloor();
         }

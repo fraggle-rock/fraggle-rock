@@ -9,10 +9,10 @@ const userProfile = require('./component/userProfile.js');
 let serverUpdateTick;
 
 const appendRenderer = function appendRenderer(renderer) {
-  document.querySelector('body').appendChild(renderer.domElement);
+  document.querySelector('#GameViewContainer').appendChild(renderer.domElement);
 }
 
-const init = function init() {
+const init = function init(maxPlayers) {
   const camera = cameraBuilder.buildCamera();
   const renderer = rendererBuilder.buildRenderer();
   appendRenderer(renderer);
@@ -21,14 +21,17 @@ const init = function init() {
 
   // build level
   if (userProfile.map === 0) {
-    scene = levelBuilder.buildLevelOne();
+    scene = levelBuilder.buildFraggleRock();
   } else if (userProfile.map === 1) {
-    scene = levelBuilder.buildLevelTwo();
+    scene = levelBuilder.buildDawnMountain();
   } else {
-    scene = levelBuilder.buildLevelThree();
+    scene = levelBuilder.buildHighNoon();
   }
 
-  return { camera, renderer, scene, spawnPoints };
+  let owner = userProfile.User;
+  let mapChoice = userProfile.map;
+
+  return { camera, renderer, scene, spawnPoints, owner, maxPlayers, mapChoice };
 };
 
 const join = function join() {
@@ -39,24 +42,23 @@ const join = function join() {
   return { camera, renderer, scene };
 }
 
-
-const startGame = function startGame(numPlayers, showMenu) {
-  const game = init(); //creates camera, renderer and scene data
+const startGame = function startGame(maxPlayers) {
+  const game = init(maxPlayers); //creates camera, renderer and scene data
   sceneUtility.addLookControls(game.camera, socketUtility);
   const playerInput = sceneUtility.addMoveControls(game.camera, socketUtility);
   sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game); //Renders screen to page and requests re-render at next animation frame
-  socketUtility.requestNewMatch(game, numPlayers, showMenu); //Request to the server to create a new match
+  socketUtility.requestNewMatch(game, maxPlayers); //Request to the server to create a new match
 };
 
-const joinGame = function joinGame(matchNumber, showMenu) {
+const joinGame = function joinGame(matchNumber) {
   // load game of this matchNumber
   const game = join(matchNumber);
   sceneUtility.addLookControls(game.camera, socketUtility);
   const playerInput = sceneUtility.addMoveControls(game.camera, socketUtility);
   sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game);
-  socketUtility.joinMatch(matchNumber, game, showMenu);
+  socketUtility.joinMatch(matchNumber, game);
 };
 
 module.exports = { startGame, joinGame };

@@ -9,16 +9,17 @@ const transactionController = require('./../../server/db/controllers/Transaction
 // const setupSchema = require('./setupSchema');
 
 const users = [
-  { username: 'player1',
+  { username: 'rockingnick',
     email: 'riyaz@hackreactor.com',
     token: 'riyazToken',
     facebookid: 'riyazFacebookid',
     map: '1',
     graphicsSetting: 'high',
     skins: ['1', '2'],
+    url: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/12038272_1072402766105988_6600498372014025136_n.jpg?oh=3f93e4e13495e902e886b451c9258afe&oe=58B1D0A9',
     hats: ['1'],
   },
-  { username: 'player2',
+  { username: 'smashingwill',
     email: 'will@hackreactor.com',
     token: 'willToken',
     facebookid: 'willFacebookid',
@@ -26,8 +27,9 @@ const users = [
     graphicsSetting: 'high',
     skins: ['1', '2'],
     hats: ['1'],
+    url: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/12038272_1072402766105988_6600498372014025136_n.jpg?oh=3f93e4e13495e902e886b451c9258afe&oe=58B1D0A9',
   },
-  { username: 'player3',
+  { username: 'cooleric',
     email: 'eric@hackreactor.com',
     token: 'ericToken',
     facebookid: 'ericFacebookid',
@@ -35,8 +37,9 @@ const users = [
     graphicsSetting: 'high',
     skins: ['1', '2'],
     hats: ['1'],
+    url: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/12038272_1072402766105988_6600498372014025136_n.jpg?oh=3f93e4e13495e902e886b451c9258afe&oe=58B1D0A9',
   },
-  { username: 'player4',
+  { username: 'insaneriyaz',
     email: 'nick@hackreactor.com',
     token: 'nickToken',
     facebookid: 'nickFacebookid',
@@ -44,6 +47,7 @@ const users = [
     graphicsSetting: 'high',
     skins: ['1', '2'],
     hats: ['1'],
+    url: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/12038272_1072402766105988_6600498372014025136_n.jpg?oh=3f93e4e13495e902e886b451c9258afe&oe=58B1D0A9',
   },
 ];
 
@@ -79,35 +83,35 @@ const scores = [
 
 const transactions = [
   {
-    username: 'player1',
-    points: 100,
+    username: 'rockingnick',
+    points: 2000,
   },
   {
-    username: 'player2',
-    points: 100,
+    username: 'cooleric',
+    points: 2000,
   },
   {
-    username: 'player3',
-    points: 100,
+    username: 'insaneriyaz',
+    points: 2000,
   },
   {
-    username: 'player4',
-    points: 100,
+    username: 'smashingwill',
+    points: 2000,
   },
   {
-    username: 'player1',
+    username: 'rockingnick',
     points: -30,
   },
   {
-    username: 'player2',
+    username: 'cooleric',
     points: -35,
   },
   {
-    username: 'player3',
+    username: 'insaneriyaz',
     points: -40,
   },
   {
-    username: 'player4',
+    username: 'smashingwill',
     points: -25,
   },
 ]
@@ -150,7 +154,7 @@ const populateScores = function populateScores() {
   .then(() => {
     transactionController.clear()
     .then(() => {
-      transactions.forEach((transaction, index) => {
+      transactions.forEach((transaction) => {
         userController.searchUserByUsername(transaction.username)
         .then((user) => {
           transactionController.insertTransaction({ user_id: user.id,

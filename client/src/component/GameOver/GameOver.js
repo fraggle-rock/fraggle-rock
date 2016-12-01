@@ -17,8 +17,8 @@ class GameOver extends React.Component {
   render() {
       return (
         <div id='GameOver'>
-          <div id='GameOverContainer'>
-            <div id='CreateMatchBackground'>
+          <div className='menuContainer'>
+            <div className='menuBackground'>
               <h1>Game Over</h1>
               <button className='btn-primary GameOverHome' onClick={this.backToHome}>HOME</button>
               <h3 id='PlayerWins'><span>{userProfile.winner}</span> Wins!!!!!</h3>

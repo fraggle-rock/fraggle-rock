@@ -56,8 +56,8 @@ class Settings extends React.Component {
 
   render() {
       return (
-        <div id='Store'>
-          <div id='CreateMatchBackground'>
+        <div className='menuContainer'>
+          <div className='menuBackground'>
             <div id='Profile'>
               <Profile />
             </div>

@@ -17,7 +17,8 @@ module.exports = {
       map: user.map,
       graphicsSetting: user.graphicsSetting,
       skins: user.skins,
-      hats: user.hats
+      hats: user.hats,
+      url: user.url,
     })
     .save();
   },

@@ -30,7 +30,7 @@ class LogIn extends React.Component {
         success: (data) => {
           if(data.length == 0) {
             var username = prompt('Welcome to Smash Ball Brawl. Please Enter a Username');
-            username = username.splice(0, 10);
+            username = username.slice(0, 10);
             if(username !== null) {
               userProfile.User = username;
               userProfile.facebookid = e.id;
@@ -39,7 +39,8 @@ class LogIn extends React.Component {
                   username: username,
                   token: e.accessToken,
                   email: 'fakeEmail@gmail.com',
-                  facebookid: e.id
+                  facebookid: e.id,
+                  url: e.picture.data.url
                 }
               $.ajax({
                 url: '/api/addUser',
