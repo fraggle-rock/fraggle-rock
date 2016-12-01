@@ -1,5 +1,5 @@
 const socketPort = 3001;
-const socketManager = '127.0.0.1';
+const socketManager = process.env.SOCKET_MANAGER || '127.0.0.1';
 const socketManagerPort = 4444;
 const io = require('socket.io')(socketPort);
 const matchController = require('./matchController.js');
