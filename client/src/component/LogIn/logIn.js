@@ -28,7 +28,6 @@ class LogIn extends React.Component {
         url: '/api/getUserByFacebookID/' + e.id,
         method: 'Get',
         success: (data) => {
-          console.log(data)
           if(data.length == 0) {
             var username = prompt('Welcome to Smash Ball Brawl. Please Enter a Username');
             username = username.slice(0, 10);
