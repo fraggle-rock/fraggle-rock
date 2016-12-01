@@ -106,6 +106,25 @@ canvas {
   transition: all .25s;
 }
 
+.btn-md {
+  display: inline-block
+  font-weight: 400;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  border: 1px solid transparent;
+  padding: .25rem .45rem;
+  font-size: 1rem;
+  border-radius: .15rem;
+  transition: all .25s;
+}
+
 .btn-primary {
   color: white;
   background-color: #0275d8;
@@ -154,6 +173,7 @@ canvas {
 
 #screenOverlay {
   position: absolute;
+  display: none;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -519,14 +539,31 @@ canvas {
 
 /*---------------------------------Menu Layout--------------------------------------------------*/
 
+.menuContainer {
+  margin-top: 14%;
+  text-align: center;
+  color: white;
+}
+
+.menuBackground {
+  margin: 0 auto;
+  height: 425px;
+  width: 600px;
+  z-index:-1;
+  background: -moz-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* ff3.6+ */
+  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(22,112,186,1)), color-stop(100%, rgba(2,13,61,1))); /* safari4+,chrome */
+  background: -webkit-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* safari5.1+,chrome10+ */
+  background: -o-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* opera 11.10+ */
+  background: -ms-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* ie10+ */
+  background: linear-gradient(37deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* w3c */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020D3D', endColorstr='#1670BA',GradientType=0 );
+  border-radius: 20px;
+}
+
 .buttonBox {
   width: 100%;
   position: relative;
   margin-bottom: 20px;
-}
-
-.buttonBox > h1, .homeBtn, .selectSkinBtn {
-
 }
 
 .buttonBox > h1 {
@@ -558,12 +595,6 @@ canvas {
 
 
 /*---------------------------------Leaderboard--------------------------------------------------*/
-
-#LeaderData {
-  text-align: center;
-  color: white;
-  margin-top: 14%
-}
 
 #LeaderBoardUserNameTitle {
   font-size: 20px;
@@ -604,26 +635,6 @@ canvas {
 }
 
 /*-----------------------Create Match------------------------*/
-
-#CreateMatchContainer {
-  margin-top: 14%;
-  text-align: center;
-}
-
-#CreateMatchBackground {
-  margin: 0 auto;
-  height: 425px;
-  width: 600px;
-  z-index:-1;
-  background: -moz-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* ff3.6+ */
-  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(22,112,186,1)), color-stop(100%, rgba(2,13,61,1))); /* safari4+,chrome */
-  background: -webkit-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* safari5.1+,chrome10+ */
-  background: -o-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* opera 11.10+ */
-  background: -ms-linear-gradient(53deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* ie10+ */
-  background: linear-gradient(37deg, rgba(22,112,186,1) 0%, rgba(2,13,61,1) 100%); /* w3c */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020D3D', endColorstr='#1670BA',GradientType=0 );
-  border-radius: 20px;
-}
 
 #StartMatch {
   margin-top: 40px;
@@ -709,6 +720,7 @@ canvas {
   background-color: white;
   margin-bottom: 20px;
   cursor: pointer;
+  color: black;
 }
 
 #MapSelector {
@@ -718,46 +730,31 @@ canvas {
 
 /*--------------------------Join Match---------------------------------------*/
 
-#JoinDawnMountain {
-  height: 50px;
+.JoinMatchHeader {
+  margin: 20px 0;
+}
+
+.JoinMatchBody {
+  height: 280px;
+  overflow-y: auto;
+}
+
+.JoinMatchSpan {
+  display: inline-block;
+  width: 150px;
+  margin: 5px 0;
+}
+
+.JoinMatchSpan img {
   width: 50px;
 }
 
-#JoinMatchTitle {
-  margin-top: 14%;
-  text-align: center;
-  color: white;
-}
-
-#JoinLevelPic {
-  margin-top: 10px;
-}
-
-#JoinMatchGameID {
-  margin-top: 30px;
-}
-
-#JoinGameButton {
-  margin-top: 20px;
-}
-
-#JoinLevelTitle {
-  margin-left: 100px;
-}
-
-#JoinJoinTitle, #JoinUserTitle, #JoinLevelTitle {
-  display: inline-block;
-  margin-right: 100px;
-  margin-top: 5px;
+.JoinMatchBox {
+  display: flex;
+  align-items: center;
 }
 
 /*----------------------Store--------------------------------*/
-
-#Store {
-  margin-top: 14%;
-  color: white;
-  text-align: center;
-}
 
 .SkinPic {
   height: 140px;

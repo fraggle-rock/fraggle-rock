@@ -30,9 +30,11 @@ class LeaderBoard extends React.Component {
 
   render() {
     return (
-      <div id='LeaderBoardTitle'>
-        <div id='LeaderData'>
-          <div id='CreateMatchBackground'>
+      <div className='menuContainer'>
+        <div id='Profile'>
+          <Profile />
+        </div>
+        <div className='menuBackground'>
           <div className='buttonBox'>
             <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
             <h1>Top 10 Players</h1>
@@ -47,10 +49,6 @@ class LeaderBoard extends React.Component {
               {this.state.leaderBoards.map(leader => <LeaderBoardDataScore key={leader.score.toString()} leader={leader} />)}
             </div>
           </div>
-        </div>
-        <div id='Profile'>
-          <Profile />
-        </div>
         </div>
       </div>
     );

@@ -1,8 +1,6 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
-import JoinButtonData from './JoinButtonData.js';
-import JoinLevelData from './JoinLevelData.js';
-import JoinUserData from './JoinUserData.js';
+import JoinMatchData from './JoinMatchData.js';
 import Profile from '../Home/Profile.js';
 
 class JoinMatch extends React.Component {
@@ -34,38 +32,34 @@ class JoinMatch extends React.Component {
 
   render() {
     return (
-      <div id='JoinMatchTitle'>
-        <div id='CreateMatchBackground' >
+      <div className='menuContainer'>
+        <div id='Profile'>
+          <Profile />
+        </div>
+        <div className='menuBackground'>
           <div className='buttonBox'>
             <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
             <h1>Join Match</h1>
             <button className='btn btn-warning selectSkinBtn' onClick={this.selectSkin}>Select Skin</button>
           </div>
           <div id='JoinMatchData'>
-            <div id='JoinLevelTitle'>
-              <div>Level</div>
-              {this.state.liveMatches.map((games) => <JoinLevelData key={games} games={games} />)}
-            </div>
-            <div id='JoinUserTitle'>
-              <div id='JoinUserId'>User</div>
-              {this.state.liveMatches.map((games) => <JoinUserData key={games} games={games} />)}
-            </div>
-            <div id='JoinJoinTitle'>
-              <div>Join</div>
-              {this.state.liveMatches.map((games) => <JoinButtonData key={games} games={games} />)}
+            <div id='JoinMatchTable'>
+              <div className='JoinMatchHeader'>
+                <div className='JoinMatchSpan'>Map</div>
+                <div className='JoinMatchSpan'>Host</div>
+                <div className='JoinMatchSpan'>Players</div>
+                <div className='JoinMatchSpan'></div>
+              </div>
+              <div className='JoinMatchBody'>
+                {this.state.liveMatches.map((match) => <JoinMatchData key={match.matchId} match={match} />)}
+              </div>
             </div>
           </div>
-        </div>
-        <div id='Profile'>
-          <Profile />
         </div>
       </div>
     );
 
   }
 }
-
-
-
 
 export default JoinMatch;

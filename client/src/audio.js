@@ -1,3 +1,5 @@
+const userProfile = require('./component/userProfile.js');
+
 function BufferLoader(context, urlList, callback) {
   this.context = context;
   this.urlList = urlList;
@@ -67,13 +69,15 @@ function SmashBrawl(currContext) {
 }
 
 SmashBrawl.prototype.shootRound = function shootRound(type, rounds, interval, random, random2) {
-  random = random || 0;
-  const time = context.currentTime;
-  // Make multiple sources using the same buffer and play in quick succession.
-  for (let i = 0; i < rounds; i += 1) {
-    const source = this.makeSource(this.buffers[type]);
-    source.playbackRate.value = 1 + (Math.random() * random2);
-    source.start(time + (i * interval) + (Math.random() * random));
+  if (userProfile.sound === 1) {
+    random = random || 0;
+    const time = context.currentTime;
+    // Make multiple sources using the same buffer and play in quick succession.
+    for (let i = 0; i < rounds; i += 1) {
+      const source = this.makeSource(this.buffers[type]);
+      source.playbackRate.value = 1 + (Math.random() * random2);
+      source.start(time + (i * interval) + (Math.random() * random));
+    }
   }
 };
 

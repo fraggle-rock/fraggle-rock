@@ -9,7 +9,7 @@ const spawnPoints = [
   [[0, 0, 0], [0, 5, 25], [0, 5, -25], [50, 20, 0], [-50, 20, 0]]
 ];
 
-const buildLevelOne = function buildLevelOne(options) {
+const buildFraggleRock = function buildFraggleRock(options) {
   const scene = this.buildBlankLevel();
   let mesh;
 
@@ -56,7 +56,7 @@ const buildLevelOne = function buildLevelOne(options) {
   return scene;
 }
 
-const buildLevelTwo = function buildLevelTwo(options) {
+const buildDawnMountain = function buildDawnMountain(options) {
   const scene = this.buildBlankLevel();
   let mesh;
 
@@ -92,7 +92,7 @@ const buildLevelTwo = function buildLevelTwo(options) {
   return scene;
 }
 
-const buildLevelThree = function buildLevelThree(options) {
+const buildHighNoon = function buildHighNoon(options) {
   const scene = this.buildBlankLevel();
   let mesh;
 
@@ -145,9 +145,9 @@ const buildBlankLevel = function buildBlankLevel() {
 }
 
 module.exports = function LevelBuilder() {
-  this.buildLevelOne = buildLevelOne.bind(this);
-  this.buildLevelTwo = buildLevelTwo.bind(this);
-  this.buildLevelThree = buildLevelThree.bind(this);
+  this.buildFraggleRock = buildFraggleRock.bind(this);
+  this.buildDawnMountain = buildDawnMountain.bind(this);
+  this.buildHighNoon = buildHighNoon.bind(this);
   this.buildBlankLevel = buildBlankLevel.bind(this);
   this.spawnPoints = spawnPoints;
 }
