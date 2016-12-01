@@ -877,5 +877,25 @@ canvas {
 }
 
 #PlayerWins {
-  margin-top: 100px;
+  margin-top: 40px;
+}
+
+.GameOverBox {
+  display: flex;
+}
+
+.GameOverUser {
+  margin: 5px 70px auto auto;
+}
+
+.GameOverScore {
+  margin: 5px auto auto 0;
+}
+
+.GameOverUserTitle {
+  margin: auto 50px auto auto;
+}
+
+.GameOverScoreTitle {
+  margin: auto auto auto 0;
 }
