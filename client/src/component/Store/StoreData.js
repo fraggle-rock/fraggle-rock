@@ -30,7 +30,6 @@ var StoreData = props => {
             },
             success: (error) => {
               userProfile.stars = userProfile.stars - props.skin.price;
-              console.log('userProfile')
               browserHistory.push('Store')
             }
           })

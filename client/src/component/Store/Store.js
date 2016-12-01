@@ -27,6 +27,13 @@ class Store extends React.Component {
       method: 'Get',
       success: (data) => {
         userProfile.stars = data;
+        userProfile.Skins.forEach((skinOwned) => {
+          userProfile.storeSkins.forEach((skin) => {
+            if(skinOwned === skin.skin) {
+              skin.owned = true;
+            }
+          })
+        })
         browserHistory.push('Store')
       }
     })

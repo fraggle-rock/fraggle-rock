@@ -46,7 +46,6 @@ class CreateMatch extends React.Component {
     }
     //check ~ key for menu
     document.addEventListener('keydown', showMenu)
-
     const resume = document.getElementById('resume');
     resume.addEventListener('click', function(e) {
       screenOverlay.style.display = '-webkit-box';
@@ -63,9 +62,7 @@ class CreateMatch extends React.Component {
     });
 
     const exit = document.getElementById('exit');
-    console.log('exit', exit)
     exit.addEventListener('click', function(e) {
-      console.log('click')
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
       screenOverlay.style.display = 'box';

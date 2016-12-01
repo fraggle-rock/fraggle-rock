@@ -50,9 +50,7 @@ const JoinButtonData = props => {
     document.getElementById('JoinMatchTitle').style.display = 'none';
 
     const exit = document.getElementById('exit');
-    console.log('exit', exit)
     exit.addEventListener('click', function(e) {
-      console.log('click')
       screenOverlay.style.display = '-webkit-box';
       screenOverlay.style.display = '-moz-box';
       screenOverlay.style.display = 'box';
