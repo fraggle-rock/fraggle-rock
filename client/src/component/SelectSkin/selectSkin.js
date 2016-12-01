@@ -7,13 +7,21 @@ class SelectSkin extends React.Component {
   constructor(props) {
 	  super(props);
 	  this.state = {
-	    user: null,
+	    skins: []
 	  };
 	  this.backToHome = this.backToHome.bind(this);
+    this.componentWillMount = this.componentWillMount.bind(this)
   }
 
   backToHome() {
     browserHistory.goBack();
+  }
+  
+  componentWillMount() {
+    console.log(this.state.skins)
+    for(var i = 0; i < userProfile.Skins.length; i++) {
+      this.state.skins.push(userProfile.skinsObj[userProfile.Skins[i]])
+    }
   }
 
   render() {
@@ -25,7 +33,7 @@ class SelectSkin extends React.Component {
             </div>
             <button id='HOMEButton' className='btn btn-primary' onClick={this.backToHome}>Go Back</button>
             <div id='Skins'>
-              {userProfile.Skins.map((skins) => <SelectSkinData key={skins.skin} skins={skins} />)}
+              {this.state.skins.map((skins) => <SelectSkinData key={skins.skin} skins={skins} />)}
             </div>
           </div>
         </div>

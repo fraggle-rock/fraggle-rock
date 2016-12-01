@@ -39,14 +39,13 @@ class Store extends React.Component {
     browserHistory.push('/Home');
   }
 
-  componentDidMount() {
+  componentWillMount() {
     $.ajax({
       url: '/api/getPointsByUsername/' + userProfile.User,
       method: 'Get',
       success: (data) => {
-        console.log(data)
         userProfile.experience = data;
-        console.log(userProfile.experience)
+        browserHistory.push('Store')
       }
     })
   }

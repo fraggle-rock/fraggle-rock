@@ -5,15 +5,35 @@ import userProfile from '../userProfile.js';
 var StoreData = props => {
 	var addSkin = function() {
     if(userProfile.experience >= props.skins.price) {
-      if(props.skins.type === 'hat') {
-        userProfile.Skins.push(props.skins)
-        userProfile.experience = userProfile.experience - props.skins.price;
-        browserHistory.push('Store')
-      } else {
-        userProfile.Skins.push(props.skins)
-        userProfile.experience = userProfile.experience - props.skins.price;
-        browserHistory.push('Store')
-      }
+      var data = {facebookid: userProfile.facebookid, points: -(props.skins.price)}
+      $.ajax({
+        url: '/api/addTransactionByFacebookID',
+        method: 'Post',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        error: (error) => {
+          console.log(error)
+        },
+        success: (data) => {
+          userProfile.Skins.push(props.skins.skin)
+          console.log(userProfile.userId)
+          var skins = {id: userProfile.userId, skins: userProfile.Skins}
+          console.log(JSON.stringify(skins))
+          $.ajax({
+            url: '/api/updateSkins',
+            method: 'Post',
+            data: JSON.stringify(skins),
+            contentType: 'application/json',
+            error: (error) => {
+              console.log(error)
+            },
+            success: (error) => {
+              userProfile.experience = userProfile.experience - props.skins.price;
+              browserHistory.push('Store')
+            }
+          })
+        }
+      }) 
     } else {
       props.state.noFunds = true;
       browserHistory.push('Store')
