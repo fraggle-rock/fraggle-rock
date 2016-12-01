@@ -191,7 +191,7 @@ const updateScoreTable = function updateScoreTable(uuid,num) {
       }
     }
   }
-  console.log('Update score table ', scoreTable);
+  // console.log('Update score table ', scoreTable);
 }
 const physicsLoop = function physicsLoop(match) {
   for (var key in match.clients) {
@@ -300,7 +300,7 @@ const shootBall = function shootBall(camera) {
         scoreTable[e.target.useruuid] = scoreTable[e.target.useruuid] + config.onShootScore;
       }
   }
-    console.log('Mass ', e.body.mass, ' Damping ', e.body.linearDamping, 'Score ', scoreTable);
+    // console.log('Mass ', e.body.mass, ' Damping ', e.body.linearDamping, 'Score ', scoreTable);
     collisionSound = { play: 7 };
   }
 });
