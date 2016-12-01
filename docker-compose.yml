@@ -9,24 +9,12 @@ services:
     env_file:
       .env
     command: node fraggle-rock/server/app.js
-  socketManager:
+  socketmanager:
     image: mhart/alpine-node:6
     volumes:
       - '.:/fraggle-rock'
+    ports:
+      - '4444:4444'
     env_file:
       .env
     command: node fraggle-rock/socket/socketManager.js
-  socket1:
-    image: mhart/alpine-node:6
-    volumes:
-      - '.:/fraggle-rock'
-    ports:
-      - '3001:3001'
-    command: node fraggle-rock/socket/app.js
-  socket2:
-    image: mhart/alpine-node:6
-    volumes:
-      - '.:/fraggle-rock'
-    ports:
-      - '3002:3001'
-    command: node fraggle-rock/socket/app.js
