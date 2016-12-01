@@ -82,6 +82,9 @@ class HUD extends React.Component {
               <div className="player1 playerNameBox">
                 <div className="playerName" id="player1Name">Player 1</div>
               </div>
+              <div class="player1 playerScoreBox">
+                <div class="playerScore" id="player1Score">0</div>
+              </div>              
             </div>
 
             <div className="player2 playerBox" id="player2Box">

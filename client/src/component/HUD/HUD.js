@@ -36,6 +36,9 @@ class HUD extends React.Component {
               <div class="player1 playerNameBox">
                 <div class="playerName" id="player1Name">Player 1</div>
               </div>
+              <div class="player1 playerScoreBox">
+                <div class="playerScore" id="player1Score">0</div>
+              </div>
             </div>
             <div class="player2 playerBox" id="player2Box">
               <img src="./textures/playerBlueHealth.png" class="playerPic" />

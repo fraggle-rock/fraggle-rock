@@ -274,6 +274,23 @@ canvas {
   text-shadow: 1px 1px black;
 }
 
+.playerScoreBox {
+  position: absolute;
+  top: 51px;
+  left: 0;
+  width: 80px;
+  height: 29px;
+  text-align: center;
+}
+
+.playerScore {
+  font-family: 'Play', sans-serif;
+  font-size: 11px;
+  color: red;
+  z-index: 6;
+  text-shadow: 1px 1px black;
+}
+
 .crosshairContainer {
   width: 41px;
   height: 15px;
