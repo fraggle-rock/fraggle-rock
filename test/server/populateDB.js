@@ -18,6 +18,7 @@ const users = [
     skins: ['1', '2'],
     url: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/12038272_1072402766105988_6600498372014025136_n.jpg?oh=3f93e4e13495e902e886b451c9258afe&oe=58B1D0A9',
     hats: ['1'],
+    sound: 'true',
   },
   { username: 'smashingwill',
     email: 'will@hackreactor.com',
@@ -28,6 +29,7 @@ const users = [
     skins: ['1', '2'],
     hats: ['1'],
     url: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/12038272_1072402766105988_6600498372014025136_n.jpg?oh=3f93e4e13495e902e886b451c9258afe&oe=58B1D0A9',
+    sound: 'true',
   },
   { username: 'cooleric',
     email: 'eric@hackreactor.com',
@@ -38,6 +40,7 @@ const users = [
     skins: ['1', '2'],
     hats: ['1'],
     url: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/12038272_1072402766105988_6600498372014025136_n.jpg?oh=3f93e4e13495e902e886b451c9258afe&oe=58B1D0A9',
+    sound: 'true',
   },
   { username: 'insaneriyaz',
     email: 'nick@hackreactor.com',
@@ -48,6 +51,7 @@ const users = [
     skins: ['1', '2'],
     hats: ['1'],
     url: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/12038272_1072402766105988_6600498372014025136_n.jpg?oh=3f93e4e13495e902e886b451c9258afe&oe=58B1D0A9',
+    sound: 'true',
   },
 ];
 
