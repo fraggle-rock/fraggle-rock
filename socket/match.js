@@ -55,7 +55,7 @@ const loadPoll = function loadPoll(clientUuid) {
 };
 
 const sendPoll = function sendPoll() {
-  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: this.numPlayers };
+  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: this.maxPlayers };
   for (var key in this.clients) {
     const client = this.clients[key];
     let score = 0;
@@ -205,7 +205,7 @@ const physicsLoop = function physicsLoop(match) {
     Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
       //PLAYER DEATH & RESPAWN
       client.lives--
-      updateScoreTable(client.uuid, match.numPlayers);
+      updateScoreTable(client.uuid, match.maxPlayers);
       const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)]
 
       clientBody.position.set(spawn[0], spawn[1], spawn[2]);
