@@ -31,6 +31,9 @@ const User = db.define('User', {
   email: {
     type: Sequelize.STRING,
   },
+  sound: {
+    type: Sequelize.STRING,
+  },
   token: {
     type: Sequelize.STRING,
   },

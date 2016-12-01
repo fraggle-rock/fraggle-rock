@@ -1,5 +1,6 @@
 const express = require('express');
 const UserController = require('./../db/controllers/UserController');
+const transactionController = require('./../db/controllers/TransactionController');
 
 const router = express.Router();
 
@@ -7,7 +8,11 @@ router.route('/addUser')
 .post((req, res) => {
   UserController.insertUser(req.body)
   .then((user) => {
-    res.status(200).send(user);
+    transactionController.insertTransaction({ user_id: user.id,
+      transaction: 500 })
+      .then((transaction) => {
+        res.status(200).send(user);
+      });
   });
 });
 

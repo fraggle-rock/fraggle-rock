@@ -19,6 +19,7 @@ module.exports = {
       skins: user.skins,
       hats: user.hats,
       url: user.url,
+      sound: user.sound,
     })
     .save();
   },
