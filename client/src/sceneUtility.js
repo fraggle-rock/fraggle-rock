@@ -3,8 +3,8 @@ const objectBuilder = require('./objectBuilder');
 const config = require('../../config/config.js');
 const flat = require('../../config/flat.js');
 const audio = require('./audio');
-const userProfile = require('./component/userProfile.js')
-
+const userProfile = require('./component/userProfile.js');
+import { browserHistory } from 'react-router';
 
 const redBallStack = (function() {
   const result = [];
@@ -15,8 +15,8 @@ const redBallStack = (function() {
   return result;
 })();
 
-const remoteClients = {};
-const remoteScene = {};
+let remoteClients = {};
+let remoteScene = {};
 let currentGame = {};
 
 //make sure object exists
@@ -30,9 +30,9 @@ let shotRegen = false;
 let jumpCount = config.maxJumps;
 let jumpRegen = false;
 let latestServerUpdate;
-const serverShapeMap = {};
-const meshLookup = {init: false};
-const clearLookup = {};
+let serverShapeMap = {};
+let meshLookup = {init: false};
+let clearLookup = {};
 
 //DEBUGGING
 let ticks = 0;
@@ -41,7 +41,7 @@ let averageTickRate = 0;
 
 module.exports = {
   addLookControls: function addLookControls(camera, socketUtility) {
-    const onMouseMove = function onMouseMove(event) {
+    $(document).mousemove(() => {
       const movementX = event.movementX;
       const movementY = event.movementY;
       yaw -= movementX * config.mouseSensitivity;
@@ -53,10 +53,9 @@ module.exports = {
       const quat = yawQuat.multiply(pitchQuat);
       camera.quaternion.copy(quat);
       if (currentGame.on) {
-        socketUtility.emitClientQuaternion(camera); 
+        socketUtility.emitClientQuaternion(camera);
       }
-    };
-   document.addEventListener('mousemove', onMouseMove, false);
+    });
   },
   addMoveControls: function addMoveControls(camera, socketUtility) {
     const playerInput = {};
@@ -119,7 +118,9 @@ module.exports = {
           const regen = function regen() {
             if (jumpCount < config.maxJumps) {
               jumpCount++;
-              document.getElementById('jump' + jumpCount).style.opacity = '1';
+              if (userProfile.matchId) {
+                document.getElementById('jump' + jumpCount).style.opacity = '1';
+              }
             }
             if (jumpCount < config.maxJumps) {
               setTimeout(regen, config.jumpRegen)
@@ -159,16 +160,18 @@ module.exports = {
         socketUtility.emitClientPosition(camera, playerInput);
       }
     };
-    document.addEventListener('keydown', onKeyDown, false);
-    document.addEventListener('keyup', onKeyUp, false);
+    $(document).on('keydown', onKeyDown);
+    $(document).on('keyup', onKeyUp);
     return playerInput;
   },
   addClickControls: function addClickControls(socketUtility) {
-    window.addEventListener('click', () => {
+    const clickHandler = function clickHandler() {
       if (currentGame.on) {
         if (shotCount > 0) {
           audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
-          document.getElementById('ammo' + shotCount).style.opacity = '0';
+          if (userProfile.matchId) {
+            document.getElementById('ammo' + shotCount).style.opacity = '0';
+          }
           shotCount--;
           socketUtility.emitShootBall({
             position: currentGame.camera.position,
@@ -179,7 +182,9 @@ module.exports = {
         const regen = function regen() {
           if (shotCount < config.maxShots) {
             shotCount++;
-            document.getElementById('ammo' + shotCount).style.opacity = '1';
+            if (userProfile.matchId) {
+              document.getElementById('ammo' + shotCount).style.opacity = '1';
+            }
           }
           if (shotCount < config.maxShots) {
             setTimeout(regen, config.shotRegen)
@@ -193,8 +198,9 @@ module.exports = {
             regen();
           }, config.shotRegen)
         }
-      }  
-    });
+      }
+    };
+    $(document).on('click', clickHandler);
   },
   animate: function animate(game) {
     currentGame = game;
@@ -204,12 +210,13 @@ module.exports = {
     game.renderer.render(game.scene, game.camera);
     requestAnimationFrame(animate.bind(null, game));
   },
-  loadMatchInfo: function loadMatchInfo(matchInfo) {
+  loadMatchInfo: function loadMatchInfo(matchInfo, quitMatch) {
     currentGame.matchInfo = matchInfo;
 
     let victory = false;
     let playersAlive = [];
     let players = Object.keys(matchInfo.clients).length;
+
 
     //check who is alive and set health and names
     Object.keys(matchInfo.clients).forEach( (uuid) => {
@@ -219,9 +226,9 @@ module.exports = {
       document.getElementById('player' + client.playerNumber + 'life2').style.opacity = client.lives > 1 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'life3').style.opacity = client.lives > 2 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'Name').innerHTML = client.name;
-
+      document.getElementById('player' + client.playerNumber + 'Score').innerHTML = client.score;
       if (client.lives > 0) {
-        playersAlive.push(client.playerNumber);
+        playersAlive.push(client.name);
       } else {
         document.getElementById('player' + client.playerNumber + 'Box').style.opacity = '0';
       }
@@ -234,13 +241,46 @@ module.exports = {
       document.getElementById('victoryBox').style.opacity = '1';
       document.getElementById('victoryBox').style.height = '300px';
       document.getElementById('victoryBox').style.marginTop = '15%';
-      document.getElementById('victor').innerHTML = 'Player ' + playersAlive[0] + ' Wins!';
-      //END GAME HERE
+      document.getElementById('victor').innerHTML = playersAlive[0] + ' Wins!';
+      userProfile.winner = playersAlive[0];
+
+      //END GAME
+      quitMatch()
+      remoteClients = {};
+      currentGame = {};
+      remoteScene = {};
+      pitch = 0;
+      yaw = 0;
+      host = false;
+      shotCount = null;
+      shotRegen = false;
+      jumpCount = null;
+      jumpRegen = null;
+      latestServerUpdate = null;
+      serverShapeMap = null;
+      meshLookup = {};
+      clearLookup = {};
+      setTimeout(() => {
+        userProfile.matchId = null;
+        userProfile.maxPlayers = null;
+        userProfile.createMatch = false;
+        let canvas = document.getElementsByTagName('canvas');
+        canvas[0].remove();
+        document.exitPointerLock();
+        $(document).off(); //removes all event listeners
+        const screenOverlay = document.getElementById( 'screenOverlay' );
+        const victoryBox = document.getElementById( 'victoryBox' );
+        victoryBox.style.display = 'none';
+        screenOverlay.style.display = 'none';
+        browserHistory.push('GameOver')
+      }, 4000)
     }
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     // Player out of bounds -> death
-    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound || Math.abs(clientPosition.position.x) > config.playerHorizontalBound || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
+    if (Math.abs(clientPosition.position.y) > config.playerVerticalBound
+    || Math.abs(clientPosition.position.x) > config.playerHorizontalBound
+    || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
       //death sound
       audio.smashBrawl.shootRound(2, 1, 0.08, 0, 1);
 

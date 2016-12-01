@@ -19,7 +19,7 @@ const addUpdateListeners = function addUpdateListeners(socket) {
   });
   socket.on('poll', function(matchInfo) {
     socket.emit('poll', sceneUtility.getCamera().uuid.slice(0, config.uuidLength));
-    sceneUtility.loadMatchInfo(JSON.parse(matchInfo));
+    sceneUtility.loadMatchInfo(JSON.parse(matchInfo), module.exports.quitMatch);
   });
 }
 
@@ -74,7 +74,7 @@ const hasChangedInput = function hasChangedInput(playerInput) {
 
 
 module.exports = {
-  requestNewMatch: function requestNewMatch(game, numPlayers) {
+  requestNewMatch: function requestNewMatch(game, maxPlayers) {
     addUpdateListeners(socket);
     const camera = game.camera.toJSON();
     camera.position = game.camera.position;
@@ -85,7 +85,8 @@ module.exports = {
     camera.skinPath = userProfile.ChosenSkin;
     camera.name = userProfile.User;
 
-    const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints, numPlayers: numPlayers};
+    const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints,
+      maxPlayers: maxPlayers, owner: game.owner, mapChoice: game.mapChoice};
     socket.emit('fullScene', fullScene);
   },
   joinMatch: function joinMatch(matchNumber, game) {

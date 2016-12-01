@@ -31,8 +31,16 @@ module.exports = {
   },
   liveGames: function liveGames() {
     var liveMatchesArray = []
-    for(var key in liveMatches) {
-      liveMatchesArray.push(key)
+    for (var matchId in liveMatches) {
+      let currentMatch = liveMatches[matchId];
+      let match = {
+        numPlayers: Object.keys(currentMatch.clients).length,
+        maxPlayers: currentMatch.maxPlayers,
+        owner: currentMatch.owner,
+        mapChoice: currentMatch.mapChoice,
+        matchId: matchId
+      };
+      liveMatchesArray.push(match);
     }
     return liveMatchesArray;
   },

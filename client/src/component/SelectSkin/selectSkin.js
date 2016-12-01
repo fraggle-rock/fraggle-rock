@@ -8,19 +8,35 @@ class SelectSkin extends React.Component {
   constructor(props) {
 	  super(props);
 	  this.state = {
-	    user: null,
+	    skins: []
 	  };
 	  this.backToHome = this.backToHome.bind(this);
+    this.componentWillMount = this.componentWillMount.bind(this)
   }
 
   backToHome() {
     browserHistory.goBack();
   }
 
+  componentWillMount() {
+    userProfile.Skins.forEach((userSkin) => {
+      userProfile.storeSkins.forEach((storeSkin) => {
+        if (userSkin === storeSkin.skin) {
+          //state doesnt set fast enough so you have to use asynch state or it over-writes
+          this.setState(function (prevState) {
+            return {
+              skins: prevState.skins.concat(storeSkin)
+            };
+          });
+        }
+      });
+    });
+  }
+
   render() {
       return (
-        <div id='Store'>
-          <div id='CreateMatchBackground' >
+        <div className='menuContainer'>
+          <div className='menuBackground'>
             <div id='Profile'>
               <Profile />
             </div>
@@ -29,7 +45,7 @@ class SelectSkin extends React.Component {
               <h1>Select Skin</h1>
             </div>
             <div id='Skins'>
-              {userProfile.Skins.length ? userProfile.Skins.map((skin) => <SelectSkinData key={skin.skin} skin={skin} />) : 'Go to the store to buy skins!'}
+              {this.state.skins.length ? this.state.skins.map((skin) => <SelectSkinData key={skin.skin} skin={skin} />) : 'Go to the store to buy skins!'}
             </div>
           </div>
         </div>

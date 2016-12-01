@@ -4,6 +4,7 @@ const THREE = require('three');
 const config = require('../config/config.js');
 const flat = require('../config/flat.js')
 let kill;
+const scoreTable = {};
 
 const getGuid = function getGuid() {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-_{}[]|;:<>,./?`~';
@@ -54,10 +55,21 @@ const loadPoll = function loadPoll(clientUuid) {
 };
 
 const sendPoll = function sendPoll() {
-  const matchInfo = {clients: {}, numPlayers: this.numPlayers};
+  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: this.numPlayers };
   for (var key in this.clients) {
     const client = this.clients[key];
-    matchInfo.clients[client.uuid] = ({uuid: client.uuid, name: client.name, lives: client.lives, skinPath: client.skinPath, color: client.color, playerNumber: client.playerNumber})
+    let score = 0;
+    if (scoreTable[key] !== undefined) {
+      score = scoreTable[key];
+    }
+    matchInfo.clients[client.uuid] = ({ uuid: client.uuid,
+      name: client.name,
+      lives: client.lives,
+      skinPath: client.skinPath,
+      color: client.color,
+      playerNumber: client.playerNumber,
+      score
+    });
   }
   this.io.to(this.guid).emit('poll', JSON.stringify(matchInfo));
 };
@@ -114,7 +126,9 @@ const buildPhysicsEmit = function buildPhysicsEmit(match) {
     clear.push(ball.id);
   }
   match.balls.forEach(function(ball, i) {
-    if (Math.abs(ball.position.x) > config.physicsBounds || Math.abs(ball.position.y) > config.physicsBounds || Math.abs(ball.position.z) > config.physicsBounds) {
+    if (Math.abs(ball.position.x) > config.physicsBounds ||
+    Math.abs(ball.position.y) > config.physicsBounds ||
+    Math.abs(ball.position.z) > config.physicsBounds) {
       expiredBallIndices.push(i);
       match.world.remove(ball);
       clear.push(ball.id)
@@ -123,7 +137,9 @@ const buildPhysicsEmit = function buildPhysicsEmit(match) {
     }
   });
   match.boxes.forEach(function(box, i) {
-    if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
+    if (Math.abs(box.position.x) > 200
+    || Math.abs(box.position.y) > 200
+    || Math.abs(box.position.z) > 200) {
         match.world.remove(box);
         match.boxes.splice(i, 1);
         clear.push(box.uuid);
@@ -166,6 +182,17 @@ const physicsEmit = function physicsEmit (match, socket) {
   match.sendFull = false;
 };
 
+const updateScoreTable = function updateScoreTable(uuid, num) {
+  if (num > 0 ) {
+    const bonus = config.pointsOnPlayerDeath * (num - 1);
+    for (var key in scoreTable) {
+      if (key !== uuid) {
+        scoreTable[key] += bonus;
+      }
+    }
+  }
+  // console.log('Update score table ', scoreTable);
+}
 const physicsLoop = function physicsLoop(match) {
   for (var key in match.clients) {
     const client = match.clients[key];
@@ -173,14 +200,17 @@ const physicsLoop = function physicsLoop(match) {
     const currVelocity = clientBody.velocity;
     let movePerTick = config.playerMovePerTick;
     let isMoving = false;
-    if (Math.abs(clientBody.position.y) > config.playerVerticalBound || Math.abs(clientBody.position.x) > config.playerHorizontalBound || Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
+    if (Math.abs(clientBody.position.y) > config.playerVerticalBound ||
+    Math.abs(clientBody.position.x) > config.playerHorizontalBound ||
+    Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
       //PLAYER DEATH & RESPAWN
-      client.lives--;
-
+      client.lives--
+      updateScoreTable(client.uuid, match.numPlayers);
       const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)]
 
       clientBody.position.set(spawn[0], spawn[1], spawn[2]);
-
+      clientBody.mass = config.playerModelMass;
+      clientBody.linearDamping = config.playerDamping;
       clientBody.velocity.set(0,0,0);
       match.sendPoll();
       continue;
@@ -225,7 +255,7 @@ const startPhysics = function startPhysics() {
     const clientBody = this.clientToCannon[client.uuid];
     const spawn = this.spawnPoints[random(0, this.spawnPoints.length - 1)]
     clientBody.position.set(spawn[0], spawn[1], spawn[2]);
-    clientBody.velocity.set(0,0,0);
+    clientBody.velocity.set(0, 0, 0);
   };
   this.physicsClock = setInterval(this.physicsLoop.bind(null, this), this.tickRate * 1000);
 };
@@ -243,24 +273,37 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
-  ballBody.uuid = camera.uuid;
+  ballBody.useruuid = camera.uuid;
   const context =this;
 
   const shootDirection = camera.direction;
-  ballBody.velocity.set(shootDirection.x * config.ballVelocity, shootDirection.y * config.ballVelocity, shootDirection.z * config.ballVelocity);
+  ballBody.velocity.set(shootDirection.x * config.ballVelocity,
+    shootDirection.y * config.ballVelocity,
+    shootDirection.z * config.ballVelocity);
   x += shootDirection.x * 2.5;
   y += shootDirection.y * 2.5;
   z += shootDirection.z * 2.5;
-  ballBody.position.set(x,y,z);
+  ballBody.position.set(x, y, z);
 
-  ballBody.addEventListener("collide",function(e){
-    if(e.body.userData && e.body.userData.shapeType >= 3) {
-      collisionSound = { play: e.body.userData.shapeType };
-    } else if( e.target.uuid && (e.body.mass === config.playerModelMass) && (e.target.mass === config.ballMass)
-    && (e.target.uuid !== e.body.uuid)) {
-      collisionSound = { play: 7 };
-    }
-  });
+  ballBody.addEventListener('collide', function (e) {
+  if(e.body.userData && e.body.userData.shapeType >= 3) {
+    collisionSound = { play: e.body.userData.shapeType };
+  } else if( e.target.useruuid
+  && (e.body.userData)
+  && (e.body.userData.playername)
+  && (e.target.mass === config.ballMass)
+  && (e.target.useruuid !== e.body.uuid)) {
+    if (e.body.mass > config.onShootMassLoss) {
+      e.body.mass -= config.onShootMassLoss;
+      e.body.linearDamping -= config.onShootDamplingLoss;
+      if(scoreTable[e.target.useruuid] !== undefined) {
+        scoreTable[e.target.useruuid] = scoreTable[e.target.useruuid] + config.onShootScore;
+      }
+  }
+    // console.log('Mass ', e.body.mass, ' Damping ', e.body.linearDamping, 'Score ', scoreTable);
+    collisionSound = { play: 7 };
+  }
+});
 
 };
 
@@ -278,21 +321,30 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.linearDamping = config.playerDamping;
   ballBody.angularDamping = config.playerDamping;
   ballBody.uuid = player.object.uuid;
+  scoreTable[ballBody.uuid] = 0;
   const playerNumber = Object.keys(this.clients).length + 1;
   this.clientToCannon[player.object.uuid] = ballBody;
   player.name = player.name || 'Guest';
+  ballBody.userData = { playername: player.name };
 
   // player data for other users
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, quaternion: player.quaternion, up: false, left: false, right: false, down: false, lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name, color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid,
+    position: ballBody.position, direction: player.direction,
+    quaternion: player.quaternion,
+    up: false, left: false, right: false, down: false,
+    lastUpdate: performance.now(), skinPath: player.skinPath, name: player.name,
+    color: config.colors[playerNumber - 1], lives: 3, playerNumber: playerNumber };
   this.world.add(ballBody);
   this.sendPoll();
 };
 
-const loadFullScene = function loadFullScene(scene, player, io, numPlayers, spawnPoints) {
+const loadFullScene = function loadFullScene(scene, player, io, maxPlayers, spawnPoints, owner, mapChoice) {
   // Setup our world
   this.io = io;
-  this.numPlayers = numPlayers;
+  this.maxPlayers = maxPlayers;
   this.spawnPoints = spawnPoints;
+  this.owner = owner;
+  this.mapChoice = mapChoice;
   const context = this;
   let world = new CANNON.World();
   world.quatNormalizeSkip = 0;
