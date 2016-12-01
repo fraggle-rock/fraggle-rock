@@ -41,8 +41,8 @@ class CreateMatch extends React.Component {
     }
   }
 
-  StartMatch(numPlayers) {
-    userProfile.players = numPlayers;
+  StartMatch(maxPlayers) {
+    userProfile.maxPlayers = maxPlayers;
     userProfile.createMatch = true;
     browserHistory.push('/Game');
   }
