@@ -31,17 +31,17 @@ module.exports = {
   },
   liveGames: function liveGames() {
     var liveMatchesArray = []
-    console.log('TEXT', liveMatches)
-    for(var matchId in liveMatches) {
-      // let match = {}
-      // match.numPlayers = Object.keys(liveMatches[matchId].clients).length;
-      // for(var clientId in liveMatches[matchId].clients) {
-      //   let client = liveMatches[matchId].clients[clientId];
-      //   if (client.playerNumber === 1) {
-      //     match.owner = player.name;
-      //   }
-      // }
-      liveMatchesArray.push(matchId);
+    for (var matchId in liveMatches) {
+      let currentMatch = liveMatches[matchId];
+      // console.log('TEXT', liveMatches[matchId].owner)
+      let match = {
+        numPlayers: Object.keys(currentMatch.clients).length,
+        maxPlayers: currentMatch.maxPlayers,
+        owner: currentMatch.owner,
+        mapChoice: currentMatch.mapChoice,
+        matchId: matchId
+      };
+      liveMatchesArray.push(match);
     }
     return liveMatchesArray;
   },

@@ -22,7 +22,12 @@ class SelectSkin extends React.Component {
     userProfile.Skins.forEach((userSkin) => {
       userProfile.storeSkins.forEach((storeSkin) => {
         if (userSkin === storeSkin.skin) {
-          this.setState({skins: this.state.skins.concat(storeSkin)});
+          //state doesnt set fast enough so you have to use asynch state or it over-writes
+          this.setState(function (prevState) {
+            return {
+              skins: prevState.skins.concat(storeSkin)
+            };
+          });
         }
       });
     });

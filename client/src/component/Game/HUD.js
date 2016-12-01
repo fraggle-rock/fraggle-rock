@@ -26,7 +26,6 @@ class HUD extends React.Component {
 
     //check ~ key for menu
     $(document).on('keydown', (e) => {
-      console.log('menu')
       if (e.keyCode === 192) {
         const hud = document.getElementById( 'HUD' );
         const menuContainer = document.getElementById( 'menuContainer' );

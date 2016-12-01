@@ -118,7 +118,9 @@ module.exports = {
           const regen = function regen() {
             if (jumpCount < config.maxJumps) {
               jumpCount++;
-              document.getElementById('jump' + jumpCount).style.opacity = '1';
+              if (userProfile.matchId) {
+                document.getElementById('jump' + jumpCount).style.opacity = '1';
+              }
             }
             if (jumpCount < config.maxJumps) {
               setTimeout(regen, config.jumpRegen)
@@ -167,7 +169,9 @@ module.exports = {
       if (currentGame.on) {
         if (shotCount > 0) {
           audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
-          document.getElementById('ammo' + shotCount).style.opacity = '0';
+          if (userProfile.matchId) {
+            document.getElementById('ammo' + shotCount).style.opacity = '0';
+          }
           shotCount--;
           socketUtility.emitShootBall({
             position: currentGame.camera.position,
@@ -178,7 +182,9 @@ module.exports = {
         const regen = function regen() {
           if (shotCount < config.maxShots) {
             shotCount++;
-            document.getElementById('ammo' + shotCount).style.opacity = '1';
+            if (userProfile.matchId) {
+              document.getElementById('ammo' + shotCount).style.opacity = '1';
+            }
           }
           if (shotCount < config.maxShots) {
             setTimeout(regen, config.shotRegen)
@@ -204,7 +210,7 @@ module.exports = {
     game.renderer.render(game.scene, game.camera);
     requestAnimationFrame(animate.bind(null, game));
   },
-  loadMatchInfo: function loadMatchInfo(matchInfo, quitMatch, showMenu) {
+  loadMatchInfo: function loadMatchInfo(matchInfo, quitMatch) {
     currentGame.matchInfo = matchInfo;
 
     let victory = false;
@@ -236,8 +242,8 @@ module.exports = {
       document.getElementById('victoryBox').style.marginTop = '15%';
       document.getElementById('victor').innerHTML = playersAlive[0] + ' Wins!';
       userProfile.winner = playersAlive[0];
-      //END GAME HERE
 
+      //END GAME
       quitMatch()
       remoteClients = {};
       currentGame = {};
@@ -254,10 +260,13 @@ module.exports = {
       meshLookup = {};
       clearLookup = {};
       setTimeout(() => {
-        var canvas = document.getElementsByTagName('canvas');
+        userProfile.matchId = null;
+        userProfile.maxPlayers = null;
+        userProfile.createMatch = false;
+        let canvas = document.getElementsByTagName('canvas');
         canvas[0].remove();
         document.exitPointerLock();
-        document.removeEventListener('keydown', showMenu)
+        $(document).off(); //removes all event listeners
         const screenOverlay = document.getElementById( 'screenOverlay' );
         const victoryBox = document.getElementById( 'victoryBox' );
         victoryBox.style.display = 'none';

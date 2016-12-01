@@ -45,13 +45,13 @@ class JoinMatch extends React.Component {
           <div id='JoinMatchData'>
             <div id='JoinMatchTable'>
               <div className='JoinMatchHeader'>
-                <div className='JoinMatchHead'>Map</div>
-                <div className='JoinMatchHead'>User</div>
-                <div className='JoinMatchHead'>Players</div>
-                <div className='JoinMatchHead'> </div>
+                <div className='JoinMatchSpan'>Map</div>
+                <div className='JoinMatchSpan'>Host</div>
+                <div className='JoinMatchSpan'>Players</div>
+                <div className='JoinMatchSpan'></div>
               </div>
               <div className='JoinMatchBody'>
-                {this.state.liveMatches.map((game) => <JoinMatchData key={game} game={game} />)}
+                {this.state.liveMatches.map((match) => <JoinMatchData key={match.matchId} match={match} />)}
               </div>
             </div>
           </div>

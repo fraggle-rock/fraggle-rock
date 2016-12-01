@@ -37,7 +37,7 @@ module.exports = {
       'ha2.obj': {skinPic: '../../../textures/Skins/hat.jpg', skin: 'ha2.obj', name: 'The Hat', price: 1500, type: 'hat'}
     },
   sound: 1,
-  players: 2,
+  maxPlayers: null,
   createMatch: false,
   matchId: null,
   storeSkins: [
