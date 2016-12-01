@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --progress --colors --watch",
     "start": "node ./server/app.js",
-    "start-dev": "nodemon ./server/app.js",
+    "start-dev-server": "nodemon ./server/app.js",
+    "start-dev-socket": "nodemon ./socket/app.js",
     "test": "npm run test:server",
     "test:server": "ls",
     "socket": "node ./socket/app.js",
