@@ -1,6 +1,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import Profile from './Profile.js';
+import userProfile from '../userProfile.js'
 const clientScene = require('../../clientScene.js');
 
 class Home extends React.Component {
@@ -12,6 +13,28 @@ class Home extends React.Component {
 	  };
     this.showLeaderBoards = this.showLeaderBoards.bind(this);
     this.JoinMatch = this.JoinMatch.bind(this);
+  }
+
+  componentWillMount() {
+    if(userProfile.User === 'Guest') {
+      if(window.localStorage.id) {
+        $.ajax({
+          url: '/api/getUserByFacebookID/' + window.localStorage.id,
+          method: 'Get',
+          success: (data) => {
+            userProfile.User = data.username;
+            userProfile.Skins = data.skins || [];
+            userProfile.facebookid = data.facebookid;
+            userProfile.userId = data.id;
+            userProfile.FacebookPicture = data.FacebookPicture;
+            browserHistory.push('Home')
+          },
+          error: (error) => {
+            console.log(error)
+          }
+        })
+      }
+    }
   }
 
   CreateMatch() {

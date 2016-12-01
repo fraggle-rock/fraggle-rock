@@ -19,6 +19,28 @@ class CreateMatch extends React.Component {
 	  this.backToHome = this.backToHome.bind(this);
   }
 
+  componentWillMount() {
+    if(userProfile.User === 'Guest') {
+      if(window.localStorage.id) {
+        $.ajax({
+          url: '/api/getUserByFacebookID/' + window.localStorage.id,
+          method: 'Get',
+          success: (data) => {
+            userProfile.User = data.username;
+            userProfile.Skins = data.skins || [];
+            userProfile.facebookid = data.facebookid;
+            userProfile.userId = data.id;
+            userProfile.FacebookPicture = data.FacebookPicture;
+            browserHistory.push('CreateMatch')
+          },
+          error: (error) => {
+            console.log(error)
+          }
+        })
+      }
+    }
+  }
+
   StartMatch(numPlayers) {
     const screenOverlay = document.getElementById( 'screenOverlay' );
     const menuContainer = document.getElementById( 'menuContainer' );

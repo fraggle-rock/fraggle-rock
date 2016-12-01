@@ -34,6 +34,7 @@ class LogIn extends React.Component {
             if(username !== null) {
               userProfile.User = username;
               userProfile.facebookid = e.id;
+              window.localStorage.id = e.id;
               var dataSent = {                
                   username: username,
                   token: e.accessToken,
@@ -59,6 +60,7 @@ class LogIn extends React.Component {
             userProfile.Skins = data.skins || [];
             userProfile.facebookid = e.id;
             userProfile.userId = data.id;
+            window.localStorage.id = e.id;
             browserHistory.push('Home')
           }
         }

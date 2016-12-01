@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 import LeaderBoardDataScore from './LeaderBoardDataScore.js';
 import LeaderBoardDataUser from './LeaderBoardDataUser.js';
 import Profile from '../Home/Profile.js';
+import userProfile from '../userProfile.js'
 
 class LeaderBoard extends React.Component {
   constructor(props) {
@@ -19,6 +20,25 @@ class LeaderBoard extends React.Component {
   }
 
   componentWillMount() {
+    if(userProfile.User === 'Guest') {
+      if(window.localStorage.id) {
+        $.ajax({
+          url: '/api/getUserByFacebookID/' + window.localStorage.id,
+          method: 'Get',
+          success: (data) => {
+            userProfile.User = data.username;
+            userProfile.Skins = data.skins || [];
+            userProfile.facebookid = data.facebookid;
+            userProfile.userId = data.id;
+            userProfile.FacebookPicture = data.FacebookPicture;
+            browserHistory.push('LeaderBoard')
+          },
+          error: (error) => {
+            console.log(error)
+          }
+        })
+      }
+    }
     $.ajax({
       url: '/api/leaderBoard',
       method: 'GET',
