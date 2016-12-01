@@ -93,19 +93,21 @@ module.exports = {
           }
         }
         socket = io(serverUrl + ':3001');
-        addUpdateListeners(socket);
-        const camera = game.camera.toJSON();
-        camera.position = game.camera.position;
-        camera.quaternion = game.camera.quaternion;
-        camera.direction = game.camera.getWorldDirection();
+        setTimeout(function() {
+          addUpdateListeners(socket);
+          const camera = game.camera.toJSON();
+          camera.position = game.camera.position;
+          camera.quaternion = game.camera.quaternion;
+          camera.direction = game.camera.getWorldDirection();
 
-        // declare your name and skin
-        camera.skinPath = userProfile.ChosenSkin;
-        camera.name = userProfile.User;
+          // declare your name and skin
+          camera.skinPath = userProfile.ChosenSkin;
+          camera.name = userProfile.User;
 
-        const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints,
-        maxPlayers: maxPlayers, owner: game.owner, mapChoice: game.mapChoice};
-        socket.emit('fullScene', fullScene);
+          const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints,
+          maxPlayers: maxPlayers, owner: game.owner, mapChoice: game.mapChoice};
+          socket.emit('fullScene', fullScene);
+        }, 1500);
       }
     });
   },
@@ -117,17 +119,19 @@ module.exports = {
       serverUrl = '127.0.0.1';
     }
     socket = io(serverUrl + ':3001');
-    addUpdateListeners(socket);
-    const player = game.camera.toJSON();
-    player.position = game.camera.position;
-    player.direction = game.camera.getWorldDirection();
-    player.quaternion = game.camera.quaternion;
 
-    // sending my name and skin to other players
-    player.name = userProfile.User;
-    player.skinPath = userProfile.ChosenSkin;
+    setTimeout(function() {
+      addUpdateListeners(socket);
+      const player = game.camera.toJSON();
+      player.position = game.camera.position;
+      player.direction = game.camera.getWorldDirection();
+      player.quaternion = game.camera.quaternion;
 
-    socket.emit('addMeToMatch', {player: player});
+      // sending my name and skin to other players
+      player.name = userProfile.User;
+      player.skinPath = userProfile.ChosenSkin;
+      socket.emit('addMeToMatch', {player: player});
+    }, 1500);
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
     playerInput.direction = camera.getWorldDirection();

@@ -14,6 +14,8 @@ class JoinMatchData extends React.Component {
     if (this.props.match.maxPlayers === 0) {
       this.props.match.maxPlayers = 'Sandbox';
     }
+
+    this.props.match.numPlayers = Object.keys(this.props.match.clients).length;
   }
 
   JoinMatch(matchUrl) {
