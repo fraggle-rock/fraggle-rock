@@ -29,7 +29,7 @@ class SelectSkin extends React.Component {
             userProfile.Skins = data.skins || [];
             userProfile.facebookid = data.facebookid;
             userProfile.userId = data.id;
-            userProfile.FacebookPicture = data.FacebookPicture;
+            userProfile.FacebookPicture = data.url;
             for(var i = 0; i < userProfile.Skins.length; i++) {
               this.state.skins.push(userProfile.skinsObj[userProfile.Skins[i]])
             }
@@ -40,10 +40,6 @@ class SelectSkin extends React.Component {
           }
         })
       }
-    } else {
-      for(var i = 0; i < userProfile.Skins.length; i++) {
-        this.state.skins.push(userProfile.skinsObj[userProfile.Skins[i]])
-      } 
     }
     userProfile.Skins.forEach((userSkin) => {
       userProfile.storeSkins.forEach((storeSkin) => {
@@ -71,7 +67,7 @@ class SelectSkin extends React.Component {
               <h1>Select Skin</h1>
             </div>
             <div id='Skins'>
-              {this.state.skins.length ? this.state.skins.map((skin) => <SelectSkinData key={skin.skin} skin={skin} />) : 'Go to the store to buy skins!'}
+              {this.state.skins.length ? this.state.skins.map((skin) => <SelectSkinData key={skin.name} skin={skin} />) : 'Go to the store to buy skins!'}
             </div>
           </div>
         </div>

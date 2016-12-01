@@ -16,17 +16,19 @@ class Home extends React.Component {
   }
 
   componentWillMount() {
-    if(userProfile.User === 'Guest') {
+    console.log(userProfile)
+    if(userProfile.User === 'Guest' || userProfile.User === null) {
       if(window.localStorage.id) {
         $.ajax({
           url: '/api/getUserByFacebookID/' + window.localStorage.id,
           method: 'Get',
           success: (data) => {
+            console.log(data)
             userProfile.User = data.username;
             userProfile.Skins = data.skins || [];
             userProfile.facebookid = data.facebookid;
             userProfile.userId = data.id;
-            userProfile.FacebookPicture = data.FacebookPicture;
+            userProfile.FacebookPicture = data.url;
             browserHistory.push('Home')
           },
           error: (error) => {

@@ -15,6 +15,13 @@ class Store extends React.Component {
 	  };
 	  this.backToHome = this.backToHome.bind(this);
     this.backToStore = this.backToStore.bind(this);
+  }
+
+  backToHome() {
+    browserHistory.push('/Home');
+  }
+
+  componentWillMount() {
     if(userProfile.User === 'Guest') {
       if(window.localStorage.id) {
         $.ajax({
@@ -25,37 +32,45 @@ class Store extends React.Component {
             userProfile.Skins = data.skins || [];
             userProfile.facebookid = data.facebookid;
             userProfile.userId = data.id;
-            userProfile.FacebookPicture = data.FacebookPicture;
-            browserHistory.push('Store')
+            userProfile.FacebookPicture = data.url;
+            $.ajax({
+              url: '/api/getPointsByUsername/' + userProfile.User,
+              method: 'Get',
+              success: (data) => {
+                userProfile.stars = data;
+                userProfile.Skins.forEach((skinOwned) => {
+                  userProfile.storeSkins.forEach((skin) => {
+                    if(skinOwned === skin.skin) {
+                      skin.owned = true;
+                    }
+                  })
+                })
+                browserHistory.push('Store')
+              }
+            }) 
           },
           error: (error) => {
             console.log(error)
           }
         })
       }
-    }
-  }
-
-  backToHome() {
-    browserHistory.push('/Home');
-  }
-
-  componentWillMount() {
-    $.ajax({
-      url: '/api/getPointsByUsername/' + userProfile.User,
-      method: 'Get',
-      success: (data) => {
-        userProfile.stars = data;
-        userProfile.Skins.forEach((skinOwned) => {
-          userProfile.storeSkins.forEach((skin) => {
-            if(skinOwned === skin.skin) {
-              skin.owned = true;
-            }
+    } else {
+      $.ajax({
+        url: '/api/getPointsByUsername/' + userProfile.User,
+        method: 'Get',
+        success: (data) => {
+          userProfile.stars = data;
+          userProfile.Skins.forEach((skinOwned) => {
+            userProfile.storeSkins.forEach((skin) => {
+              if(skinOwned === skin.skin) {
+                skin.owned = true;
+              }
+            })
           })
-        })
-        browserHistory.push('Store')
-      }
-    })
+          browserHistory.push('Store')
+        }
+      })    
+    }
   }
 
   backToStore() {

@@ -24,7 +24,7 @@ class JoinMatch extends React.Component {
             userProfile.Skins = data.skins || [];
             userProfile.facebookid = data.facebookid;
             userProfile.userId = data.id;
-            // userProfile.FacebookPicture = data.FacebookPicture;
+            userProfile.FacebookPicture = data.url;
             browserHistory.push('JoinMatch')
           },
           error: (error) => {

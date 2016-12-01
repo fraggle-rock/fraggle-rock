@@ -5,7 +5,7 @@ module.exports = {
   ChosenSkin: null,
   color: 'teal',
   facebookid: null,
-  stars: 2000,
+  stars: 0,
   hat: 'ha2.obj',
   maps: [
     {name: 'Fraggle Rock', thumb: '../../../textures/fraggleRockThumb.jpg'},
