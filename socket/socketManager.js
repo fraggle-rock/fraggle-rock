@@ -41,7 +41,7 @@ const liveGames = function(req, res) {
   let liveGames = {};
   for (var url in physicsServers) {
     const matchInfo = physicsServers[url].matchInfo;
-    liveGames[url] = matchInfo;
+    liveGames[url] = matchInfo || 'empty';
   }
   console.log(liveGames);
   res.end(JSON.stringify(liveGames));

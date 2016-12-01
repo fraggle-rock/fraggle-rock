@@ -1,12 +1,12 @@
 const THREE = require('three');
 const io = require('socket.io-client');
-const socket = io(window.location.hostname + ':3001');
 const sceneUtility = require('./sceneUtility');
 const flat = require('../../config/flat');
 const config = require('../../config/config');
 const userProfile = require('./component/userProfile');
 const lastEmittedClient = {theta: 0};
 const audio = require('./audio');
+let socket;
 let canEmitQ = true;
 let emitQ;
 
@@ -75,19 +75,39 @@ const hasChangedInput = function hasChangedInput(playerInput) {
 
 module.exports = {
   requestNewMatch: function requestNewMatch(game, maxPlayers) {
-    addUpdateListeners(socket);
-    const camera = game.camera.toJSON();
-    camera.position = game.camera.position;
-    camera.quaternion = game.camera.quaternion;
-    camera.direction = game.camera.getWorldDirection();
+    $.ajax({
+      url: '/api/liveGames',
+      method: 'GET',
+      success: (data) => {
+        const physicsServers = JSON.parse(data);
+        let serverUrl;
+        for (var url in physicsServers) {
+          const server = physicsServers[url];
+          if (server === 'empty') {
+            if (url !== '::ffff:127.0.0.1') {
+              serverUrl = url;
+            } else {
+              serverUrl = '127.0.0.1';
+            }
+            break;
+          }
+        }
+        socket = io(serverUrl + ':3001');
+        addUpdateListeners(socket);
+        const camera = game.camera.toJSON();
+        camera.position = game.camera.position;
+        camera.quaternion = game.camera.quaternion;
+        camera.direction = game.camera.getWorldDirection();
 
-    // declare your name and skin
-    camera.skinPath = userProfile.ChosenSkin;
-    camera.name = userProfile.User;
+        // declare your name and skin
+        camera.skinPath = userProfile.ChosenSkin;
+        camera.name = userProfile.User;
 
-    const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints,
-      maxPlayers: maxPlayers, owner: game.owner, mapChoice: game.mapChoice};
-    socket.emit('fullScene', fullScene);
+        const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints,
+        maxPlayers: maxPlayers, owner: game.owner, mapChoice: game.mapChoice};
+        socket.emit('fullScene', fullScene);
+      }
+    });
   },
   joinMatch: function joinMatch(matchNumber, game) {
     addUpdateListeners(socket);

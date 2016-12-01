@@ -17,10 +17,10 @@ class JoinMatch extends React.Component {
       url: '/api/liveGames',
       method: 'GET',
       success: (data) => {
-        debugger;
+        const physicsServers = JSON.parse(data);
         this.setState({liveMatches: JSON.parse(data)})
       }
-    })
+    });
   }
 
   backToHome() {
