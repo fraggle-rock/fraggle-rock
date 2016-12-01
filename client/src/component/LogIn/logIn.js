@@ -33,7 +33,8 @@ class LogIn extends React.Component {
             username = username.splice(0, 10);
             if(username !== null) {
               userProfile.User = username;
-              var dataSent = {
+              userProfile.facebookid = e.id;
+              var dataSent = {                
                   username: username,
                   token: e.accessToken,
                   email: 'fakeEmail@gmail.com',
@@ -55,7 +56,9 @@ class LogIn extends React.Component {
             }
           } else {
             userProfile.User = data.username;
-            // userProfile.stars = data.stars;
+            userProfile.Skins = data.skins || [];
+            userProfile.facebookid = e.id;
+            userProfile.userId = data.id;
             browserHistory.push('Home')
           }
         }

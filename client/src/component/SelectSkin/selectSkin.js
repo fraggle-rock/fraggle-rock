@@ -8,13 +8,20 @@ class SelectSkin extends React.Component {
   constructor(props) {
 	  super(props);
 	  this.state = {
-	    user: null,
+	    skins: []
 	  };
 	  this.backToHome = this.backToHome.bind(this);
+    this.componentWillMount = this.componentWillMount.bind(this)
   }
 
   backToHome() {
     browserHistory.goBack();
+  }
+  
+  componentWillMount() {
+    for(var i = 0; i < userProfile.Skins.length; i++) {
+      this.state.skins.push(userProfile.skinsObj[userProfile.Skins[i]])
+    }
   }
 
   render() {
@@ -29,7 +36,7 @@ class SelectSkin extends React.Component {
               <h1>Select Skin</h1>
             </div>
             <div id='Skins'>
-              {userProfile.Skins.length ? userProfile.Skins.map((skin) => <SelectSkinData key={skin.skin} skin={skin} />) : 'Go to the store to buy skins!'}
+              {this.state.skins.length ? this.state.skins.map((skin) => <SelectSkinData key={skin.skin} skin={skin} />) : 'Go to the store to buy skins!'}
             </div>
           </div>
         </div>

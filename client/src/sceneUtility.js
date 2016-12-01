@@ -3,7 +3,8 @@ const objectBuilder = require('./objectBuilder');
 const config = require('../../config/config.js');
 const flat = require('../../config/flat.js');
 const audio = require('./audio');
-const userProfile = require('./component/userProfile.js')
+const userProfile = require('./component/userProfile.js');
+import { browserHistory } from 'react-router';
 
 
 const redBallStack = (function() {
@@ -15,8 +16,8 @@ const redBallStack = (function() {
   return result;
 })();
 
-const remoteClients = {};
-const remoteScene = {};
+let remoteClients = {};
+let remoteScene = {};
 let currentGame = {};
 
 //make sure object exists
@@ -30,9 +31,9 @@ let shotRegen = false;
 let jumpCount = config.maxJumps;
 let jumpRegen = false;
 let latestServerUpdate;
-const serverShapeMap = {};
-const meshLookup = {init: false};
-const clearLookup = {};
+let serverShapeMap = {};
+let meshLookup = {init: false};
+let clearLookup = {};
 
 //DEBUGGING
 let ticks = 0;
@@ -204,7 +205,7 @@ module.exports = {
     game.renderer.render(game.scene, game.camera);
     requestAnimationFrame(animate.bind(null, game));
   },
-  loadMatchInfo: function loadMatchInfo(matchInfo) {
+  loadMatchInfo: function loadMatchInfo(matchInfo, quitMatch, showMenu) {
     currentGame.matchInfo = matchInfo;
 
     let victory = false;
@@ -221,7 +222,7 @@ module.exports = {
       document.getElementById('player' + client.playerNumber + 'Name').innerHTML = client.name;
 
       if (client.lives > 0) {
-        playersAlive.push(client.playerNumber);
+        playersAlive.push(client.name);
       } else {
         document.getElementById('player' + client.playerNumber + 'Box').style.opacity = '0';
       }
@@ -234,8 +235,36 @@ module.exports = {
       document.getElementById('victoryBox').style.opacity = '1';
       document.getElementById('victoryBox').style.height = '300px';
       document.getElementById('victoryBox').style.marginTop = '15%';
-      document.getElementById('victor').innerHTML = 'Player ' + playersAlive[0] + ' Wins!';
+      document.getElementById('victor').innerHTML = playersAlive[0] + ' Wins!';
+      userProfile.winner = playersAlive[0];
       //END GAME HERE
+
+      quitMatch()
+      remoteClients = {};
+      currentGame = {};
+      remoteScene = {};
+      pitch = 0;
+      yaw = 0;
+      host = false;
+      shotCount = null;
+      shotRegen = false;
+      jumpCount = null;
+      jumpRegen = null;
+      latestServerUpdate = null;
+      serverShapeMap = null;
+      meshLookup = {};
+      clearLookup = {};
+      setTimeout(() => {
+        var canvas = document.getElementsByTagName('canvas');
+        canvas[0].remove();
+        document.exitPointerLock();
+        document.removeEventListener('keydown', showMenu)
+        const screenOverlay = document.getElementById( 'screenOverlay' );
+        const victoryBox = document.getElementById( 'victoryBox' );
+        victoryBox.style.display = 'none';
+        screenOverlay.style.display = 'none';
+        browserHistory.push('GameOver')
+      }, 4000)
     }
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
