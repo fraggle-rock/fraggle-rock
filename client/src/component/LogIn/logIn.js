@@ -36,7 +36,7 @@ class LogIn extends React.Component {
               userProfile.User = username;
               userProfile.facebookid = e.id;
               window.localStorage.id = e.id;
-              var dataSent = {                
+              var dataSent = {
                   username: username,
                   token: e.accessToken,
                   email: 'fakeEmail@gmail.com',
