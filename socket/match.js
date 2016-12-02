@@ -76,7 +76,7 @@ const buildMatchInfo = function buildMatchInfo() {
 };
 
 const sendPoll = function sendPoll() {
-  this.io.to(this.guid).compress(false).emit('poll', JSON.stringify(this.buildMatchInfo()));
+  this.io.to(this.guid).compress(true).emit('poll', JSON.stringify(this.buildMatchInfo()));
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
@@ -174,15 +174,15 @@ const physicsEmit = function physicsEmit (match, socket) {
   if (socket === undefined) {
     if (players.length > 0) {
       if (match.sendFull || clear.length > 0) {
-        match.io.to(match.guid).compress(false).emit('fullPhysicsUpdate', JSON.stringify(update));
+        match.io.to(match.guid).compress(true).emit('fullPhysicsUpdate', JSON.stringify(update));
       } else {
-        match.io.to(match.guid).volatile.compress(false).emit('physicsUpdate', JSON.stringify(update));
+        match.io.to(match.guid).volatile.compress(true).emit('physicsUpdate', JSON.stringify(update));
       }
     } else {
       match.deleteMatch(match.guid);
     }
   } else {
-    socket.compress(false).emit('fullPhysicsUpdate', JSON.stringify(update));
+    socket.compress(true).emit('fullPhysicsUpdate', JSON.stringify(update));
   }
   match.sendFull = false;
 };
