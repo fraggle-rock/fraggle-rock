@@ -1,15 +1,13 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
-import JoinMatchData from './JoinMatchData.js';
 import Profile from '../Home/Profile.js';
 import userProfile from '../userProfile.js';
 
-class JoinMatch extends React.Component {
+class About extends React.Component {
   constructor(props) {
 	  super(props);
 	  this.state = {
-	    user: null,
-      liveMatches: []
+	    user: null
 	  };
   }
 
@@ -25,7 +23,7 @@ class JoinMatch extends React.Component {
             userProfile.facebookid = data.facebookid;
             userProfile.userId = data.id;
             userProfile.FacebookPicture = data.url;
-            browserHistory.push('JoinMatch')
+            browserHistory.push('About')
           },
           error: (error) => {
             console.log(error)
@@ -46,10 +44,6 @@ class JoinMatch extends React.Component {
     browserHistory.push('/Home');
   }
 
-  selectSkin() {
-    browserHistory.push('/SelectSkin')
-  }
-
   render() {
     return (
       <div className='menuContainer'>
@@ -59,20 +53,18 @@ class JoinMatch extends React.Component {
         <div className='menuBackground'>
           <div className='buttonBox'>
             <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
-            <h1>Join Match</h1>
-            <button className='btn btn-warning selectSkinBtn' onClick={this.selectSkin}>Select Skin</button>
-          </div>
-          <div id='JoinMatchData'>
-            <div id='JoinMatchTable'>
-              <div className='JoinMatchHeader'>
-                <div className='JoinMatchSpan'>Map</div>
-                <div className='JoinMatchSpan'>Host</div>
-                <div className='JoinMatchSpan'>Players</div>
-                <div className='JoinMatchSpan'></div>
-              </div>
-              <div className='JoinMatchBody'>
-                {this.state.liveMatches.map((match) => <JoinMatchData key={match.matchId} match={match} />)}
-              </div>
+            <h1>About</h1>
+            <h2>The Goal</h2>
+            <div>The goal of the game is to knock your opponent off the map!</div>
+            <h2>Controls</h2>
+            <div>
+              <div>W: Move Foward</div>
+              <div>A: Move Left</div>
+              <div>S: Move Back</div>
+              <div>D: Move Right</div>
+              <div>Space: Jump</div>
+              <div>Click: Shoot Ball</div>
+              <div> ~: Bring Up In Game Menu</div>
             </div>
           </div>
         </div>
@@ -82,4 +74,4 @@ class JoinMatch extends React.Component {
   }
 }
 
-export default JoinMatch;
+export default About;

@@ -35,11 +35,13 @@ class LogIn extends React.Component {
             if(username !== null) {
               userProfile.User = username;
               userProfile.facebookid = e.id;
-              var dataSent = {
+              window.localStorage.id = e.id;
+              var dataSent = {                
                   username: username,
                   token: e.accessToken,
                   email: 'fakeEmail@gmail.com',
-                  facebookid: e.id
+                  facebookid: e.id,
+                  url: e.picture.data.url
                 }
               $.ajax({
                 url: '/api/addUser',
@@ -50,7 +52,6 @@ class LogIn extends React.Component {
                   console.log(error)
                 },
                 success: (data) => {
-                  userProfile.stars = 200;
                   browserHistory.push('Home')
                 }
               })
@@ -60,6 +61,7 @@ class LogIn extends React.Component {
             userProfile.Skins = data.skins || [];
             userProfile.facebookid = e.id;
             userProfile.userId = data.id;
+            window.localStorage.id = e.id;
             browserHistory.push('Home')
           }
         }

@@ -129,7 +129,7 @@ class HUD extends React.Component {
               </div>
               <div className="player4 playerScoreBox">
                 <div className="playerScore" id="player4Score">0</div>
-              </div>
+              </div>              
             </div>
 
           </div>
