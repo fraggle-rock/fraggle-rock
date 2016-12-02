@@ -79,6 +79,9 @@ class JoinMatch extends React.Component {
             }
           }
           this.setState({liveMatches: liveMatches})
+          setTimeout(() => {
+            this.setState({refresh: false})
+          }, 1000);
         }
       });
     }
