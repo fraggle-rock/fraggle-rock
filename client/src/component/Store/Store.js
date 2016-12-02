@@ -22,38 +22,36 @@ class Store extends React.Component {
   }
 
   componentWillMount() {
-    if(userProfile.User === 'Guest') {
-      if(window.localStorage.id) {
-        $.ajax({
-          url: '/api/getUserByFacebookID/' + window.localStorage.id,
-          method: 'Get',
-          success: (data) => {
-            userProfile.User = data.username;
-            userProfile.Skins = data.skins || [];
-            userProfile.facebookid = data.facebookid;
-            userProfile.userId = data.id;
-            userProfile.FacebookPicture = data.url;
-            $.ajax({
-              url: '/api/getPointsByUsername/' + userProfile.User,
-              method: 'Get',
-              success: (data) => {
-                userProfile.stars = data;
-                userProfile.Skins.forEach((skinOwned) => {
-                  userProfile.storeSkins.forEach((skin) => {
-                    if(skinOwned === skin.skin) {
-                      skin.owned = true;
-                    }
-                  })
+    if(window.localStorage.id) {
+      $.ajax({
+        url: '/api/getUserByFacebookID/' + window.localStorage.id,
+        method: 'Get',
+        success: (data) => {
+          userProfile.User = data.username;
+          userProfile.Skins = data.skins || [];
+          userProfile.facebookid = data.facebookid;
+          userProfile.userId = data.id;
+          userProfile.FacebookPicture = data.url;
+          $.ajax({
+            url: '/api/getPointsByUsername/' + userProfile.User,
+            method: 'Get',
+            success: (data) => {
+              userProfile.stars = data;
+              userProfile.Skins.forEach((skinOwned) => {
+                userProfile.storeSkins.forEach((skin) => {
+                  if(skinOwned === skin.skin) {
+                    skin.owned = true;
+                  }
                 })
-                browserHistory.push('Store')
-              }
-            }) 
-          },
-          error: (error) => {
-            console.log(error)
-          }
-        })
-      }
+              })
+              browserHistory.push('Store')
+            }
+          }) 
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      })
     } else {
       $.ajax({
         url: '/api/getPointsByUsername/' + userProfile.User,
