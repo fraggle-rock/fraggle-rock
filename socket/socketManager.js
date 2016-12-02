@@ -22,7 +22,9 @@ const register = function(req, res) {
     serverUrl = serverUrl.slice(7);
   }
   console.log('registering new physics server at ' + serverUrl);
-  
+  if (physicsServer[serverUrl]) {
+    clearInterval(physicsServer[serverUrl].timeout)
+  }
   physicsServers[serverUrl] = {status: 'empty'};
   const server = physicsServers[serverUrl];
   server.lastUpdate = Date.now();
@@ -60,6 +62,7 @@ const statusPoll = function(req, res) {
   req.on('end', function() {
     let server = physicsServers[serverUrl];
     if (!server) {
+      console.log('re-registering new physics server at ' + serverUrl)
       physicsServers[serverUrl] = {status: 'empty'};
       server = physicsServers[serverUrl];
       server.lastUpdate = Date.now();
