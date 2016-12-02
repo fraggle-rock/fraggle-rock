@@ -20,25 +20,25 @@ class LeaderBoard extends React.Component {
   }
 
   componentWillMount() {
-    if(userProfile.User === 'Guest') {
-      if(window.localStorage.id) {
-        $.ajax({
-          url: '/api/getUserByFacebookID/' + window.localStorage.id,
-          method: 'Get',
-          success: (data) => {
-            userProfile.User = data.username;
-            userProfile.Skins = data.skins || [];
-            userProfile.facebookid = data.facebookid;
-            userProfile.userId = data.id;
-            userProfile.FacebookPicture = data.url;
-            browserHistory.push('LeaderBoard')
-          },
-          error: (error) => {
-            console.log(error)
-          }
-        })
-      }
+
+    if(window.localStorage.id) {
+      $.ajax({
+        url: '/api/getUserByFacebookID/' + window.localStorage.id,
+        method: 'Get',
+        success: (data) => {
+          userProfile.User = data.username;
+          userProfile.Skins = data.skins || [];
+          userProfile.facebookid = data.facebookid;
+          userProfile.userId = data.id;
+          userProfile.FacebookPicture = data.url;
+          browserHistory.push('LeaderBoard')
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      })
     }
+    
     $.ajax({
       url: '/api/leaderBoard',
       method: 'GET',
