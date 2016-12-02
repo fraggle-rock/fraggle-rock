@@ -214,6 +214,7 @@ canvas {
 }
 
 #HUD {
+  pointer-events: none;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -224,6 +225,7 @@ canvas {
 }
 
 #victoryBox {
+  pointer-events: none;
   margin: 0 auto;
   position: absolute;
   top: 0;
@@ -241,9 +243,11 @@ canvas {
 
 #victor {
   font-size: 25px;
+  margin-top: 20px;
 }
 
 .playerBoxContainer {
+  pointer-events: none;
   text-align: center;
   width: 380px;
   height: 125px; /*90px*/
@@ -415,9 +419,7 @@ canvas {
 }
 
 .menu-title {
-  font-size: 50px;
-  color: white;
-  display: block;
+  pointer-events: none;
   margin-top: 4%;
 }
 
@@ -778,7 +780,7 @@ canvas {
 }
 
 .JoinMatchBody {
-  height: 280px;
+  height: 220px;
   overflow-y: auto;
 }
 
@@ -786,6 +788,16 @@ canvas {
   display: inline-block;
   width: 150px;
   margin: 5px 0;
+}
+
+btn-refresh {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+#refreshButton {
+  width: 14px;
 }
 
 .JoinMatchSpan img {

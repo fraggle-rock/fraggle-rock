@@ -10,16 +10,9 @@ class GameOver extends React.Component {
 
     this.state = {
 	    user: null,
-      highScore: 0,
+      highScore: userProfile.scoreBoard.reverse()[0].score,
 	  }
 
-    userProfile.scoreBoard.forEach((player) => {
-      if (player.score > this.state.highScore) {
-        this.setState({
-          highScore: player.score
-        });
-      }
-    });
   }
 
   backToHome() {
