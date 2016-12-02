@@ -69,10 +69,16 @@ class JoinMatch extends React.Component {
         url: '/api/liveGames',
         method: 'GET',
         success: (data) => {
-          this.setState({liveMatches: JSON.parse(data)});
-          setTimeout(() => {
-            this.setState({refresh: false})
-          }, 1000);
+          const physicsServers = JSON.parse(data);
+          const liveMatches = [];
+          for (var url in physicsServers) {
+            const server = physicsServers[url];
+            if (server !== 'empty' && Object.keys(server.clients).length !== server.maxPlayers && Object.keys(server.clients).length < 6) {
+              server.url = url;
+              liveMatches.push(server)
+            }
+          }
+          this.setState({liveMatches: liveMatches})
         }
       });
     }
