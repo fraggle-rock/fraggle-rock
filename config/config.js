@@ -36,10 +36,10 @@ module.exports = {
   killFloorUpVelocity: 50,
   maxBalls: 20,
   onShootMassLoss: 3.7,
-  onShootDamplingLoss: 0.075,
+  onShootDampingLoss: 0.085,
   onShootScore: 10,
   pointsOnPlayerDeath: 30,
-  colors: ['red', 'blue', 'green', 'magenta', 'teal'],
+  colors: ['red', 'blue', 'green', 'magenta', 'teal', 'white'],
   hatAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2)),
   skinAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI)).multiply((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2)),
 };

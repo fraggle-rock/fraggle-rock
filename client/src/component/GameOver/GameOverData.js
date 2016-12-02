@@ -8,12 +8,19 @@ class GameOverData extends React.Component {
     super(props);
   }
 
+  componentDidMount() {
+    let percent = this.props.player.score / this.props.highScore;
+    let width = Math.floor(250 * percent);
+    $('#GameOverBar' + this.props.i).width(width);
+  }
+
   render() {
     return (
-    <div className='GameOverBox'>
-      <div className='GameOverUser'>{this.props.player.username}</div>
-      <div className='GameOverScore'>{this.props.player.score}</div>
-    </div>
+      <div className='GameOverBarBox'>
+        <div className='GameOverSpan GameOverUsername'>{this.props.player.username}</div>
+        <div className='GameOverBar' id={'GameOverBar' + this.props.i}></div>
+        <div className='GameOverScore'>{this.props.player.score}✪</div>
+      </div>
     )
   }
 }
