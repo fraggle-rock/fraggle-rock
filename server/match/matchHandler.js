@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.route('/liveGames')
   .get((req, res) => {
-    request(`http://${socketManager}:${socketManagerPort}/liveGames`, function(error, response, body) {
+    request(`http://127.0.0.1:${socketManagerPort}/liveGames`, function(error, response, body) {
       res.send(body);
     });
   });
