@@ -2,7 +2,6 @@
 const express = require('express');
 const request = require('request');
 const socketManager = process.env.SOCKET_MANAGER || '127.0.0.1';
-console.log(socketManager);
 const socketManagerPort = 4444;
 
 const router = express.Router();

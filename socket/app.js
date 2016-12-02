@@ -15,7 +15,11 @@ setTimeout(function() {
     body: 'registerMe'
   };
   request(options, function(error, response, body) {
-    console.log('succesfully registered');
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('succesfully registered');
+    }
     setInterval(function() {
       const options = {
         method: 'POST',
@@ -26,7 +30,11 @@ setTimeout(function() {
         body: matchController.getMatch() ? JSON.stringify(matchController.getMatch().buildMatchInfo()) : '{}'
       };
       request(options, function(error, response, body) {
-        console.log('successful poll update');
+        if (error) {
+          console.error(error);
+        } else {
+          console.log('succesfully updated');
+        }
       })
     }, 5000);
   })

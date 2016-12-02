@@ -35,7 +35,7 @@ const register = function(req, res) {
   }, 10 * 1000);
 
   res.statusCode = 200;
-  res.end();
+  res.end('success');
 }
 
 const liveGames = function(req, res) {
@@ -51,7 +51,10 @@ const liveGames = function(req, res) {
 }
 
 const statusPoll = function(req, res) {
-  const serverUrl = req.connection.remoteAddress;
+  let serverUrl = req.connection.remoteAddress;
+  if (serverUrl.indexOf('::ffff:') !== -1) {
+    serverUrl = serverUrl.slice(7);
+  }
   let statusPoll = '';
   req.on('data', function(chunk) {statusPoll += chunk});
   req.on('end', function() {
