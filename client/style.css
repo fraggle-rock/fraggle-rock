@@ -885,17 +885,21 @@ canvas {
 }
 
 .GameOverUser {
-  margin: 5px 70px auto auto;
+  margin: 5px 0 auto auto;
+  width: 120px;
 }
 
 .GameOverScore {
   margin: 5px auto auto 0;
+  width: 120px;
 }
 
 .GameOverUserTitle {
-  margin: auto 50px auto auto;
+  margin: 5px 0 auto auto;
+  width: 120px;
 }
 
 .GameOverScoreTitle {
-  margin: auto auto auto 0;
+  margin: 5px auto auto 0;
+  width: 120px;
 }

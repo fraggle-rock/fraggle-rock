@@ -38,7 +38,7 @@ module.exports = {
   onShootMassLoss: 4,
   onShootDamplingLoss: 0.075,
   onShootScore: 10,
-  pointsOnPlayerDeath: 50,
+  pointsOnPlayerDeath: 30,
   colors: ['red', 'blue', 'green', 'magenta', 'teal'],
   hatAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2)),
   skinAdjustQ: ((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI)).multiply((new THREE.Quaternion()).setFromAxisAngle(new THREE.Vector3(0, 1, 0), -Math.PI / 2)),
