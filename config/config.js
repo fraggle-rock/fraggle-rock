@@ -35,7 +35,7 @@ module.exports = {
   killFloorInterval: 1000,
   killFloorUpVelocity: 50,
   maxBalls: 20,
-  onShootMassLoss: 4,
+  onShootMassLoss: 3.7,
   onShootDamplingLoss: 0.075,
   onShootScore: 10,
   pointsOnPlayerDeath: 30,

@@ -118,7 +118,7 @@ module.exports = {
           const regen = function regen() {
             if (jumpCount < config.maxJumps) {
               jumpCount++;
-              if (userProfile.matchId) {
+              if (userProfile.matchId || userProfile.createMatch) {
                 document.getElementById('jump' + jumpCount).style.opacity = '1';
               }
             }
@@ -169,9 +169,7 @@ module.exports = {
       if (currentGame.on) {
         if (shotCount > 0) {
           audio.smashBrawl.shootRound(1, 1, 0.08, 0, 1);
-          if (userProfile.matchId) {
-            document.getElementById('ammo' + shotCount).style.opacity = '0';
-          }
+          document.getElementById('ammo' + shotCount).style.opacity = '0';
           shotCount--;
           socketUtility.emitShootBall({
             position: currentGame.camera.position,
@@ -182,7 +180,7 @@ module.exports = {
         const regen = function regen() {
           if (shotCount < config.maxShots) {
             shotCount++;
-            if (userProfile.matchId) {
+            if (userProfile.matchId || userProfile.createMatch) {
               document.getElementById('ammo' + shotCount).style.opacity = '1';
             }
           }
@@ -221,12 +219,17 @@ module.exports = {
     //check who is alive and set health and names
     Object.keys(matchInfo.clients).forEach( (uuid) => {
       let client = matchInfo.clients[uuid];
-//      console.log('Score Table ', client.name , client.score);
       document.getElementById('player' + client.playerNumber + 'Box').style.opacity = '1';
       document.getElementById('player' + client.playerNumber + 'life1').style.opacity = client.lives > 0 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'life2').style.opacity = client.lives > 1 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'life3').style.opacity = client.lives > 2 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'Name').innerHTML = client.name;
+      if (!client.mass) {
+        client.mass = 50;
+      }
+      let percent = Math.floor((config.playerModelMass - client.mass) * 7);
+
+      document.getElementById('player' + client.playerNumber + 'Percent').innerHTML = percent + '%';
       document.getElementById('player' + client.playerNumber + 'Score').innerHTML = client.score;
       if (client.lives > 0) {
         playersAlive.push(client.name);
@@ -236,7 +239,7 @@ module.exports = {
     });
 
     //if you are the last player alive, display victory screen
-    if (players > 1 && playersAlive.length === 1 && matchInfo.numPlayers !== 0) {
+    if (players > 1 && playersAlive.length === 1 && matchInfo.maxPlayers !== 0) { //matchInfo does not contain maxPlayers yet
       document.getElementById('HUD').style.display = 'none';
       // document.getElementById('victoryBox').style.display = '';
       document.getElementById('victoryBox').style.opacity = '1';
@@ -298,8 +301,10 @@ module.exports = {
         shotCount = 3;
 
         for (var i = 1; i <= 3; i++) {
-          document.getElementById('jump' + i).style.opacity = '1';
-          document.getElementById('ammo' + i).style.opacity = '1';
+          if (userProfile.matchId || userProfile.createMatch) {
+            document.getElementById('jump' + i).style.opacity = '1';
+            document.getElementById('ammo' + i).style.opacity = '1';
+          }
         }
       }
     }
