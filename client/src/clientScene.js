@@ -48,7 +48,7 @@ const startGame = function startGame(maxPlayers) {
   const playerInput = sceneUtility.addMoveControls(game.camera, socketUtility);
   sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game); //Renders screen to page and requests re-render at next animation frame
-  socketUtility.requestNewMatch(game, maxPlayers); //Request to the server to create a new match
+  socketUtility.requestNewMatch(game); //Request to the server to create a new match
 };
 
 const joinGame = function joinGame(matchNumber) {
