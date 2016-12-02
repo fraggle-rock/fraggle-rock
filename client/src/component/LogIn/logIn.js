@@ -6,8 +6,8 @@ import userProfile from '../userProfile.js'
 import _ from 'underscore';
 
 const randomGenerator = function () {
-  const randomAdj = ['Bad', 'Whack', 'Manic', 'Candy', 'Freak', 'Bliss'];
-  const randomNoun = ['Geek', 'Doll', 'Tron', 'Cyber', 'Doll', 'Pie']
+  const randomAdj = ['Bad', 'Whack', 'Manic', 'Freak', 'Bliss', 'Trash', 'Dope'];
+  const randomNoun = ['Geek', 'Doll', 'Tron', 'Pie', 'Dog', 'Cat', 'Shark']
   let randomStr = '';
   randomStr += randomAdj[_.random(0,randomAdj.length-1)];
   randomStr += randomNoun[_.random(0,randomNoun.length-1)];
