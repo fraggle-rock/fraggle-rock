@@ -12,7 +12,7 @@ class GameOver extends React.Component {
   }
   
   backToHome() {
-    browserHistory.push('/Home')
+    window.location.pathname = 'Home'
   }
 
   render() {
