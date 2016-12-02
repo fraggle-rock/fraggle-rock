@@ -210,6 +210,7 @@ const physicsLoop = function physicsLoop(match) {
       //PLAYER DEATH & RESPAWN
       client.lives--
       const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)];
+
       if(client.lives === 0) {
         match.numPlayers -= 1;
       }

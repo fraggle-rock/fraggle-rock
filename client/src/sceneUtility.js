@@ -225,7 +225,12 @@ module.exports = {
       document.getElementById('player' + client.playerNumber + 'life2').style.opacity = client.lives > 1 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'life3').style.opacity = client.lives > 2 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'Name').innerHTML = client.name;
-      document.getElementById('player' + client.playerNumber + 'Percent').innerHTML = ((config.playerModelMass - client.mass) * 6) + '%';
+      if (!client.mass) {
+        client.mass = 50;
+      }
+      let percent = Math.floor((config.playerModelMass - client.mass) * 7);
+
+      document.getElementById('player' + client.playerNumber + 'Percent').innerHTML = percent + '%';
       document.getElementById('player' + client.playerNumber + 'Score').innerHTML = client.score;
       if (client.lives > 0) {
         playersAlive.push(client.name);

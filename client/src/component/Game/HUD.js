@@ -76,7 +76,7 @@ class HUD extends React.Component {
                 <div className='playerName' id='player1Name'>Player 1</div>
               </div>
               <div className="player1 playerPercentBox">
-                <span className="playerPercent" id="player1Percent">357%</span>
+                <span className="playerPercent" id="player1Percent">100%</span>
               </div>
               <div className="player1 playerScoreBox">
                 <span className="playerScore" id="player1Score">0</span>
