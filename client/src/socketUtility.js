@@ -121,7 +121,7 @@ module.exports = {
       player.name = userProfile.User;
       player.skinPath = userProfile.ChosenSkin;
       socket.emit('addMeToMatch', {player: player});
-    }, 1500);
+    }, 5000);
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
     playerInput.direction = camera.getWorldDirection();
