@@ -5,7 +5,7 @@ module.exports = {
   ChosenSkin: null,
   color: 'teal',
   facebookid: null,
-  stars: 2000,
+  stars: 0,
   hat: 'ha2.obj',
   maps: [
     {name: 'Fraggle Rock', thumb: '../../../textures/fraggleRockThumb.jpg'},
@@ -60,5 +60,5 @@ module.exports = {
   {skinPic: '../../../textures/skins/8BallPreview.jpg', skin: '/textures/skins/8ball.jpg', name: '8 Ball', price: 250, owned: false},
   {skinPic: '../../../textures/skins/CaptainAmericaPreview.jpg', skin: '/textures/skins/CaptainAmerica.jpg', name: 'Captain America', price: 400, owned: false},
   {skinPic: '../../../textures/Skins/hatPreview.jpg', skin: 'ha2.obj', name: 'The Hat', price: 1500, type: 'hat', owned: false}
-  ]
+  ],
 }

@@ -481,6 +481,10 @@ canvas {
   margin-top: 5px;
 }
 
+#About {
+  margin-top: 5px;
+}
+
 #username {
   float: left;
   text-align: left;
@@ -703,7 +707,7 @@ canvas {
 
 .mapThumbBox {
   display: inline-block;
-  margin: 5px;
+  margin: 4px;
   cursor: pointer;
 }
 
@@ -873,5 +877,29 @@ canvas {
 }
 
 #PlayerWins {
-  margin-top: 100px;
+  margin-top: 40px;
+}
+
+.GameOverBox {
+  display: flex;
+}
+
+.GameOverUser {
+  margin: 5px 0 auto auto;
+  width: 120px;
+}
+
+.GameOverScore {
+  margin: 5px auto auto 0;
+  width: 120px;
+}
+
+.GameOverUserTitle {
+  margin: 5px 0 auto auto;
+  width: 120px;
+}
+
+.GameOverScoreTitle {
+  margin: 5px auto auto 0;
+  width: 120px;
 }
