@@ -261,6 +261,11 @@ module.exports = {
       serverShapeMap = null;
       meshLookup = {};
       clearLookup = {};
+      userProfile.scoreBoard = [];
+      Object.keys(matchInfo.clients).forEach( (uuid) => {
+        let client = matchInfo.clients[uuid];
+        userProfile.scoreBoard.push({username: client.name, score: client.score});
+      }
       setTimeout(() => {
         userProfile.matchId = null;
         userProfile.maxPlayers = null;

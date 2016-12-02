@@ -24,6 +24,7 @@ class LogIn extends React.Component {
       userProfile.FacebookPicture = e.picture.data.url;
       userProfile.Skins = [];
       userProfile.ChosenSkin = null;
+      debugger;
       $.ajax({
         url: '/api/getUserByFacebookID/' + e.id,
         method: 'Get',
@@ -92,7 +93,4 @@ class LogIn extends React.Component {
 
   }
 }
-
-
-
 export default LogIn;
