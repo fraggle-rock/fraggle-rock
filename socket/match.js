@@ -300,7 +300,7 @@ const shootBall = function shootBall(camera) {
   && (e.body.userData.playername)
   && (e.target.mass === config.ballMass)
   && (e.target.useruuid !== e.body.uuid)) {
-    if (e.body.mass > config.onShootMassLoss + 1) {
+    if (e.body.mass > config.onShootMassLoss * 2 + 1) {
       e.body.mass -= config.onShootMassLoss;
 
       if (e.body.linearDamping > config.onShootDampingLoss + .05) {
