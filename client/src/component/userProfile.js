@@ -40,6 +40,7 @@ module.exports = {
   maxPlayers: null,
   createMatch: false,
   matchId: null,
+  // scoreBoard: [{username: 'Chimpanzee', score: 800}, {username: 'Michael', score: 734}, {username: 'jimmy', score: 13}, {username: 'scorebit', score: 0}],
   scoreBoard: [],
   storeSkins: [
   {skinPic: '../../../textures/skins/SmileyFacePreview.jpg', skin: '/textures/skins/SmileyFace.jpg', name: 'Big Smile', price: 500, owned: false},
