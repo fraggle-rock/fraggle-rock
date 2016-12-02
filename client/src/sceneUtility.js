@@ -265,7 +265,7 @@ module.exports = {
       Object.keys(matchInfo.clients).forEach( (uuid) => {
         let client = matchInfo.clients[uuid];
         userProfile.scoreBoard.push({username: client.name, score: client.score});
-      }
+      });
       setTimeout(() => {
         userProfile.matchId = null;
         userProfile.maxPlayers = null;
