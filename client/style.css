@@ -33,7 +33,7 @@ canvas {
   font-family: 'Press Start 2P';
   src:
     local('Press Start 2P'),
-    url('./assets/PressStart2P.ttf')
+    url('./assets/fonts/PressStart2P.ttf')
     format('truetype');
 }
 
@@ -41,7 +41,15 @@ canvas {
   font-family: 'Play';
   src:
     local('Play'),
-    url('./assets/Play.ttf')
+    url('./assets/fonts/Play.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'Bungee';
+  src:
+    local('Bungee'),
+    url('./assets/fonts/Bungee.ttf')
     format('truetype');
 }
 
@@ -222,7 +230,7 @@ canvas {
 .playerBoxContainer {
   text-align: center;
   width: 380px;
-  height: 140px; /*90px*/
+  height: 125px; /*90px*/
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -234,13 +242,8 @@ canvas {
   position: relative;
   text-align: left;
   transition: opacity 2s ease-in;
+  width: 80px;
   opacity: 0;
-}
-
-.playerScore {
-  display: inline-block;
-  font-size: 15px;
-  font-family: 'Bungee', sans-serif;
 }
 
 .playerBox > img {
@@ -256,8 +259,8 @@ canvas {
   height: 17px;
   position: absolute;
   z-index: 4;
-  top: 62px;
-  left: 12px;
+  top: 64px;
+  left: 15px;
 }
 
 .playerLives img {
@@ -266,7 +269,6 @@ canvas {
   margin: 4px 0 0;
   transition: all 1s;
 }
-
 
 .playerNameBox {
   position: absolute;
@@ -285,20 +287,35 @@ canvas {
   text-shadow: 1px 1px black;
 }
 
+.playerPercentBox {
+  position: absolute;
+  top: 73px;
+  left: 0px;
+  width: 80px;
+  height: 35px;
+  text-align: center;
+}
+
+.playerPercent {
+  height: 35px;
+  font-size: 16px;
+  font-family: 'Bungee', sans-serif;
+  text-shadow: 1px 1px black;
+}
+
 .playerScoreBox {
   position: absolute;
-  top: 51px;
-  left: 0;
+  top: 98px;
+  left: 0px;
   width: 80px;
-  height: 29px;
+  height: 35px;
   text-align: center;
 }
 
 .playerScore {
-  font-family: 'Play', sans-serif;
+  height: 35px;
   font-size: 11px;
-  color: red;
-  z-index: 6;
+  font-family: 'Play', sans-serif;
   text-shadow: 1px 1px black;
 }
 
@@ -329,7 +346,6 @@ canvas {
 
 #jump1, #jump2, #jump3 {
   display: block;
-  /*background-color: white;*/
   color: white;
   margin: 2.5px 0;
   font-size: 1.9px;
@@ -359,8 +375,7 @@ canvas {
   transition: all .25s;
 }
 
-#menuContainer { /*CHANGE MY NAME!*/
-
+#gameMenuContainer {
   width: 100%;
   height: 100%;
 
@@ -381,7 +396,6 @@ canvas {
   box-align: center;
 
   text-align: center;
-  cursor: pointer;
 }
 
 .menu-title {
@@ -417,6 +431,7 @@ canvas {
 
 #resume:hover, #exit:hover {
   color: rgb(211,211,211);
+  cursor: pointer;
 }
 
 .menu-descr {
@@ -703,7 +718,6 @@ canvas {
 }
 
 .mapThumb {
-  pointer-events: none;
   height: auto;
   width: 173px;
   margin-bottom: 5px;

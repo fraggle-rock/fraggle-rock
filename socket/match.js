@@ -54,20 +54,24 @@ const loadPoll = function loadPoll(clientUuid) {
   }
 };
 
+//send match info to clients
 const sendPoll = function sendPoll() {
-  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: this.maxPlayers };
+  const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: Object.keys(this.clients).length };
   for (var key in this.clients) {
     const client = this.clients[key];
+    console.log(client)
     let score = 0;
     if (scoreTable[key] !== undefined) {
       score = scoreTable[key];
     }
-    matchInfo.clients[client.uuid] = ({ uuid: client.uuid,
+    matchInfo.clients[client.uuid] = ({
+      uuid: client.uuid,
       name: client.name,
       lives: client.lives,
       skinPath: client.skinPath,
       color: client.color,
       playerNumber: client.playerNumber,
+      mass: client.mass, //FIXME
       score
     });
   }
@@ -206,7 +210,6 @@ const physicsLoop = function physicsLoop(match) {
       //PLAYER DEATH & RESPAWN
       client.lives--
       const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)];
-      console.log('Match ', match, 'Clients ', client);
       if(client.lives === 0) {
         match.numPlayers -= 1;
       }
@@ -279,7 +282,7 @@ const shootBall = function shootBall(camera) {
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
   ballBody.useruuid = camera.uuid;
-  const context =this;
+  const context = this;
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity,
@@ -301,6 +304,7 @@ const shootBall = function shootBall(camera) {
     if (e.body.mass > config.onShootMassLoss) {
       e.body.mass -= config.onShootMassLoss;
       e.body.linearDamping -= config.onShootDamplingLoss;
+      context.clients[e.body.uuid].mass = e.body.mass;
       if(scoreTable[e.target.useruuid] !== undefined) {
         scoreTable[e.target.useruuid] = scoreTable[e.target.useruuid] + config.onShootScore;
         e.target.useruuid = null;

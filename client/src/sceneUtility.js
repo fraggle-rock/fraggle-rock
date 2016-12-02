@@ -225,6 +225,7 @@ module.exports = {
       document.getElementById('player' + client.playerNumber + 'life2').style.opacity = client.lives > 1 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'life3').style.opacity = client.lives > 2 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'Name').innerHTML = client.name;
+      document.getElementById('player' + client.playerNumber + 'Percent').innerHTML = ((config.playerModelMass - client.mass) * 6) + '%';
       document.getElementById('player' + client.playerNumber + 'Score').innerHTML = client.score;
       if (client.lives > 0) {
         playersAlive.push(client.name);
@@ -296,8 +297,10 @@ module.exports = {
         shotCount = 3;
 
         for (var i = 1; i <= 3; i++) {
-          document.getElementById('jump' + i).style.opacity = '1';
-          document.getElementById('ammo' + i).style.opacity = '1';
+          if (userProfile.matchId || userProfile.createMatch) {
+            document.getElementById('jump' + i).style.opacity = '1';
+            document.getElementById('ammo' + i).style.opacity = '1';
+          }
         }
       }
     }

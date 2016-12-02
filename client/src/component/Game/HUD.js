@@ -14,7 +14,7 @@ class HUD extends React.Component {
   }
 
   componentDidMount() {
-    const menuContainer = document.getElementById( 'menuContainer' );
+    const menuContainer = document.getElementById( 'gameMenuContainer' );
     const hud = document.getElementById( 'HUD' );
     menuContainer.style.display = '';
     hud.style.display = 'none';
@@ -23,7 +23,7 @@ class HUD extends React.Component {
     $(document).on('keydown', (e) => {
       if (e.keyCode === 192) {
         const hud = document.getElementById( 'HUD' );
-        const menuContainer = document.getElementById( 'menuContainer' );
+        const menuContainer = document.getElementById( 'gameMenuContainer' );
 
         if (menuContainer.style.display === '') {
           menuContainer.style.display = 'none';
@@ -39,13 +39,13 @@ class HUD extends React.Component {
   }
 
   resume() {
-    document.getElementById( 'menuContainer' ).style.display = 'none';
+    document.getElementById( 'gameMenuContainer' ).style.display = 'none';
     document.getElementById( 'HUD' ).style.display = '';
     document.body.requestPointerLock();
   }
 
   exit() {
-    document.getElementById( 'menuContainer' ).style.display = 'none';
+    document.getElementById( 'gameMenuContainer' ).style.display = 'none';
     socketUtility.quitMatch();
     $(document).off();
     userProfile.matchId = null;
@@ -66,7 +66,6 @@ class HUD extends React.Component {
           <div className='playerBoxContainer'>
 
             <div className='player1 playerBox' id='player1Box'>
-              <div className='playerScore'>248</div>
               <img src='./textures/playerRedHealth.png' className='playerPic' />
               <div className='playerLives'>
                 <img className='player1 life3' id='player1life3' src='./textures/playerhealthheart.png' />
@@ -76,8 +75,11 @@ class HUD extends React.Component {
               <div className='player1 playerNameBox'>
                 <div className='playerName' id='player1Name'>Player 1</div>
               </div>
+              <div className="player1 playerPercentBox">
+                <span className="playerPercent" id="player1Percent">357%</span>
+              </div>
               <div className="player1 playerScoreBox">
-                <div className="playerScore" id="player1Score">0</div>
+                <span className="playerScore" id="player1Score">0</span>
               </div>
             </div>
 
@@ -91,8 +93,11 @@ class HUD extends React.Component {
               <div className='player2 playerNameBox'>
                 <div className='playerName' id='player2Name'>Player 2</div>
               </div>
+              <div className="player2 playerPercentBox">
+                <span className="playerPercent" id="player2Percent">100%</span>
+              </div>
               <div className="player2 playerScoreBox">
-                <div className="playerScore" id="player2Score">0</div>
+                <span className="playerScore" id="player2Score">0</span>
               </div>
             </div>
 
@@ -106,8 +111,11 @@ class HUD extends React.Component {
               <div className='player3 playerNameBox'>
                 <div className='playerName' id='player3Name'>Player 3</div>
               </div>
+              <div className="player3 playerPercentBox">
+                <span className="playerPercent" id="player3Percent">100%</span>
+              </div>
               <div className="player3 playerScoreBox">
-                <div className="playerScore" id="player3Score">0</div>
+                <span className="playerScore" id="player3Score">0</span>
               </div>
             </div>
 
@@ -121,9 +129,12 @@ class HUD extends React.Component {
               <div className='player4 playerNameBox'>
                 <div className='playerName' id='player4Name'>Player 4</div>
               </div>
+              <div className="player4 playerPercentBox">
+                <span className="playerPercent" id="player4Percent">100%</span>
+              </div>
               <div className="player4 playerScoreBox">
-                <div className="playerScore" id="player4Score">0</div>
-              </div>              
+                <span className="playerScore" id="player4Score">0</span>
+              </div>
             </div>
 
           </div>
@@ -143,7 +154,7 @@ class HUD extends React.Component {
           </div>
         </div>
 
-        <div id='menuContainer'>
+        <div id='gameMenuContainer'>
           <div className='menu-title'><img src='./textures/logotext.png'/></div>
           <div className='menu'>
             <div>
