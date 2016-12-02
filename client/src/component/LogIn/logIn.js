@@ -3,7 +3,17 @@ import Home from '../Home/Home.js'
 import FacebookLogin from 'react-facebook-login'
 import { browserHistory } from 'react-router';
 import userProfile from '../userProfile.js'
+import _ from 'underscore';
 
+const randomGenerator = function () {
+  const randomAdj = ['Bad', 'Whack', 'Manic', 'Candy', 'Freak', 'Bliss'];
+  const randomNoun = ['Geek', 'Doll', 'Tron', 'Cyber', 'Doll', 'Pie']
+  let randomStr = '';
+  randomStr += randomAdj[_.random(0,randomAdj.length-1)];
+  randomStr += randomNoun[_.random(0,randomNoun.length-1)];
+  randomStr += _.random(0, 10);
+  return randomStr;
+};
 class LogIn extends React.Component {
   constructor(props) {
 	  super(props);
@@ -14,6 +24,7 @@ class LogIn extends React.Component {
   }
 
   playAsGuest() {
+    userProfile.User = randomGenerator();
     browserHistory.push('/Home')
   }
 
@@ -29,8 +40,8 @@ class LogIn extends React.Component {
         method: 'Get',
         success: (data) => {
           if(data.length == 0) {
-            var username = prompt('Welcome to Smash Ball Brawl. Please Enter a Username');
-            username = username || 'Random stringify'
+           var username = prompt('Welcome to Smash Ball Brawl. Please Enter a Username');
+            // var username = 'Random stringify'
             username = username.slice(0, 10);
             if(username !== null) {
               userProfile.User = username;
@@ -77,7 +88,7 @@ class LogIn extends React.Component {
             <div id='Facebook'>
               <FacebookLogin
                   appId="1709766049351226"
-                  autoLoad={true}
+                  autoLoad={false}
                   fields="name,email,picture"
                   onClick={this.componentClicked}
                   callback={this.responseFacebook}
