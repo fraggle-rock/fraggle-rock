@@ -1,26 +1,17 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
-import LeaderBoardDataScore from './LeaderBoardDataScore.js';
-import LeaderBoardDataUser from './LeaderBoardDataUser.js';
 import Profile from '../Home/Profile.js';
-import userProfile from '../userProfile.js'
+import userProfile from '../userProfile.js';
 
-class LeaderBoard extends React.Component {
+class About extends React.Component {
   constructor(props) {
 	  super(props);
 	  this.state = {
-	    user: null,
-      leaderBoards: []
+	    user: null
 	  };
-	  this.backToHome = this.backToHome.bind(this);
-  }
-
-  backToHome() {
-    browserHistory.push('/Home');
   }
 
   componentWillMount() {
-
     if(window.localStorage.id) {
       $.ajax({
         url: '/api/getUserByFacebookID/' + window.localStorage.id,
@@ -31,7 +22,7 @@ class LeaderBoard extends React.Component {
           userProfile.facebookid = data.facebookid;
           userProfile.userId = data.id;
           userProfile.FacebookPicture = data.url;
-          browserHistory.push('LeaderBoard')
+          browserHistory.push('About')
         },
         error: (error) => {
           console.log(error)
@@ -40,12 +31,16 @@ class LeaderBoard extends React.Component {
     }
     
     $.ajax({
-      url: '/api/leaderBoard',
+      url: '/api/liveGames',
       method: 'GET',
       success: (data) => {
-        this.setState({leaderBoards: data.reverse()})
+        this.setState({liveMatches: JSON.parse(data)})
       }
     })
+  }
+
+  backToHome() {
+    browserHistory.push('/Home');
   }
 
   render() {
@@ -57,16 +52,18 @@ class LeaderBoard extends React.Component {
         <div className='menuBackground'>
           <div className='buttonBox'>
             <button className='btn btn-primary homeBtn' onClick={this.backToHome}>◀ Back</button>
-            <h1>Top 10 Players</h1>
-          </div>
-          <div id='DataLeader'>
-            <div id='LeaderBoardUser'>
-              <h3>USERNAME</h3>
-              {this.state.leaderBoards.map(leader => <LeaderBoardDataUser key={leader.username.toString()} leader={leader} />)}
-            </div>
-            <div id='LeaderBoardScore'>
-              <h3>SCORE</h3>
-              {this.state.leaderBoards.map(leader => <LeaderBoardDataScore key={leader.score.toString()} leader={leader} />)}
+            <h1>About</h1>
+            <h2>The Goal</h2>
+            <div>The goal of the game is to knock your opponent off the map!</div>
+            <h2>Controls</h2>
+            <div>
+              <div>W: Move Foward</div>
+              <div>A: Move Left</div>
+              <div>S: Move Back</div>
+              <div>D: Move Right</div>
+              <div>Space: Jump</div>
+              <div>Click: Shoot Ball</div>
+              <div> ~: Bring Up In Game Menu</div>
             </div>
           </div>
         </div>
@@ -76,6 +73,4 @@ class LeaderBoard extends React.Component {
   }
 }
 
-
-
-export default LeaderBoard;
+export default About;

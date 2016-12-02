@@ -14,7 +14,7 @@ class Game extends React.Component {
 
   componentDidMount() {
     if (userProfile.createMatch) {
-      const maxPlayers = userProfile.players;
+      const maxPlayers = userProfile.maxPlayers;
       clientScene.startGame(maxPlayers);
     } else {
       clientScene.joinGame(userProfile.matchUrl);

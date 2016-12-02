@@ -1,6 +1,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import Profile from './Profile.js';
+import userProfile from '../userProfile.js'
 const clientScene = require('../../clientScene.js');
 
 class Home extends React.Component {
@@ -14,12 +15,36 @@ class Home extends React.Component {
     this.JoinMatch = this.JoinMatch.bind(this);
   }
 
+  componentWillMount() {
+    if(window.localStorage.id) {
+      $.ajax({
+        url: '/api/getUserByFacebookID/' + window.localStorage.id,
+        method: 'Get',
+        success: (data) => {
+          userProfile.User = data.username;
+          userProfile.Skins = data.skins || [];
+          userProfile.facebookid = data.facebookid;
+          userProfile.userId = data.id;
+          userProfile.FacebookPicture = data.url;
+          browserHistory.push('Home')
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      })
+    }
+  }
+
   CreateMatch() {
     browserHistory.push('/CreateMatch')
   }
 
   JoinMatch() {
     browserHistory.push('/JoinMatch')
+  }
+
+  About() {
+    browserHistory.push('About')
   }
 
   showLeaderBoards() {
@@ -40,6 +65,9 @@ class Home extends React.Component {
             <button id="joinExisting" onClick={this.JoinMatch} className='btn btn-primary'>Join Match</button>
           </div>
           <button id="LeaderBoardButton" onClick={this.showLeaderBoards} className='btn btn-primary'>View Leaderboards</button>
+          <div>
+            <button id="About" onClick={this.About} className='btn btn-danger'>About</button>
+          </div>
         </div>
         <div className='version'>v0.7</div>
         <div className='createdBy'>Created by Nick Lathen, Will Stockman, Eric Eakin, and Riyaz Ahmed, 2016</div>

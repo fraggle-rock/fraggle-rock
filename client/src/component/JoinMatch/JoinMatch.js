@@ -2,6 +2,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import JoinMatchData from './JoinMatchData.js';
 import Profile from '../Home/Profile.js';
+import userProfile from '../userProfile.js';
 
 class JoinMatch extends React.Component {
   constructor(props) {
@@ -13,6 +14,23 @@ class JoinMatch extends React.Component {
   }
 
   componentWillMount() {
+    if(window.localStorage.id) {
+      $.ajax({
+        url: '/api/getUserByFacebookID/' + window.localStorage.id,
+        method: 'Get',
+        success: (data) => {
+          userProfile.User = data.username;
+          userProfile.Skins = data.skins || [];
+          userProfile.facebookid = data.facebookid;
+          userProfile.userId = data.id;
+          userProfile.FacebookPicture = data.url;
+          browserHistory.push('JoinMatch')
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      })
+    }
     $.ajax({
       url: '/api/liveGames',
       method: 'GET',

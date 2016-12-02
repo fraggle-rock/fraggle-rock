@@ -63,12 +63,14 @@ const buildMatchInfo = function buildMatchInfo() {
     if (scoreTable[key] !== undefined) {
       score = scoreTable[key];
     }
-    matchInfo.clients[client.uuid] = ({ uuid: client.uuid,
+    matchInfo.clients[client.uuid] = ({
+      uuid: client.uuid,
       name: client.name,
       lives: client.lives,
       skinPath: client.skinPath,
       color: client.color,
       playerNumber: client.playerNumber,
+      mass: client.mass, //FIXME
       score
     });
   }
@@ -155,7 +157,6 @@ const buildPhysicsEmit = function buildPhysicsEmit(match) {
     }
   });
   if (expiredBallIndices.length > 0) {
-    // console.log('Deleted out of bounds ball!');
     let offset = 0;
     expiredBallIndices.forEach(function(index) {
       match.balls.splice(index - offset, 1);
@@ -196,7 +197,6 @@ const updateScoreTable = function updateScoreTable(uuid, num) {
       }
     }
   }
-  // console.log('Update score table ', scoreTable);
 }
 const physicsLoop = function physicsLoop(match) {
   for (var key in match.clients) {
@@ -210,15 +210,20 @@ const physicsLoop = function physicsLoop(match) {
     Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
       //PLAYER DEATH & RESPAWN
       client.lives--
-      updateScoreTable(client.uuid, match.numPlayers);
-      const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)]
+      const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)];
 
-      clientBody.position.set(spawn[0], spawn[1], spawn[2]);
-      clientBody.mass = config.playerModelMass;
-      clientBody.linearDamping = config.playerDamping;
-      clientBody.velocity.set(0,0,0);
-      match.sendPoll();
-      continue;
+      if(client.lives === 0) {
+        match.numPlayers -= 1;
+      }
+      if(client.lives > 0) {
+        updateScoreTable(client.uuid, match.numPlayers);
+        clientBody.position.set(spawn[0], spawn[1], spawn[2]);
+        clientBody.mass = client.mass = config.playerModelMass;
+        clientBody.linearDamping = config.playerDamping;
+        clientBody.velocity.set(0,0,0);
+        match.sendPoll();
+        continue;
+      }
     }
     if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
       movePerTick = movePerTick * .707;
@@ -279,7 +284,7 @@ const shootBall = function shootBall(camera) {
   ballBody.linearDamping = .1;
   ballBody.angularDamping = .1;
   ballBody.useruuid = camera.uuid;
-  const context =this;
+  const context = this;
 
   const shootDirection = camera.direction;
   ballBody.velocity.set(shootDirection.x * config.ballVelocity,
@@ -301,11 +306,12 @@ const shootBall = function shootBall(camera) {
     if (e.body.mass > config.onShootMassLoss) {
       e.body.mass -= config.onShootMassLoss;
       e.body.linearDamping -= config.onShootDamplingLoss;
+      context.clients[e.body.uuid].mass = e.body.mass;
       if(scoreTable[e.target.useruuid] !== undefined) {
         scoreTable[e.target.useruuid] = scoreTable[e.target.useruuid] + config.onShootScore;
+        e.target.useruuid = null;
       }
   }
-    // console.log('Mass ', e.body.mass, ' Damping ', e.body.linearDamping, 'Score ', scoreTable);
     collisionSound = { play: 7 };
   }
 });
@@ -347,6 +353,7 @@ const loadFullScene = function loadFullScene(scene, player, io, maxPlayers, spaw
   // Setup our world
   this.io = io;
   this.maxPlayers = maxPlayers;
+  this.numPlayers = maxPlayers;
   this.spawnPoints = spawnPoints;
   this.owner = owner;
   this.mapChoice = mapChoice;

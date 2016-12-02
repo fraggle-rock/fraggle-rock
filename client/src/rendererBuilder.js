@@ -4,7 +4,7 @@ const userProfile = require('./component/userProfile');
 module.exports = {
   buildRenderer: function buildRenderer() {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth - 5, window.innerHeight - 5);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
   if (userProfile.graphics === 2) {
 	  renderer.shadowMap.enabled = true;

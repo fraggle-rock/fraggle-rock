@@ -95,13 +95,11 @@ module.exports = {
           camera.position = game.camera.position;
           camera.quaternion = game.camera.quaternion;
           camera.direction = game.camera.getWorldDirection();
-
           // declare your name and skin
           camera.skinPath = userProfile.ChosenSkin;
           camera.name = userProfile.User;
-
           const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints,
-          maxPlayers: maxPlayers, owner: game.owner, mapChoice: game.mapChoice};
+          maxPlayers: game.maxPlayers, owner: game.owner, mapChoice: game.mapChoice};
           socket.emit('fullScene', fullScene);
         }, 1500);
       }

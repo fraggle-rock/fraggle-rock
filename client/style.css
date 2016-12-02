@@ -1,8 +1,7 @@
 /*
 font-family: 'Press Start 2P', sans-serif;
-font-family: 'Titillium Web', sans-serif;
-font-family: 'Roboto Mono', monospace;
 font-family: 'Play', sans-serif;
+font-family: 'Bungee', sans-serif;
 */
 /*FOR DEBUGGING WIREFRAME*/
 /*div {
@@ -34,7 +33,7 @@ canvas {
   font-family: 'Press Start 2P';
   src:
     local('Press Start 2P'),
-    url('./assets/PressStart2P.ttf')
+    url('./assets/fonts/PressStart2P.ttf')
     format('truetype');
 }
 
@@ -42,7 +41,23 @@ canvas {
   font-family: 'Play';
   src:
     local('Play'),
-    url('./assets/Play.ttf')
+    url('./assets/fonts/Play.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'Bungee';
+  src:
+    local('Bungee'),
+    url('./assets/fonts/Bungee.ttf')
+    format('truetype');
+}
+
+@font-face {
+  font-family: 'Titillium';
+  src:
+    local('Titillium'),
+    url('./assets/fonts/TitilliumWeb-Black.ttf')
     format('truetype');
 }
 
@@ -55,6 +70,12 @@ body {
   background-size: cover;
   overflow: hidden;
   font-family: sans-serif;
+  color: white;
+  margin: 0;
+}
+
+#app {
+  margin: 0;
 }
 
 h3 {
@@ -63,8 +84,6 @@ h3 {
 
 canvas {
   margin: auto;
-  display: flex;
-  align-items: center;
 }
 
 /*----------------------BUTTONS----------------------*/
@@ -174,7 +193,8 @@ canvas {
 
 #screenOverlay {
   position: absolute;
-  display: none;
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -218,7 +238,7 @@ canvas {
 .playerBoxContainer {
   text-align: center;
   width: 380px;
-  height: 90px;
+  height: 125px; /*90px*/
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -230,6 +250,7 @@ canvas {
   position: relative;
   text-align: left;
   transition: opacity 2s ease-in;
+  width: 80px;
   opacity: 0;
 }
 
@@ -246,8 +267,8 @@ canvas {
   height: 17px;
   position: absolute;
   z-index: 4;
-  top: 62px;
-  left: 12px;
+  top: 64px;
+  left: 15px;
 }
 
 .playerLives img {
@@ -256,7 +277,6 @@ canvas {
   margin: 4px 0 0;
   transition: all 1s;
 }
-
 
 .playerNameBox {
   position: absolute;
@@ -275,11 +295,45 @@ canvas {
   text-shadow: 1px 1px black;
 }
 
+.playerPercentBox {
+  position: absolute;
+  top: 81px;
+  left: 0px;
+  width: 80px;
+  height: 35px;
+  text-align: center;
+}
+
+.playerPercent {
+  height: 35px;
+  font-size: 16px;
+  font-family: 'Titillium', sans-serif;
+  text-shadow: 1px 1px black;
+}
+
+.playerScoreBox {
+  position: absolute;
+  top: 98px;
+  left: 0px;
+  width: 80px;
+  height: 35px;
+  text-align: center;
+}
+
+.playerScore {
+  height: 35px;
+  font-size: 11px;
+  font-family: 'Play', sans-serif;
+  text-shadow: 1px 1px black;
+}
+
 .crosshairContainer {
   width: 41px;
   height: 15px;
   margin: 0 auto;
   padding-right: 4px;
+  display: block;
+  text-align: center;
 }
 
 #crosshair {
@@ -293,13 +347,13 @@ canvas {
   height: 15px;
   display: inline-block;
   margin-right: 6px;
+  margin-top: -3px;
   float: left;
   line-height: 8px;
 }
 
 #jump1, #jump2, #jump3 {
   display: block;
-  /*background-color: white;*/
   color: white;
   margin: 2.5px 0;
   font-size: 1.9px;
@@ -313,6 +367,7 @@ canvas {
 .ammoBox {
   display: inline-block;
   margin-left: 5px;
+  margin-top: -2px;
   height: 15px;
   width: 5px;
   float: right;
@@ -328,8 +383,7 @@ canvas {
   transition: all .25s;
 }
 
-#menuContainer {
-
+#gameMenuContainer {
   width: 100%;
   height: 100%;
 
@@ -350,7 +404,6 @@ canvas {
   box-align: center;
 
   text-align: center;
-  cursor: pointer;
 }
 
 .menu-title {
@@ -386,21 +439,12 @@ canvas {
 
 #resume:hover, #exit:hover {
   color: rgb(211,211,211);
+  cursor: pointer;
 }
 
 .menu-descr {
   font-size: 10px;
   padding: 10px;
-}
-
-#menuContainer {
-
-  width: 100%;
-  height: 100%;
-
-  display: -webkit-box;
-  display: -moz-box;
-  display: block;
 }
 
 .version {
@@ -461,6 +505,10 @@ canvas {
 }
 
 #LeaderBoardButton {
+  margin-top: 5px;
+}
+
+#About {
   margin-top: 5px;
 }
 
@@ -543,7 +591,6 @@ canvas {
 .menuContainer {
   margin-top: 14%;
   text-align: center;
-  color: white;
 }
 
 .menuBackground {
@@ -572,7 +619,6 @@ canvas {
   text-align: center;
   padding: 0 10px;
   margin: 15px 40px;
-  color: white;
   font-weight: normal;
 }
 
@@ -626,13 +672,11 @@ canvas {
 #LeaderBoardDataScore {
   margin-top: 13px;
   font-size: 15px;
-  color: white;
 }
 
 #LeaderBoardDataUser {
   margin-top: 13px;
   font-size: 15px;
-  color: white;
 }
 
 /*-----------------------Create Match------------------------*/
@@ -650,15 +694,6 @@ canvas {
   display: inline-block;
   margin: 10px 0;
   font-size: 14px;
-  cursor: pointer;
-  color: white;
-  -webkit-user-select: none; /* Chrome/Safari unSelectable Text*/
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+ */
-}
-
-#ChooseMap:hover {
-  color: skyblue;
 }
 
 #maps {
@@ -686,12 +721,11 @@ canvas {
 
 .mapThumbBox {
   display: inline-block;
-  margin: 5px;
+  margin: 4px;
   cursor: pointer;
 }
 
 .mapThumb {
-  pointer-events: none;
   height: auto;
   width: 173px;
   margin-bottom: 5px;
@@ -764,12 +798,11 @@ canvas {
   pointer-events: none;
 }
 
-
 #Skins {
   margin: 20px auto;
   height: 250px;
   overflow-y: auto;
-  overflow-x:hidden;
+  overflow-x: hidden;
   width: 580px;
   background-color: white;
   opacity: 1;
@@ -784,13 +817,13 @@ canvas {
 
 .SkinName {
   margin: auto;
-  color: white;
   font-size: 16px;
   background-color: black;
   width: 140px;
   padding: 5px 0;
   margin-top: -5px;
   margin-bottom: 5px;
+  color: white;
 }
 
 .SkinButton {
@@ -799,7 +832,6 @@ canvas {
 }
 
 .SkinCost {
-  color: white;
   background-color: black;
   width: 140px;
   margin: 0 auto 5px;
@@ -847,7 +879,6 @@ canvas {
 
 #GameOver {
   text-align: center;
-  color: white;
   margin: auto;
 }
 
@@ -856,5 +887,29 @@ canvas {
 }
 
 #PlayerWins {
-  margin-top: 100px;
+  margin-top: 40px;
+}
+
+.GameOverBox {
+  display: flex;
+}
+
+.GameOverUser {
+  margin: 5px 0 auto auto;
+  width: 120px;
+}
+
+.GameOverScore {
+  margin: 5px auto auto 0;
+  width: 120px;
+}
+
+.GameOverUserTitle {
+  margin: 5px 0 auto auto;
+  width: 120px;
+}
+
+.GameOverScoreTitle {
+  margin: 5px auto auto 0;
+  width: 120px;
 }

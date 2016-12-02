@@ -15,13 +15,18 @@ class JoinMatchData extends React.Component {
       this.props.match.maxPlayers = 'Sandbox';
     }
 
+    this.JoinMatch = this.JoinMatch.bind(this)
     this.props.match.numPlayers = Object.keys(this.props.match.clients).length;
   }
 
   JoinMatch(matchUrl) {
-    userProfile.createMatch = false;
-    userProfile.matchUrl = matchUrl;
-    browserHistory.push('/Game');
+    if(this.props.match.numPlayers === this.props.match.maxPlayers || this.props.match.numPlayers === 6) {
+
+    } else {
+      userProfile.createMatch = false;
+      userProfile.matchUrl = matchUrl;
+      browserHistory.push('/Game');    
+    }
   }
 
   render() {
@@ -33,7 +38,7 @@ class JoinMatchData extends React.Component {
       <div className='JoinMatchSpan'>{this.props.match.owner}</div>
       <div className='JoinMatchSpan'>{this.props.match.numPlayers} / {this.props.match.maxPlayers}</div>
       <div className='JoinMatchSpan'>
-        <button onClick={() => this.JoinMatch(this.props.match.url)} className='btn-md btn-success'>Join Game</button>
+        <button onClick={() => this.JoinMatch(this.props.match.url)} className={this.props.match.numPlayers === this.props.match.maxPlayers || this.props.match.numPlayers === 6 ? 'btn btn-danger' : 'btn btn-success'}>{this.props.match.numPlayers === this.props.match.maxPlayers || this.props.match.numPlayers === 6 ? 'Game Full' : 'Join Game'}</button>
       </div>
     </div>
     )

@@ -19,8 +19,28 @@ class CreateMatch extends React.Component {
 	  this.backToHome = this.backToHome.bind(this);
   }
 
-  StartMatch(numPlayers) {
-    userProfile.players = numPlayers;
+  componentWillMount() {
+    if(window.localStorage.id) {
+      $.ajax({
+        url: '/api/getUserByFacebookID/' + window.localStorage.id,
+        method: 'Get',
+        success: (data) => {
+          userProfile.User = data.username;
+          userProfile.Skins = data.skins || [];
+          userProfile.facebookid = data.facebookid;
+          userProfile.userId = data.id;
+          userProfile.FacebookPicture = data.url;
+          browserHistory.push('CreateMatch')
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      })
+    }
+  }
+
+  StartMatch(maxPlayers) {
+    userProfile.maxPlayers = maxPlayers;
     userProfile.createMatch = true;
     browserHistory.push('/Game');
   }
@@ -65,7 +85,7 @@ class CreateMatch extends React.Component {
               <button className='btn btn-warning selectSkinBtn' onClick={this.selectSkin}>Select Skin</button>
             </div>
 
-            <div id='ChooseMap' onClick={this.ChooseMap}>CHOOSE MAP</div>
+            <div id='ChooseMap' className='btn-md btn-primary' onClick={this.ChooseMap}>CHOOSE MAP</div>
 
             <div id='MapSelector'>
               <MapSelector mapChoice={this.state.mapChoice} maps={this.state.maps} click={this.mapChosen.bind(this)} />

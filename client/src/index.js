@@ -12,6 +12,7 @@ import SelectSkin from './component/SelectSkin/selectSkin.js';
 import Settings from './component/Settings/Settings.js';
 import GameOver from './component/GameOver/GameOver.js';
 import Game from './component/Game/Game.js';
+import About from './component/About/About.js';
 
 
 ReactDOM.render((
@@ -28,6 +29,7 @@ ReactDOM.render((
         <Route path='SelectSkin' component={SelectSkin} />
         <Route path='Settings' component={Settings} />
         <Route path='GameOver' component={GameOver} />
+        <Route path='About' component={About} />
       </Route>
     </Router>
   </div>
