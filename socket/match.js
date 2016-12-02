@@ -214,10 +214,10 @@ const physicsLoop = function physicsLoop(match) {
       if(client.lives === 0) {
         match.numPlayers -= 1;
       }
-      if(client.lives >0) {
+      if(client.lives > 0) {
         updateScoreTable(client.uuid, match.numPlayers);
         clientBody.position.set(spawn[0], spawn[1], spawn[2]);
-        clientBody.mass = config.playerModelMass;
+        clientBody.mass = client.mass = config.playerModelMass;
         clientBody.linearDamping = config.playerDamping;
         clientBody.velocity.set(0,0,0);
         match.sendPoll();
