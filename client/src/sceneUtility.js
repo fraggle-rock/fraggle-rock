@@ -4,6 +4,8 @@ const config = require('../../config/config.js');
 const flat = require('../../config/flat.js');
 const audio = require('./audio');
 const userProfile = require('./component/userProfile.js');
+const _ = require('underscore');
+
 import { browserHistory } from 'react-router';
 
 const redBallStack = (function() {
@@ -267,6 +269,7 @@ module.exports = {
         let client = matchInfo.clients[uuid];
         userProfile.scoreBoard.push({username: client.name, score: client.score});
       });
+      userProfile.scoreBoard = _.sortBy(userProfile.scoreBoard, 'score');
 
       setTimeout(() => {
         userProfile.matchId = null;
