@@ -59,7 +59,6 @@ const sendPoll = function sendPoll() {
   const matchInfo = {clients: {}, maxPlayers: this.maxPlayers, numPlayers: Object.keys(this.clients).length };
   for (var key in this.clients) {
     const client = this.clients[key];
-    console.log(client)
     let score = 0;
     if (scoreTable[key] !== undefined) {
       score = scoreTable[key];
@@ -154,7 +153,6 @@ const buildPhysicsEmit = function buildPhysicsEmit(match) {
     }
   });
   if (expiredBallIndices.length > 0) {
-    // console.log('Deleted out of bounds ball!');
     let offset = 0;
     expiredBallIndices.forEach(function(index) {
       match.balls.splice(index - offset, 1);
@@ -195,7 +193,6 @@ const updateScoreTable = function updateScoreTable(uuid, num) {
       }
     }
   }
-  // console.log('Update score table ', scoreTable);
 }
 const physicsLoop = function physicsLoop(match) {
   for (var key in match.clients) {
@@ -311,7 +308,6 @@ const shootBall = function shootBall(camera) {
         e.target.useruuid = null;
       }
   }
-    // console.log('Mass ', e.body.mass, ' Damping ', e.body.linearDamping, 'Score ', scoreTable);
     collisionSound = { play: 7 };
   }
 });

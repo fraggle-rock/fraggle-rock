@@ -219,7 +219,6 @@ module.exports = {
     //check who is alive and set health and names
     Object.keys(matchInfo.clients).forEach( (uuid) => {
       let client = matchInfo.clients[uuid];
-//      console.log('Score Table ', client.name , client.score);
       document.getElementById('player' + client.playerNumber + 'Box').style.opacity = '1';
       document.getElementById('player' + client.playerNumber + 'life1').style.opacity = client.lives > 0 ? '1' : '0';
       document.getElementById('player' + client.playerNumber + 'life2').style.opacity = client.lives > 1 ? '1' : '0';
