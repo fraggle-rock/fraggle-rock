@@ -27,7 +27,7 @@ class GameOver extends React.Component {
                 <h4 className='GameOverUserTitle'>Username</h4>
                 <h4 className='GameOverScoreTitle'>Score</h4>
               </div>
-              {userProfile.recentGame.map((player) => <GameOverData key={player.username} player={player} />)}
+              {userProfile.scoreBoard.map((player) => <GameOverData key={player.username} player={player} />)}
             </div>
           </div>
         </div>
