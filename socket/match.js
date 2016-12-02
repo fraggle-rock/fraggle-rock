@@ -300,9 +300,13 @@ const shootBall = function shootBall(camera) {
   && (e.body.userData.playername)
   && (e.target.mass === config.ballMass)
   && (e.target.useruuid !== e.body.uuid)) {
-    if (e.body.mass > config.onShootMassLoss) {
+    if (e.body.mass > config.onShootMassLoss + 1) {
       e.body.mass -= config.onShootMassLoss;
-      e.body.linearDamping -= config.onShootDampingLoss;
+
+      if (e.body.linearDamping > config.onShootDampingLoss + .05) {
+        e.body.linearDamping -= config.onShootDampingLoss;
+      }
+
       context.clients[e.body.uuid].mass = e.body.mass;
       if(scoreTable[e.target.useruuid] !== undefined) {
         scoreTable[e.target.useruuid] = scoreTable[e.target.useruuid] + config.onShootScore;

@@ -15,7 +15,7 @@ class GameOver extends React.Component {
 
     userProfile.scoreBoard.forEach((player) => {
       if (player.score > this.state.highScore) {
-        this.setState((prevState) => {
+        this.setState({
           highScore: player.score
         });
       }
