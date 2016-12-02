@@ -270,7 +270,7 @@ module.exports = {
       // populate scoreboard
       Object.keys(matchInfo.clients).forEach( (uuid) => {
         let client = matchInfo.clients[uuid];
-        userProfile.scoreBoard.push({username: client.name, score: client.score});
+        userProfile.scoreBoard.push({username: client.name, score: client.score, gameID: currentGame.uuid});
       });
       userProfile.scoreBoard = _.sortBy(userProfile.scoreBoard, 'score');
 

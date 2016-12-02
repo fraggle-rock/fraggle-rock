@@ -19,26 +19,27 @@ class SelectSkin extends React.Component {
   }
 
   componentWillMount() {
-
-    if(window.localStorage.id) {
-      $.ajax({
-        url: '/api/getUserByFacebookID/' + window.localStorage.id,
-        method: 'Get',
-        success: (data) => {
-          userProfile.User = data.username;
-          userProfile.Skins = data.skins || [];
-          userProfile.facebookid = data.facebookid;
-          userProfile.userId = data.id;
-          userProfile.FacebookPicture = data.url;
-          for(var i = 0; i < userProfile.Skins.length; i++) {
-            this.state.skins.push(userProfile.skinsObj[userProfile.Skins[i]])
+    if(userProfile.User === 'Guest') {
+      if(window.localStorage.id) {
+        $.ajax({
+          url: '/api/getUserByFacebookID/' + window.localStorage.id,
+          method: 'Get',
+          success: (data) => {
+            userProfile.User = data.username;
+            userProfile.Skins = data.skins || [];
+            userProfile.facebookid = data.facebookid;
+            userProfile.userId = data.id;
+            userProfile.FacebookPicture = data.url;
+            for(var i = 0; i < userProfile.Skins.length; i++) {
+              this.state.skins.push(userProfile.skinsObj[userProfile.Skins[i]])
+            }
+            browserHistory.push('SelectSkin')
+          },
+          error: (error) => {
+            console.log(error)
           }
-          browserHistory.push('SelectSkin')
-        },
-        error: (error) => {
-          console.log(error)
-        }
-      })
+        })
+      } 
     }
     
     userProfile.Skins.forEach((userSkin) => {

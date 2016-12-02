@@ -20,7 +20,6 @@ router.route('/leaderBoard')
       .then((games) => {
         sortedScores.forEach((sortedScore, index) => {
           const obj = { userid: users[index].id,
-            gameid: games[index].uuid,
             username: users[index].username,
             facebookid: users[index].facebookid,
             email: users[index].email,

@@ -11,6 +11,40 @@ class GameOver extends React.Component {
 	  }
   }
   
+  componentWillMount() {
+    if(window.localStorage.id) {
+      userProfile.scoreBoard.forEach((score) => {
+        if(score.username === userProfile.User) {
+          var data = {facebookid: window.localStorage.id, points: score.score}
+          $.ajax({
+            url: '/api/addTransactionByFacebookID',
+            method: 'Post',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: (data) => {
+              var gameData = {facebookid: window.localStorage.id, uuid: 'abc-123-456', score: score.score};
+              $.ajax({
+                url: '/api/addScore',
+                method: 'Post',
+                data: JSON.stringify(gameData),
+                contentType: 'application/json',
+                success: (data) => {
+
+                },
+                error: (error) => {
+                  console.log(error)
+                }
+              })
+            },
+            error: (error) => {
+              console.log(error)
+            }
+          })
+        }
+      })
+    }
+  }
+
   backToHome() {
     window.location.pathname = 'Home'
   }

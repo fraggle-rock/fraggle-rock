@@ -1,7 +1,8 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import Profile from './Profile.js';
-import userProfile from '../userProfile.js'
+import userProfile from '../userProfile.js';
+import _ from 'underscore';
 const clientScene = require('../../clientScene.js');
 
 class Home extends React.Component {
@@ -16,22 +17,36 @@ class Home extends React.Component {
   }
 
   componentWillMount() {
-    if(window.localStorage.id) {
-      $.ajax({
-        url: '/api/getUserByFacebookID/' + window.localStorage.id,
-        method: 'Get',
-        success: (data) => {
-          userProfile.User = data.username;
-          userProfile.Skins = data.skins || [];
-          userProfile.facebookid = data.facebookid;
-          userProfile.userId = data.id;
-          userProfile.FacebookPicture = data.url;
-          browserHistory.push('Home')
-        },
-        error: (error) => {
-          console.log(error)
-        }
-      })
+    if(userProfile.User === 'Guest') {
+      if(window.localStorage.id) {
+        $.ajax({
+          url: '/api/getUserByFacebookID/' + window.localStorage.id,
+          method: 'Get',
+          success: (data) => {
+            userProfile.User = data.username;
+            userProfile.Skins = data.skins || [];
+            userProfile.facebookid = data.facebookid;
+            userProfile.userId = data.id;
+            userProfile.FacebookPicture = data.url;
+            browserHistory.push('Home')
+          },
+          error: (error) => {
+            console.log(error)
+          }
+        })
+      } else {
+        const randomGenerator = function () {
+          const randomAdj = ['Bad', 'Whack', 'Manic', 'Freak', 'Bliss', 'Trash', 'Dope'];
+          const randomNoun = ['Geek', 'Doll', 'Tron', 'Pie', 'Dog', 'Cat', 'Shark']
+          let randomStr = '';
+          randomStr += randomAdj[_.random(0,randomAdj.length-1)];
+          randomStr += randomNoun[_.random(0,randomNoun.length-1)];
+          randomStr += _.random(0, 10);
+          return randomStr;
+        };
+        userProfile.User = randomGenerator();
+        browserHistory.push('/Home')
+      }   
     }
   }
 

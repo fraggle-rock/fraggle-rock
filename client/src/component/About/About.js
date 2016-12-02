@@ -12,31 +12,25 @@ class About extends React.Component {
   }
 
   componentWillMount() {
-    if(window.localStorage.id) {
-      $.ajax({
-        url: '/api/getUserByFacebookID/' + window.localStorage.id,
-        method: 'Get',
-        success: (data) => {
-          userProfile.User = data.username;
-          userProfile.Skins = data.skins || [];
-          userProfile.facebookid = data.facebookid;
-          userProfile.userId = data.id;
-          userProfile.FacebookPicture = data.url;
-          browserHistory.push('About')
-        },
-        error: (error) => {
-          console.log(error)
-        }
-      })
-    }
-    
-    $.ajax({
-      url: '/api/liveGames',
-      method: 'GET',
-      success: (data) => {
-        this.setState({liveMatches: JSON.parse(data)})
+    if(userProfile.User === 'Guest') {
+      if(window.localStorage.id) {
+        $.ajax({
+          url: '/api/getUserByFacebookID/' + window.localStorage.id,
+          method: 'Get',
+          success: (data) => {
+            userProfile.User = data.username;
+            userProfile.Skins = data.skins || [];
+            userProfile.facebookid = data.facebookid;
+            userProfile.userId = data.id;
+            userProfile.FacebookPicture = data.url;
+            browserHistory.push('About')
+          },
+          error: (error) => {
+            console.log(error)
+          }
+        })
       }
-    })
+    }
   }
 
   backToHome() {
