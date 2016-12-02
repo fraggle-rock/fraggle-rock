@@ -17,7 +17,10 @@ const server = http.createServer((req, res) => {
 server.listen(httpPort);
 
 const register = function(req, res) {
-  const serverUrl = req.connection.remoteAddress;
+  let serverUrl = req.connection.remoteAddress;
+  if (serverUrl.indexOf('::ffff:') !== -1) {
+    serverUrl = serverUrl.slice(7);
+  }
   console.log('registering new physics server at ' + serverUrl);
   
   physicsServers[serverUrl] = {status: 'empty'};

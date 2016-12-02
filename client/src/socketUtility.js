@@ -84,11 +84,7 @@ module.exports = {
         for (var url in physicsServers) {
           const server = physicsServers[url];
           if (server === 'empty') {
-            if (url !== '::ffff:127.0.0.1') {
-              serverUrl = url;
-            } else {
-              serverUrl = '127.0.0.1';
-            }
+            serverUrl = url;
             break;
           }
         }
@@ -112,13 +108,7 @@ module.exports = {
     });
   },
   joinMatch: function joinMatch(matchUrl, game) {
-    let serverUrl;
-    if (matchUrl !== '::ffff:127.0.0.1') {
-      serverUrl = matchUrl;
-    } else {
-      serverUrl = '127.0.0.1';
-    }
-    socket = io(serverUrl + ':3001');
+    socket = io(matchUrl + ':3001');
 
     setTimeout(function() {
       addUpdateListeners(socket);
