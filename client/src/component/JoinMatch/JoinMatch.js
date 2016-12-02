@@ -9,7 +9,8 @@ class JoinMatch extends React.Component {
 	  super(props);
 	  this.state = {
 	    user: null,
-      liveMatches: []
+      liveMatches: [],
+      refresh: false
 	  };
   }
 
@@ -31,13 +32,17 @@ class JoinMatch extends React.Component {
         }
       })
     }
-    $.ajax({
-      url: '/api/liveGames',
-      method: 'GET',
-      success: (data) => {
-        this.setState({liveMatches: JSON.parse(data)})
+    setInterval(() => {
+      if (!this.state.refresh) {
+        $.ajax({
+          url: '/api/liveGames',
+          method: 'GET',
+          success: (data) => {
+            this.setState({liveMatches: JSON.parse(data)})
+          }
+        });
       }
-    })
+    }, 2000);
   }
 
   backToHome() {
@@ -46,6 +51,22 @@ class JoinMatch extends React.Component {
 
   selectSkin() {
     browserHistory.push('/SelectSkin')
+  }
+
+  refresh() {
+    if (!this.state.refresh) {
+      this.setState({refresh: true});
+      $.ajax({
+        url: '/api/liveGames',
+        method: 'GET',
+        success: (data) => {
+          this.setState({liveMatches: JSON.parse(data)});
+          setTimeout(() => {
+            this.setState({refresh: false})
+          }, 1000);
+        }
+      });
+    }
   }
 
   render() {
@@ -60,6 +81,9 @@ class JoinMatch extends React.Component {
             <h1>Join Match</h1>
             <button className='btn btn-warning selectSkinBtn' onClick={this.selectSkin}>Select Skin</button>
           </div>
+          <button className='btn-md btn-primary btn-refresh' onClick={this.refresh.bind(this)}>
+            Refresh <img id='refreshButton' src='./assets/iconrefresh.png' />
+          </button>
           <div id='JoinMatchData'>
             <div id='JoinMatchTable'>
               <div className='JoinMatchHeader'>
