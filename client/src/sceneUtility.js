@@ -120,7 +120,7 @@ module.exports = {
           const regen = function regen() {
             if (jumpCount < config.maxJumps) {
               jumpCount++;
-              if (userProfile.matchId || userProfile.createMatch) {
+              if (userProfile.matchUrl || userProfile.createMatch) {
                 document.getElementById('jump' + jumpCount).style.opacity = '1';
               }
             }
@@ -182,7 +182,7 @@ module.exports = {
         const regen = function regen() {
           if (shotCount < config.maxShots) {
             shotCount++;
-            if (userProfile.matchId || userProfile.createMatch) {
+            if (userProfile.matchUrl || userProfile.createMatch) {
               document.getElementById('ammo' + shotCount).style.opacity = '1';
             }
           }
