@@ -22,7 +22,7 @@ const register = function(req, res) {
     serverUrl = serverUrl.slice(7);
   }
   console.log('registering new physics server at ' + serverUrl);
-  if (physicsServer[serverUrl]) {
+  if (physicsServers[serverUrl]) {
     clearInterval(physicsServer[serverUrl].timeout)
   }
   physicsServers[serverUrl] = {status: 'empty'};
