@@ -91,8 +91,10 @@ io.on('connection', (socket) => {
           match.loadPoll(clientUuid);
         });
         if (match.maxPlayers === Object.keys(match.clients).length) {
+          setTimeout(function() {
             match.startPhysics();
             match.killFloor();
+          }, 2000)
         }
       });
     }
