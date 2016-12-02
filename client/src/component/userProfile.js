@@ -40,6 +40,7 @@ module.exports = {
   maxPlayers: null,
   createMatch: false,
   matchId: null,
+  scoreBoard: [],
   storeSkins: [
   {skinPic: '../../../textures/skins/SmileyFacePreview.jpg', skin: '/textures/skins/SmileyFace.jpg', name: 'Big Smile', price: 500, owned: false},
   {skinPic: '../../../textures/skins/coolGuyPreview.jpg', skin: '/textures/skins/coolGuy.jpg', name: 'Cool Guy', price: 300, owned: false},

@@ -92,7 +92,4 @@ class LogIn extends React.Component {
 
   }
 }
-
-
-
 export default LogIn;

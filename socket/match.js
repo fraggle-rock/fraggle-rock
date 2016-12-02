@@ -205,15 +205,20 @@ const physicsLoop = function physicsLoop(match) {
     Math.abs(clientBody.position.z) > config.playerHorizontalBound) {
       //PLAYER DEATH & RESPAWN
       client.lives--
-      updateScoreTable(client.uuid, match.maxPlayers);
-      const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)]
-
-      clientBody.position.set(spawn[0], spawn[1], spawn[2]);
-      clientBody.mass = config.playerModelMass;
-      clientBody.linearDamping = config.playerDamping;
-      clientBody.velocity.set(0,0,0);
-      match.sendPoll();
-      continue;
+      const spawn = match.spawnPoints[random(0, match.spawnPoints.length - 1)];
+      console.log('Match ', match, 'Clients ', client);
+      if(client.lives === 0) {
+        match.numPlayers -= 1;
+      }
+      if(client.lives >0) {
+        updateScoreTable(client.uuid, match.numPlayers);
+        clientBody.position.set(spawn[0], spawn[1], spawn[2]);
+        clientBody.mass = config.playerModelMass;
+        clientBody.linearDamping = config.playerDamping;
+        clientBody.velocity.set(0,0,0);
+        match.sendPoll();
+        continue;
+      }
     }
     if (client.up && client.left || client.up && client.right || client.down && client.left || client.down && client.right) {
       movePerTick = movePerTick * .707;
@@ -298,6 +303,7 @@ const shootBall = function shootBall(camera) {
       e.body.linearDamping -= config.onShootDamplingLoss;
       if(scoreTable[e.target.useruuid] !== undefined) {
         scoreTable[e.target.useruuid] = scoreTable[e.target.useruuid] + config.onShootScore;
+        e.target.useruuid = null;
       }
   }
     // console.log('Mass ', e.body.mass, ' Damping ', e.body.linearDamping, 'Score ', scoreTable);
@@ -342,6 +348,7 @@ const loadFullScene = function loadFullScene(scene, player, io, maxPlayers, spaw
   // Setup our world
   this.io = io;
   this.maxPlayers = maxPlayers;
+  this.numPlayers = maxPlayers;
   this.spawnPoints = spawnPoints;
   this.owner = owner;
   this.mapChoice = mapChoice;
