@@ -807,6 +807,7 @@ btn-refresh {
 .JoinMatchBox {
   display: flex;
   align-items: center;
+  transition: all .5s;
 }
 
 /*----------------------Store--------------------------------*/

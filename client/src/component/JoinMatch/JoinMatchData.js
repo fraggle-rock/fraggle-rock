@@ -18,12 +18,14 @@ class JoinMatchData extends React.Component {
   }
 
   JoinMatch(matchId) {
-    if(this.props.match.numPlayers === this.props.match.maxPlayers || this.props.match.numPlayers === 6) {
+    clearInterval(this.props.interval);
+
+    if (this.props.match.numPlayers === this.props.match.maxPlayers || this.props.match.numPlayers === 6) {
 
     } else {
       userProfile.createMatch = false;
       userProfile.matchId = matchId;
-      browserHistory.push('/Game');    
+      browserHistory.push('/Game');
     }
   }
 

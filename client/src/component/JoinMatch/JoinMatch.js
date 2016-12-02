@@ -34,17 +34,30 @@ class JoinMatch extends React.Component {
         })
       }
     }
-    setInterval(() => {
-      if (!this.state.refresh) {
-        $.ajax({
-          url: '/api/liveGames',
-          method: 'GET',
-          success: (data) => {
-            this.setState({liveMatches: JSON.parse(data)})
-          }
-        });
-      }
-    }, 2000);
+
+    this.pullGames();
+
+    setInterval(this.pullGames.bind(this), 2000)
+  }
+
+  pullGames() {
+    let context = this;
+    if (!this.state.refresh && window.location.pathname === '/JoinMatch') {
+      console.log('pull')
+      context.setState({refresh: true});
+      $.ajax({
+        url: '/api/liveGames',
+        method: 'GET',
+        success: (data) => {
+          context.setState({liveMatches: JSON.parse(data)})
+          setTimeout(() => {
+            if (window.location.pathname === '/JoinMatch') {
+              context.setState({refresh: false})
+            }
+          }, 1000);
+        }
+      });
+    }
   }
 
   backToHome() {
@@ -53,22 +66,6 @@ class JoinMatch extends React.Component {
 
   selectSkin() {
     browserHistory.push('/SelectSkin')
-  }
-
-  refresh() {
-    if (!this.state.refresh) {
-      this.setState({refresh: true});
-      $.ajax({
-        url: '/api/liveGames',
-        method: 'GET',
-        success: (data) => {
-          this.setState({liveMatches: JSON.parse(data)});
-          setTimeout(() => {
-            this.setState({refresh: false})
-          }, 1000);
-        }
-      });
-    }
   }
 
   render() {
@@ -83,7 +80,7 @@ class JoinMatch extends React.Component {
             <h1>Join Match</h1>
             <button className='btn btn-warning selectSkinBtn' onClick={this.selectSkin}>Select Skin</button>
           </div>
-          <button className='btn-md btn-primary btn-refresh' onClick={this.refresh.bind(this)}>
+          <button className='btn-md btn-primary btn-refresh' onClick={this.pullGames.bind(this)}>
             Refresh <img id='refreshButton' src='./assets/iconrefresh.png' />
           </button>
           <div id='JoinMatchData'>
@@ -95,7 +92,7 @@ class JoinMatch extends React.Component {
                 <div className='JoinMatchSpan'></div>
               </div>
               <div className='JoinMatchBody'>
-                {this.state.liveMatches.map((match) => <JoinMatchData key={match.matchId} match={match} />)}
+                {this.state.liveMatches.map((match) => <JoinMatchData interval={this.pullGames.bind(this)} key={match.matchId} match={match} />)}
               </div>
             </div>
           </div>
