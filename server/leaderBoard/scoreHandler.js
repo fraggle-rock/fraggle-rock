@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.route('/addScore')
 .post((req, res) => {
-  if (req.body.username && req.body.uuid && req.body.score) {
-    UserController.searchUserByUsername(req.body.username)
+  if (req.body.facebookid && req.body.uuid && req.body.score) {
+    UserController.searchUserByFacebookid(req.body.facebookid)
     .then((user) => {
       if (req.body.uuid) {
         console.log('Get User ', user.id);
