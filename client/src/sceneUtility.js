@@ -296,7 +296,7 @@ module.exports = {
     || Math.abs(clientPosition.position.x) > config.playerHorizontalBound
     || Math.abs(clientPosition.position.z) > config.playerHorizontalBound) {
       //death sound
-      audio.smashBrawl.shootRound(2, 1, 0.08, 0, 1);
+      // audio.smashBrawl.shootRound(2, 1, 0.08, 0, 1);
 
       //reset ammo and jumps if you are the player that died
       if (currentGame.camera.uuid.slice(0, config.uuidLength) === clientPosition.uuid) {
