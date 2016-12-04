@@ -40,9 +40,9 @@ module.exports = function Match(deleteMatch) {
   this.tickRate = config.tickRate;
   this.killFloor = killFloor.bind(this);
   this.sendFull = true;
-  this.kill = function() {deleteMatch(this.guid)}.bind(this);
   this.io;
   this.buildMatchInfo = buildMatchInfo.bind(this);
+  this.lastPoll = performance.now();
   this.sendPoll = sendPoll.bind(this);
   this.clientPoll = setInterval(function() {
     this.sendPoll();
@@ -53,6 +53,7 @@ const loadPoll = function loadPoll(clientUuid) {
   if (this.clients[clientUuid]) {
     this.clients[clientUuid].lastUpdate = performance.now();
   }
+  this.lastPoll = performance.now();
 };
 
 const buildMatchInfo = function buildMatchInfo() {
@@ -78,7 +79,12 @@ const buildMatchInfo = function buildMatchInfo() {
 };
 
 const sendPoll = function sendPoll() {
-  this.io.to(this.guid).compress(true).emit('poll', JSON.stringify(this.buildMatchInfo()));
+  const now = performance.now();
+  if (now - this.lastPoll > 10 * 1000) {
+    this.deleteMatch();
+  } else {
+    this.io.to(this.guid).compress(true).emit('poll', JSON.stringify(this.buildMatchInfo()));
+  }
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
