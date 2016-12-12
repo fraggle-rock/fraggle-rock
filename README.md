@@ -1,12 +1,12 @@
-# Project Name
+# Smash Ball Brawl
 
-> Pithy project description
+> 3D multiplayer first person shooter with physics
 
 ## Team
 
   - __Product Owner__: Eric Eakin
-  - __Scrum Master__: teamMember
-  - __Development Team Members__: Will Stockman, Nick Lathen, Riyaz Ahmed
+  - __Scrum Master__: Will Stockman
+  - __Development Team Members__: Nick Lathen, Riyaz Ahmed
 
 ## Table of Contents
 
@@ -42,7 +42,7 @@ npm install
 
 ### Roadmap
 
-View the project roadmap [here](LINK_TO_PROJECT_ISSUES)
+View the project roadmap [here](https://github.com/fraggle-rock/fraggle-rock/issues)
 
 
 ## Contributing
@@ -50,4 +50,4 @@ View the project roadmap [here](LINK_TO_PROJECT_ISSUES)
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## fraggle-rock
-creeps and cannons
+Smash Ball Brawl
