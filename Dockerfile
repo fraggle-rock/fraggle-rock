@@ -1,2 +1,2 @@
 FROM mhart/alpine-node:6
-COPY . /
+COPY . /fraggle-rock

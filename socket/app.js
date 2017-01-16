@@ -5,6 +5,22 @@ const io = require('socket.io')(socketPort);
 const matchController = require('./matchController.js');
 const request = require('request');
 
+const sendServerUpdate = function sendServerUpdate() {
+  const options = {
+    method: 'POST',
+    uri: `http://${socketManager}:${socketManagerPort}/statusPoll`,
+    headers: {
+      'Content-Type': 'text/plain'
+    },
+    body: matchController.getMatch() ? JSON.stringify(matchController.getMatch().buildMatchInfo()) : '{}'
+  };
+  request(options, function(error, response, body) {
+    if (error) {
+      console.error(error);
+    }
+  });
+}
+
 setTimeout(function() {
   const options = {
     method: 'POST',
@@ -17,25 +33,9 @@ setTimeout(function() {
   request(options, function(error, response, body) {
     if (error) {
       console.error(error);
-    } else {
-      console.log('succesfully registered');
     }
     setInterval(function() {
-      const options = {
-        method: 'POST',
-        uri: `http://${socketManager}:${socketManagerPort}/statusPoll`,
-        headers: {
-          'Content-Type': 'text/plain'
-        },
-        body: matchController.getMatch() ? JSON.stringify(matchController.getMatch().buildMatchInfo()) : '{}'
-      };
-      request(options, function(error, response, body) {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log('succesfully updated');
-        }
-      })
+      sendServerUpdate();
     }, 5000);
   })
 }, 3000); 
