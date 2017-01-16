@@ -692,12 +692,13 @@ canvas {
 /*-----------------------Create Match------------------------*/
 
 #StartMatch {
-  margin-top: 40px;
+  margin-top: 0px;
 }
 
 #StartMatch .btn {
   margin-right: 10px;
   margin-left: 10px;
+  margin-bottom: 5px;
 }
 
 #ChooseMap {
@@ -763,7 +764,7 @@ canvas {
   width: 185px;
   border-radius: 10px;
   background-color: white;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   cursor: pointer;
   color: black;
 }
