@@ -20,7 +20,10 @@ const init = function init(maxPlayers) {
   let spawnPoints = levelBuilder.spawnPoints[userProfile.map]
 
   // build level
-  if (userProfile.map === 0) {
+  if (maxPlayers === 0) {
+    scene = levelBuilder.buildSandbox();
+  }
+  else if (userProfile.map === 0) {
     scene = levelBuilder.buildFraggleRock();
   } else if (userProfile.map === 1) {
     scene = levelBuilder.buildDawnMountain();

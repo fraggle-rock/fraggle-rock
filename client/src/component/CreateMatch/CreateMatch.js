@@ -98,7 +98,7 @@ class CreateMatch extends React.Component {
             </div>
             <div id='StartMatch'>
               <div id='StartSandbox'>
-                <button id='Start1'className='btn btn-primary' onClick={this.StartMatch.bind(this, 1)}>SANDBOX</button>  
+                <button id='Start1'className='btn btn-primary' onClick={this.StartMatch.bind(this, 0)}>SANDBOX</button>  
               </div>
               <button id='Start2'className='btn btn-primary' onClick={this.StartMatch.bind(this, 2)}>2 PLAYER MATCH</button>
               <button id='Start3'className='btn btn-primary' onClick={this.StartMatch.bind(this, 3)}>3 PLAYER MATCH</button>

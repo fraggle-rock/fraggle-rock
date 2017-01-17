@@ -267,6 +267,9 @@ const physicsLoop = function physicsLoop(match) {
 };
 
 const startPhysics = function startPhysics() {
+  if (match.maxPlayers === 0) {
+    config.ballMass = 300;
+  }
   for (var key in this.clients) {
     const client = this.clients[key];
     const clientBody = this.clientToCannon[client.uuid];

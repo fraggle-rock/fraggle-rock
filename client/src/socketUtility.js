@@ -89,7 +89,7 @@ module.exports = {
           }
         }
         socket = io(serverUrl + ':3001');
-        setTimeout(function() {
+        socket.addEventListener('connect', function() {
           addUpdateListeners(socket);
           const camera = game.camera.toJSON();
           camera.position = game.camera.position;
@@ -101,7 +101,7 @@ module.exports = {
           const fullScene = {camera: camera, scene: game.scene.toJSON(), spawnPoints: game.spawnPoints,
           maxPlayers: game.maxPlayers, owner: game.owner, mapChoice: game.mapChoice};
           socket.emit('fullScene', fullScene);
-        }, 1500);
+        });
       }
     });
   },
