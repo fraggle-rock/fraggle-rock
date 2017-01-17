@@ -44,27 +44,29 @@ console.log('Physics server listening on ' + socketPort);
 io.on('connection', (socket) => {
 
   socket.on('fullScene', function (fullScene) {
-    const scene = fullScene.scene;
-    const player = fullScene.camera;
-    const match = matchController.getNewMatch();
-    const maxPlayers = fullScene.maxPlayers;
-    socket.join(match.guid);
-    match.loadFullScene(scene, player, io, maxPlayers, fullScene.spawnPoints, fullScene.owner, fullScene.mapChoice);
-    socket.on('shootBall', function(camera) {
-      match.shootBall(camera);
-    });
-    socket.on('clientUpdate', function (camera) { // listener for client position updates
-      match.loadClientUpdate(camera); // update server's copy of client position
-    });
-    socket.on('clientQ', function (clientQuaternion) {
-      match.loadClientQuaternion(clientQuaternion);
-    });
-    socket.on('poll', function(clientUuid) {
-      match.loadPoll(clientUuid);
-    });
-    if (match.maxPlayers === 0) {
-      match.startPhysics();
-      match.killFloor();
+    if (matchController.getMatch() === undefined) {
+      const scene = fullScene.scene;
+      const player = fullScene.camera;
+      const match = matchController.getNewMatch();
+      const maxPlayers = fullScene.maxPlayers;
+      socket.join(match.guid);
+      match.loadFullScene(scene, player, io, maxPlayers, fullScene.spawnPoints, fullScene.owner, fullScene.mapChoice);
+      socket.on('shootBall', function(camera) {
+        match.shootBall(camera);
+      });
+      socket.on('clientUpdate', function (camera) { // listener for client position updates
+        match.loadClientUpdate(camera); // update server's copy of client position
+      });
+      socket.on('clientQ', function (clientQuaternion) {
+        match.loadClientQuaternion(clientQuaternion);
+      });
+      socket.on('poll', function(clientUuid) {
+        match.loadPoll(clientUuid);
+      });
+      if (match.maxPlayers === 0) {
+        match.startPhysics();
+        match.killFloor();
+      }
     }
   });
 
