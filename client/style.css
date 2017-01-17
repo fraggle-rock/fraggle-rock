@@ -484,6 +484,18 @@ canvas {
   margin: auto;
 }
 
+#PlayBtn {
+  margin-bottom: 10px;
+  font-size: 25px;
+}
+
+#JustPlayBtn {
+  margin-bottom: 20px;
+  font-size: 30px;
+  background-color: #4C69BA;
+  border-color: #4C69BA;
+}
+
 #Guest {
   margin-top: 20px;
 }

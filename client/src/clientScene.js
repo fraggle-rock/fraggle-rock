@@ -22,6 +22,7 @@ const init = function init(maxPlayers) {
   // build level
   if (maxPlayers === 0) {
     scene = levelBuilder.buildSandbox();
+    spawnPoints = [levelBuilder.spawnPoints[1][1]];
   }
   else if (userProfile.map === 0) {
     scene = levelBuilder.buildFraggleRock();
